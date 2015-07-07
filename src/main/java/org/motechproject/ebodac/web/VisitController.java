@@ -114,7 +114,7 @@ public class VisitController {
                     return new Records<>(settings.getPage(), rowCount, (int) recordCount, visits);
                 case "Find Visit By Subject Address":
                     String address = (String) fields.get("Address");
-                    subjects = subjectDataService.findSubjectByAddress(address);
+                    subjects = subjectDataService.findSubjectsByAddress(address);
 
                     visits = new ArrayList<>();
                     for (Subject s : subjects) {
