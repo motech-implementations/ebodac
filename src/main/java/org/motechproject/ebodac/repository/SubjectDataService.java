@@ -34,5 +34,5 @@ public interface SubjectDataService extends MotechDataService<Subject> {
     List<Subject> findSubjectsByBoosterVaccinationDate(@LookupField(name = "boosterVaccinationDate") Range<DateTime> dateRange);
 
     @Lookup
-    List<Subject> findSubjectByAddress(@LookupField(name = "address") String address);
+    List<Subject> findSubjectsByAddress(@LookupField(name = "address", customOperator = Constants.Operators.EQ_IGNORE_CASE) String address);
 }
