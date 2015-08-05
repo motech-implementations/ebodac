@@ -2,7 +2,10 @@ package org.motechproject.ebodac.web;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.joda.time.LocalDate;
+import org.motechproject.ebodac.constants.EbodacConstants;
 import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.service.ExportService;
 import org.motechproject.ebodac.service.impl.csv.SubjectCsvImportCustomizer;
 import org.motechproject.ebodac.service.impl.csv.VisitCsvExportCustomizer;
 import org.motechproject.ebodac.web.domain.GridSettings;
@@ -44,6 +47,9 @@ public class InstanceController {
 
     @Autowired
     private VisitCsvExportCustomizer visitCsvExportCustomizer;
+
+    @Autowired
+    private ExportService exportService;
 
     @Autowired
     private EntityService entityService;
@@ -128,6 +134,43 @@ public class InstanceController {
                     csvImportExportService.exportCsv(entityId, response.getWriter());
                 }
             }
+        }
+    }
+
+    @RequestMapping(value = "/exportDailyClinicVisitScheduleReport", method = RequestMethod.GET)
+    public void exportDailyClinicVisitScheduleReport(GridSettings settings,
+                                                     @RequestParam String range,
+                                                     @RequestParam String outputFormat,
+                                                     HttpServletResponse response) throws IOException {
+
+        if (!Constants.ExportFormat.isValidFormat(outputFormat)) {
+            throw new IllegalArgumentException("Invalid export format: " + outputFormat);
+        }
+
+        final String fileName = "DailyClinicVisitScheduleReport_" + LocalDate.now().toString();
+
+        if (EbodacConstants.PDF_EXPORT_FORMAT.equals(outputFormat)) {
+            response.setContentType("application/pdf");
+        } else {
+            response.setContentType("text/csv");
+        }
+        response.setCharacterEncoding(UTF_8);
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + fileName + "." + outputFormat.toLowerCase());
+
+        Order order = null;
+        if (!settings.getSortColumn().isEmpty()) {
+            order = new Order(settings.getSortColumn(), settings.getSortDirection());
+        }
+        QueryParams queryParams = new QueryParams(settings.getPage(), settings.getRows(), order);
+
+        if (EbodacConstants.PDF_EXPORT_FORMAT.equals(outputFormat)) {
+            exportService.exportDailyClinicVisitScheduleReportToPDF(response.getOutputStream(), settings.getLookup(),
+                    settings.getFields(), queryParams);
+        } else {
+            exportService.exportDailyClinicVisitScheduleReportToCSV(response.getWriter(), settings.getLookup(),
+                    settings.getFields(), queryParams);
         }
     }
 
