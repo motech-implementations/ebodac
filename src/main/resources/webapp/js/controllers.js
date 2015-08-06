@@ -100,7 +100,12 @@
      * Reports
      *
      */
-    controllers.controller('EbodacReportsCtrl', function ($scope) {
+    controllers.controller('EbodacReportsCtrl', function ($scope, $http) {
+        $scope.availableExportRange = ['all','table'];
+        $scope.availableExportFormats = ['csv','pdf'];
+        $scope.actualExportRange = 'all';
+        $scope.exportFormat = 'csv';
+
         $scope.lookupBy = {};
         $scope.selectedLookup = undefined;
         $scope.lookupFields = [];
@@ -121,6 +126,59 @@
                           {"lookupName" : "Find Visit By SubjectId", "fields" : [{"name" : "SubjectId", "type" : "string"}]},
                           {"lookupName" : "Find Visit By Subject Name", "fields" : [{"name" : "Name", "type" : "string"}]},
                           {"lookupName" : "Find Visit By Subject Address", "fields" : [{"name" : "Address", "type" : "string"}]}];
+
+
+        $scope.exportEntityInstances = function () {
+            $('#exportInstanceModal').modal('show');
+        };
+
+        $scope.changeExportRange = function (range) {
+            $scope.actualExportRange = range;
+        };
+
+        $scope.changeExportFormat = function (format) {
+            $scope.exportFormat = format;
+        };
+
+        $scope.closeExportInstanceModal = function () {
+            $('#exportInstanceForm').resetForm();
+            $('#exportInstanceModal').modal('hide');
+        };
+
+        /**
+        * Exports selected entity's instances to CSV file
+        */
+        $scope.exportInstance = function() {
+            var url, rows, page, sortColumn, sortDirection;
+
+            url = "../ebodac/exportDailyClinicVisitScheduleReport";
+            url = url + "?range=" + $scope.actualExportRange;
+            url = url + "&outputFormat=" + $scope.exportFormat;
+
+            sortColumn = $('#dailyClinicVisitScheduleReportTable').getGridParam('sortname');
+            sortDirection = $('#dailyClinicVisitScheduleReportTable').getGridParam('sortorder');
+
+            if ($scope.actualExportRange === 'table') {
+                rows = $('#dailyClinicVisitScheduleReportTable').getGridParam('rowNum');
+                page = $('#dailyClinicVisitScheduleReportTable').getGridParam('page');
+                url = url + "&rows=" + rows;
+                url = url + "&page=" + page;
+                url = url + "&lookup=" + (($scope.selectedLookup) ? $scope.selectedLookup.lookupName : "");
+                url = url + "&fields=" + JSON.stringify($scope.lookupBy);
+            }
+            url = url + "&sortColumn=" + sortColumn;
+            url = url + "&sortDirection=" + sortDirection;
+
+            $http.get(url)
+            .success(function () {
+                $('#exportInstanceForm').resetForm();
+                $('#exportInstanceModal').modal('hide');
+                window.location.replace(url);
+            })
+            .error(function (response) {
+                handleResponse('mds.error', 'mds.error.exportData', response);
+            });
+        };
 
         /**
         * Shows/Hides lookup dialog
