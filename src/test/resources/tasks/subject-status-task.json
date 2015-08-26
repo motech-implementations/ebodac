@@ -1,36 +1,31 @@
 {
-  "description": "Indicates whether a Subject has been updated recently.",
-  "name": "TEST EBODAC Subject status",
-  "actions": [
-    {
-      "name": "org.motechproject.ebodac.domain.Subject.update",
-      "displayName": "UPDATE Subject",
-      "channelName": "data-services",
-      "moduleName": "org.motechproject.motech-platform-dataservices-entities",
-      "moduleVersion": "0.26.0.SNAPSHOT",
-      "subject": null,
-      "serviceInterface": "org.motechproject.mds.service.ActionHandlerService",
-      "serviceMethod": "update",
-      "values": {
-        "id": "{{trigger.object_id}}",
-        "@ENTITY": "org.motechproject.ebodac.domain.Subject",
-        "changed": "true"
-      }
+  "description" : null,
+  "name" : "test",
+  "actions" : [ {
+    "name" : null,
+    "displayName" : "ivr.task.initiate.call",
+    "channelName" : "ivr.task.name",
+    "moduleName" : "org.motechproject.ivr",
+    "moduleVersion" : "0.26.0.SNAPSHOT",
+    "subject" : "ivr_initiate_call",
+    "serviceInterface" : null,
+    "serviceMethod" : null,
+    "values" : {
+      "config" : "Voto"
     }
-  ],
-  "trigger": {
-    "name": null,
-    "displayName": "UPDATE Subject",
-    "channelName": "data-services",
-    "moduleName": "org.motechproject.motech-platform-dataservices-entities",
-    "moduleVersion": "0.26.0.SNAPSHOT",
-    "subject": "mds.crud.ebodacmodule.Participant.UPDATE",
-    "triggerListenerSubject": "mds.crud.ebodacmodule.Participant.UPDATE"
+  } ],
+  "trigger" : {
+    "name" : null,
+    "displayName" : "msgCampaign.send.message",
+    "channelName" : "msgCampaign.name",
+    "moduleName" : "org.motechproject.message-campaign",
+    "moduleVersion" : "0.26.0.SNAPSHOT",
+    "subject" : "org.motechproject.messagecampaign.fired-campaign-message",
+    "triggerListenerSubject" : "org.motechproject.messagecampaign.fired-campaign-message"
   },
-  "enabled": false,
-  "taskConfig": {
-    "steps": [],
-    "failIfDataNotFound": true
+  "enabled" : false,
+  "taskConfig" : {
+    "steps" : [ ]
   },
-  "hasRegisteredChannel": true
+  "hasRegisteredChannel" : true
 }
