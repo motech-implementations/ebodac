@@ -33,10 +33,6 @@ public class TaskImporterIT extends BasePaxIT {
 
     private TaskImporter taskImporter;
 
-    private static final String TEST_EBODAC_CAMPAIGN_ENROLLMENT_ON_CREATE = "TEST EBODAC campaign enrollment on create";
-    private static final String TEST_EBODAC_CAMPAIGN_ENROLLMENT_ON_UPDATE = "TEST EBODAC campaign enrollment on update";
-    private static final String TEST_EBODAC_SUBJECT_STATUS = "TEST EBODAC Subject status";
-
     private List<Long> tasksId;
 
     @Before
@@ -58,7 +54,7 @@ public class TaskImporterIT extends BasePaxIT {
         taskImporter.importTasks(FrameworkUtil.getBundle(getClass()));
         List<Task> tasks = taskService.getAllTasks();
 
-        List<Task> foundTasks = taskService.findTasksByName(TEST_EBODAC_SUBJECT_STATUS);
+        List<Task> foundTasks = taskService.findTasksByName("test");
         assertEquals(1, foundTasks.size());
         assertTrue(tasks.contains(foundTasks.get(0)));
         tasksId.add(foundTasks.get(0).getId());
