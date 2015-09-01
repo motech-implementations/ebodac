@@ -411,6 +411,21 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         return configService.getConfig().getDisconVacCampaignsList().contains(campaignName);
     }
 
+    public boolean isEnrolled(Visit visit) {
+        SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findEnrollmentBySubjectId(visit.getSubject().getSubjectId());
+        String campaignName = visit.getType().getValue();
+
+        if(null == subjectEnrollments) {
+            return false;
+        }
+
+        Enrollment enrollment = subjectEnrollments.findEnrolmentByCampaignName(campaignName);
+        if(enrollment == null || enrollment.getStatus() != EnrollmentStatus.ENROLLED) {
+            return false;
+        }
+        return true;
+    }
+
     @Autowired
     public void setSubjectEnrollmentsDataService(SubjectEnrollmentsDataService subjectEnrollmentsDataService) {
         this.subjectEnrollmentsDataService = subjectEnrollmentsDataService;
