@@ -271,6 +271,35 @@ public class DtoLookupHelper {
         return settings;
     }
 
+    public static GridSettings changeLookupAndOrderForIvrAndSmsStatisticReport(GridSettings settings) throws IOException {
+        Map<String, Object> fieldsMap = new HashMap<>();
+
+        if ("age".equals(settings.getSortColumn())) {
+            settings.setSortColumn(SubjectEnrollments.SUBJECT_DATE_OF_BIRTH_PROPERTY_NAME);
+            if (settings.getSortDirection().equals("asc")) {
+                settings.setSortDirection("desc");
+            } else {
+                settings.setSortDirection("asc");
+            }
+        }
+
+        if (StringUtils.isBlank(settings.getFields())) {
+            settings.setFields("{}");
+        }
+
+        if (StringUtils.isBlank(settings.getLookup())) {
+        } else {
+            String fields = settings.getFields();
+            fieldsMap = OBJECT_MAPPER.readValue(fields, new TypeReference<HashMap>() {});
+
+            String newLookupName = settings.getLookup();
+            settings.setLookup(newLookupName);
+        }
+
+        settings.setFields(OBJECT_MAPPER.writeValueAsString(fieldsMap));
+        return settings;
+    }
+
     public static List<LookupDto> addLookupForOptsOutOfMotechMessagesReport(List<LookupDto> lookups) {
         LookupFieldDto lookupField = new LookupFieldDto(null, "subject", LookupFieldType.RANGE, null, false, "age");
         lookupField.setClassName("java.lang.Long");

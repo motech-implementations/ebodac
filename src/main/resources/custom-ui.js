@@ -31,7 +31,7 @@ if ($scope.selectedEntity.name === "Participant" || $scope.selectedEntity.name =
     };
 }
 
-if ($scope.selectedEntity.name === "ReportPrimerVaccination" || $scope.selectedEntity.name === "ReportBoosterVaccination") {
+if ($scope.selectedEntity.name === "ReportPrimerVaccination" || $scope.selectedEntity.name === "ReportBoosterVaccination" || $scope.selectedEntity.name ==="IvrAndSmsStatisticReport") {
     $scope.showFieldsButton = false;
     $scope.availableExportFormats = ['csv','pdf','xls'];
     var exportEntityModal = '../ebodac/resources/partials/modals/export-entity.html';
@@ -128,7 +128,7 @@ $scope.exportInstance = function() {
 
     $http.get(url)
     .success(function () {
-        if ($scope.selectedEntity.name === "ReportPrimerVaccination" || $scope.selectedEntity.name === "ReportBoosterVaccination") {
+        if ($scope.selectedEntity.name === "ReportPrimerVaccination" || $scope.selectedEntity.name === "ReportBoosterVaccination" || $scope.selectedEntity.name ==="IvrAndSmsStatisticReport") {
             $('#exportEbodacInstanceForm').resetForm();
             $('#exportEbodacInstanceModal').modal('hide');
         } else {

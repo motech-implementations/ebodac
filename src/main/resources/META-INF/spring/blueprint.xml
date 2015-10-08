@@ -32,6 +32,8 @@
 
     <osgi:service ref="reportService" interface="org.motechproject.ebodac.service.ReportService" />
 
+    <osgi:service ref="ivrAndSmsStatisticReportService" interface="org.motechproject.ebodac.service.IvrAndSmsStatisticReportService" />
+
     <osgi:service ref="visitService" interface="org.motechproject.ebodac.service.VisitService" />
 
     <osgi:service ref="reportUpdateService" interface="org.motechproject.ebodac.service.ReportUpdateService" />
@@ -48,6 +50,8 @@
     <osgi:reference id="reportBoosterVaccinationDataService"
                     interface="org.motechproject.ebodac.repository.ReportBoosterVaccinationDataService" />
 
+    <osgi:reference id="ivrAndSmsStatisticReportDataService" interface="org.motechproject.ebodac.repository.IvrAndSmsStatisticReportDataService" />
+
     <osgi:reference id="subjectEnrollmentsDataService"
                     interface="org.motechproject.ebodac.repository.SubjectEnrollmentsDataService" />
 
@@ -56,6 +60,9 @@
 
     <osgi:reference id="votoMessageDataService"
                     interface="org.motechproject.ebodac.repository.VotoMessageDataService" />
+
+    <osgi:reference id="callDetailRecordDataService"
+                    interface="org.motechproject.ivr.repository.CallDetailRecordDataService" />
 
     <osgi:reference id="votoLanguageDataService"
                     interface="org.motechproject.ebodac.repository.VotoLanguageDataService" />

@@ -80,7 +80,7 @@ public final class EbodacConstants {
     public static final String FOLLOW_UPS_MISSED_CLINIC_VISITS_REPORT_NAME = "FollowupsMissedClinicVisitsReport";
     public static final String M_AND_E_MISSED_CLINIC_VISITS_REPORT_NAME = "MandEMissedClinicVisitsReport";
     public static final String OPTS_OUT_OF_MOTECH_MESSAGES_REPORT_NAME = "ParticipantsWhoOptOutOfReceivingMotechMessagesReport";
-
+    public static final String IVR_AND_SMS_STATISTIC_REPORT_NAME = "NumberOfTimesParticipantsListenedToEachMessageReport";
     public static final Map<String, String> DAILY_CLINIC_VISIT_SCHEDULE_REPORT_MAP = new LinkedHashMap<String, String>() {
         {
             put("Planned Visit Date","motechProjectedDate");
@@ -174,6 +174,24 @@ public final class EbodacConstants {
             put("Gender",                   "subject.gender");
             put("Age",                      "age");
             put("Date of Unenrollment",     "dateOfUnenrollment");
+        }
+    };
+
+    public static final Map<String, String> IVR_AND_SMS_STATISTIC_REPORT_MAP = new LinkedHashMap<String, String>() {
+        {
+            put("Participant Id",           "subject.subjectId");
+            put("Phone",                    "subject.phoneNumber");
+            put("Gender",                   "subject.gender");
+            put("Age",                      "age");
+            put("Location (Community)",     "subject.community");
+            put("Message ID",               "messageId");
+            put("Send Date",                "sendDate");
+            put("Expected Duration",        "expectedDuration");
+            put("Time Listened To",         "timeListenedTo");
+            put("Received Date",            "receivedDate");
+            put("No. of Attempts",          "age");
+            put("SMS",                      "sms");
+            put("SMS Received Date",        "smsReceivedDate");
         }
     };
 }

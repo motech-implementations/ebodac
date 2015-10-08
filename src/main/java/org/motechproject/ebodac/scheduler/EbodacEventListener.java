@@ -8,6 +8,7 @@ import org.motechproject.ebodac.helper.IvrCallHelper;
 import org.motechproject.ebodac.service.ConfigService;
 import org.motechproject.ebodac.service.EbodacEnrollmentService;
 import org.motechproject.ebodac.service.EbodacService;
+import org.motechproject.ebodac.service.IvrAndSmsStatisticReportService;
 import org.motechproject.ebodac.service.ReportService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -41,6 +42,9 @@ public class EbodacEventListener {
     @Autowired
     private IvrCallHelper ivrCallHelper;
 
+    @Autowired
+    private IvrAndSmsStatisticReportService ivrAndSmsStatisticReportService;
+
     @MotechListener(subjects = {EbodacConstants.ZETES_UPDATE_EVENT})
     public void zetesUpdate(MotechEvent event) {
         Object zetesUrl = event.getParameters().get(EbodacConstants.ZETES_URL);
@@ -66,6 +70,7 @@ public class EbodacEventListener {
         DateTime startDate = (DateTime) event.getParameters().get(EbodacConstants.DAILY_REPORT_EVENT_START_DATE);
         LOGGER.info("Started generation of daily reports...");
         reportService.generateDailyReports();
+        ivrAndSmsStatisticReportService.generateDailyReports();
         LOGGER.info("Daily Reports generation completed");
     }
 

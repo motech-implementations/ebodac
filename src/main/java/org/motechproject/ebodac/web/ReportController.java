@@ -6,6 +6,8 @@ import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ebodac.constants.EbodacConstants;
+import org.motechproject.ebodac.domain.IvrAndSmsStatisticReport;
+import org.motechproject.ebodac.domain.IvrAndSmsStatisticReportDto;
 import org.motechproject.ebodac.domain.MissedVisitsReportDto;
 import org.motechproject.ebodac.domain.OptsOutOfMotechMessagesReportDto;
 import org.motechproject.ebodac.domain.SubjectEnrollments;
@@ -91,6 +93,8 @@ public class ReportController {
                 return getMandEMissedClinicVisitsReport(settings);
             case "optsOutOfMotechMessagesReport" :
                 return getOptsOutOfMotechMessagesReport(settings);
+            case "ivrAndSmsStatisticReport" :
+                return getIvrAndSmsStatisticReport(settings);
             default:
                 return null;
         }
@@ -212,6 +216,28 @@ public class ReportController {
         return ret;
     }
 
+    @RequestMapping(value = "/getLookupsForIvrAndSmsStatisticReport", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyRole('mdsDataAccess', 'manageEbodac')")
+    @ResponseBody
+    public List<LookupDto> getLookupsForIvrAndSmsStatisticReport() {
+        List<LookupDto> ret = new ArrayList<>();
+        List<LookupDto> availableLookups;
+        try {
+            availableLookups = lookupService.getAvailableLookups(IvrAndSmsStatisticReport.class.getName());
+        } catch (EbodacLookupException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+        List<String> lookupList = configService.getConfig().getAvailableLookupsForIvrAndSmsStatisticReport();
+
+        for (LookupDto lookupDto : availableLookups) {
+            if (lookupList.contains(lookupDto.getLookupName())) {
+                ret.add(lookupDto);
+            }
+        }
+        return ret;
+    }
+
     @RequestMapping(value = "/getLookupsForVisits", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('mdsDataAccess', 'manageEbodac')")
     @ResponseBody
@@ -293,6 +319,21 @@ public class ReportController {
             }
             QueryParams queryParams = QueryParamsBuilder.buildQueryParams(settings, getFields(settings.getFields()));
             return lookupService.getEntities(OptsOutOfMotechMessagesReportDto.class, SubjectEnrollments.class,
+                    settings.getLookup(), settings.getFields(), queryParams);
+        } catch (IOException | EbodacLookupException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new Records<Object>(null);
+        }
+    }
+
+    private Records<?> getIvrAndSmsStatisticReport(GridSettings settings) {
+        try {
+            settings = DtoLookupHelper.changeLookupAndOrderForIvrAndSmsStatisticReport(settings);
+            if(settings == null) {
+                return new Records<Object>(null);
+            }
+            QueryParams queryParams = QueryParamsBuilder.buildQueryParams(settings, getFields(settings.getFields()));
+            return lookupService.getEntities(IvrAndSmsStatisticReportDto.class, IvrAndSmsStatisticReport.class,
                     settings.getLookup(), settings.getFields(), queryParams);
         } catch (IOException | EbodacLookupException e) {
             LOGGER.error(e.getMessage(), e);
