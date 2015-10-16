@@ -35,12 +35,20 @@ public abstract class XlsBasicTemplate {
         this.outputStream = outputStream;
 
         try {
-           workbook = new HSSFWorkbook(getClass().getResourceAsStream(templatePath));
+            if(templatePath != null && !templatePath.isEmpty()) {
+                workbook = new HSSFWorkbook(getClass().getResourceAsStream(templatePath));
+                setStyleMap();
+                sheet = workbook.getSheetAt(0);
+            }
+            else {
+                workbook = new HSSFWorkbook();
+                setStyleMap();
+                sheet = workbook.createSheet();
+            }
         } catch (IOException e) {
             throw new EbodacExportException(e.getMessage(), e);
         }
-        setStyleMap();
-        sheet = workbook.getSheetAt(0);
+
         PrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setLandscape(true);
         sheet.setFitToPage(true);

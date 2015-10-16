@@ -25,7 +25,7 @@ public abstract class PdfBasicTemplate {
 
     private final AcroFields acroFields;
 
-    private final Rectangle nextPageRectangle;
+    private Rectangle nextPageRectangle;
 
     private final Rectangle firstPageRectangle;
 
@@ -76,5 +76,9 @@ public abstract class PdfBasicTemplate {
         } catch (DocumentException | IOException e) {
             throw new EbodacExportException(e.getMessage(), e);
         }
+    }
+
+    public void setNextPageRectangle(Rectangle nextPageRectangle) {
+        this.nextPageRectangle = nextPageRectangle;
     }
 }
