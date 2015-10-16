@@ -92,7 +92,8 @@ public class EbodacServiceImpl implements EbodacService {
         String username = config.getFtpsUsername();
         String password = config.getFtpsPassword();
         String directory = config.getFtpsDirectory();
-        if (!directory.endsWith(File.separator)) {
+        // Due to EBODAC-455 we have to add a contains method for windows users.
+        if (!directory.endsWith(File.separator)&& directory.contains(File.separator)) {
             directory += File.separator;
         }
         Integer port = config.getFtpsPort();

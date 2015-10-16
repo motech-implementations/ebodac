@@ -53,7 +53,8 @@ public class ConfigController {
     @ResponseBody
     public Config updateConfig(@RequestBody Config config) {
         String directory = config.getFtpsDirectory();
-        if (directory != null && !directory.endsWith(File.separator)) {
+        // Due to EBODAC-455 we have to add a contains method for windows users.
+        if (directory != null && !directory.endsWith(File.separator)&& directory.contains(File.separator)) {
             directory += File.separator;
         }
         config.setFtpsDirectory(directory);
