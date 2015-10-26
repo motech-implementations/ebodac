@@ -46,6 +46,8 @@ public class Config {
 
     private String lastCalculationDate;
 
+    private String lastCalculationDateForIvrReports;
+
     private Boolean generateReports;
 
     private Boolean showWarnings = true;
@@ -65,6 +67,8 @@ public class Config {
     private List<String> availableLookupsForMandEMissedClinicVisitsReport;
 
     private List<String> availableLookupsForOptsOutOfMotechMessagesReport;
+
+    private List<String> availableLookupsForIvrAndSmsStatisticReport;
 
     private List<String> availableLookupsForVisits;
 
@@ -238,6 +242,14 @@ public class Config {
         this.lastCalculationDate = lastCalculationDate;
     }
 
+    public String getLastCalculationDateForIvrReports() {
+        return lastCalculationDateForIvrReports;
+    }
+
+    public void setLastCalculationDateForIvrReports(String lastCalculationDateForIvrReports) {
+        this.lastCalculationDateForIvrReports = lastCalculationDateForIvrReports;
+    }
+
     public Boolean getGenerateReports() {
         return generateReports;
     }
@@ -341,6 +353,17 @@ public class Config {
 
     public void setAvailableLookupsForOptsOutOfMotechMessagesReport(List<String> availableLookupsForOptsOutOfMotechMessagesReport) {
         this.availableLookupsForOptsOutOfMotechMessagesReport = availableLookupsForOptsOutOfMotechMessagesReport;
+    }
+
+    public List<String> getAvailableLookupsForIvrAndSmsStatisticReport() {
+        if (availableLookupsForIvrAndSmsStatisticReport == null) {
+            availableLookupsForIvrAndSmsStatisticReport = new ArrayList<>();
+        }
+        return availableLookupsForIvrAndSmsStatisticReport;
+    }
+
+    public void setAvailableLookupsForIvrAndSmsStatisticReport(List<String> availableLookupsForIvrAndSmsStatisticReport) {
+        this.availableLookupsForIvrAndSmsStatisticReport = availableLookupsForIvrAndSmsStatisticReport;
     }
 
     public List<String> getAvailableLookupsForVisits() {
