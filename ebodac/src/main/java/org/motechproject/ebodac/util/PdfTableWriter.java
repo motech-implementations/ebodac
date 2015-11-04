@@ -3,6 +3,7 @@ package org.motechproject.ebodac.util;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -18,6 +19,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class PdfTableWriter implements TableWriter {
+
+    private static final float MARGIN = 36f;
+    private static final float PAGE_WIDTH = PageSize.A4.getHeight() - 2 * MARGIN;
 
     private PdfBasicTemplate template;
 
@@ -62,6 +66,8 @@ public class PdfTableWriter implements TableWriter {
     @Override
     public void close() {
         try {
+            dataTable.setTotalWidth(PAGE_WIDTH);
+            setTableWidths();
             ColumnText column = new ColumnText(template.getPdfStamper().getOverContent(1));
             column.setSimpleColumn(template.getFirstPageRectangle());
             column.addElement(dataTable);
@@ -73,6 +79,19 @@ public class PdfTableWriter implements TableWriter {
             template.close();
         } catch (DocumentException ex) {
             throw new DataExportException("Unable to add a table to the PDF file", ex);
+        }
+    }
+
+    private void setTableWidths() throws DocumentException{
+        String firstColumnContent = dataTable.getRow(0).getCells()[0].getPhrase().toString();
+        if(firstColumnContent.equals("[Participant Id]")) {
+            float totalWidth = dataTable.getTotalWidth();
+            float[] widths = new float[dataTable.getNumberOfColumns()];
+            widths[0] = (totalWidth / dataTable.getNumberOfColumns()) + 20f;
+            for (int i = 1; i < widths.length; i++) {
+                widths[i] = (totalWidth - widths[0]) / (dataTable.getNumberOfColumns() - 1);
+            }
+            dataTable.setWidths(widths);
         }
     }
 
