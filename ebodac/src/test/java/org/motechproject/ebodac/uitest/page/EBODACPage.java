@@ -12,6 +12,7 @@ public class EBODACPage extends AbstractBasePage {
     public static final String URL_PATH = "/home#/mds/dataBrowser";
 
     static final By PARTICIPANTS = By.linkText("Participants");
+    static final By VISITS = By.linkText("Visits");
     public EBODACPage(WebDriver driver) {
         super(driver);
     }
@@ -20,6 +21,12 @@ public class EBODACPage extends AbstractBasePage {
         clickWhenVisible(PARTICIPANTS);
 
     }
+
+    public void goToVisit() throws InterruptedException {
+        Thread.sleep(500);
+        clickWhenVisible(VISITS);
+    }
+
 
     @Override
     public String expectedUrlPath() {
