@@ -9,6 +9,16 @@
         $scope.screeningForPrint = {};
         $scope.selectedFilter = {};
 
+        $scope.availableExportRecords = ['All','10', '25', '50', '100', '250'];
+        $scope.availableExportFormats = ['pdf','xls'];
+        $scope.actualExportRecords = 'All';
+        $scope.actualExportColumns = 'All';
+        $scope.exportFormat = 'pdf';
+        $scope.checkboxModel = {
+            exportWithLookup : true,
+            exportWithOrder : false
+        };
+
         $scope.filters = [{
             name: $scope.msg('bookingApp.screening.today'),
             dateFilter: "TODAY"
@@ -147,6 +157,69 @@
 
             return startTime.hours < endTime.hours;
         }
+
+        $scope.exportEntityInstances = function () {
+            $scope.checkboxModel.exportWithLookup = false;
+            $('#exportBookingAppInstanceModal').modal('show');
+        };
+
+        $scope.changeExportRecords = function (records) {
+            $scope.actualExportRecords = records;
+        };
+
+        $scope.changeExportFormat = function (format) {
+            $scope.exportFormat = format;
+        };
+
+        $scope.closeExportEbodacInstanceModal = function () {
+            $('#exportBookingAppInstanceModal').resetForm();
+            $('#exportBookingAppInstanceModal').modal('hide');
+        };
+
+        $scope.exportInstance = function() {
+            var url, rows, page, sortColumn, sortDirection;
+
+            url = "../booking-app/exportInstances/screening";
+            url = url + "?outputFormat=" + $scope.exportFormat;
+            url = url + "&exportRecords=" + $scope.actualExportRecords;
+
+           if ($scope.checkboxModel.exportWithOrder === true) {
+               sortColumn = $('#screenings').getGridParam('sortname');
+               sortDirection = $('#screenings').getGridParam('sortorder');
+
+               url = url + "&sortColumn=" + sortColumn;
+               url = url + "&sortDirection=" + sortDirection;
+           }
+
+//           var day = new Date();
+//           var endDay = new Date();
+//           switch($scope.selectedFilter.dateFilter) {
+//               case "TODAY":
+//                   break;
+//               case "TOMORROW":
+//                   endDay.setDate(day.getDate()+1);
+//                   break;
+//               case "THIS_WEEK":
+//                   endDay.setDate(day.getDate()+7);
+//                   break;
+//           }
+//           $scope.dayString = $filter('date')(day,'yyyy.MM.dd');
+//           $scope.endDayString = $filter('date')(day,'yyyy.MM.dd');
+//           if ($scope.checkboxModel.exportWithLookup === true) {
+//               url = url + "&lookup=" + "Find By Date");
+//               url = url + "&fields=" + "{date = {min:" + $scope.dayString + ", max:" + $scope.endDayString + "}";
+//           }
+
+            $http.get(url)
+            .success(function () {
+                $('#exportBookingAppInstanceModal').resetForm();
+                $('#exportBookingAppInstanceModal').modal('hide');
+                window.location.replace(url);
+            })
+            .error(function (response) {
+                handleResponse('mds.error', 'mds.error.exportData', response);
+            });
+        };
 
         $scope.printRow = function(id) {
 
