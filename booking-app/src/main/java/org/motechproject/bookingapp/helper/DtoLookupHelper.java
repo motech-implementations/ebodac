@@ -34,11 +34,11 @@ public final class DtoLookupHelper {
         }
 
         if (StringUtils.isBlank(settings.getLookup())) {
-            settings.setLookup("Find Visits By Type Date Primer Vaccination Date And Participant Name");
+            settings.setLookup("Find By Type Date Primer Vaccination Date And Participant Name");
             fieldsMap.put(Visit.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
         } else {
             fieldsMap = getFieldsMap(settings.getFields());
-            if (settings.getLookup().equals("Find Visits By Participant Name")) {
+            if ("Find By Participant Name".equals(settings.getLookup())) {
                 settings.setLookup(settings.getLookup() + " Type Date And Primer Vaccination Date");
             } else {
                 settings.setLookup(settings.getLookup() + " Type Date Primer Vaccination Date And Participant Name");
@@ -98,7 +98,7 @@ public final class DtoLookupHelper {
             fieldsMap.put(VisitBookingDetails.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
         } else {
             fieldsMap = getFieldsMap(settings.getFields());
-            if (settings.getLookup().equals("Find Visits By Participant Name")) {
+            if ("Find By Participant Name".equals(settings.getLookup())) {
                 settings.setLookup(settings.getLookup() + " Visit Type And Participant Prime Vaccination Date");
             } else {
                 settings.setLookup(settings.getLookup() + " Visit Type And Participant Prime Vaccination Date And Name");
