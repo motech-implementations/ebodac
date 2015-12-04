@@ -460,6 +460,10 @@
             $scope.lookupRefresh = !$scope.lookupRefresh;
         };
 
+        $scope.refreshGridAndStayOnSamePage = function() {
+            $scope.gridRefresh = !$scope.gridRefresh;
+        }
+
         $scope.enroll = function(subjectId) {
             motechConfirm("ebodac.enrollSubject.ConfirmMsg", "ebodac.enrollSubject.ConfirmTitle",
                 function (response) {
@@ -470,12 +474,12 @@
                         $http.post('../ebodac/enrollSubject', subjectId)
                         .success(function(response) {
                             motechAlert('ebodac.web.enrollment.enrollSubject.success', 'ebodac.web.enrollment.enrolledSubject');
-                            $scope.refreshGrid();
+                            $scope.refreshGridAndStayOnSamePage();
                             $scope.enrollInProgress = false;
                         })
                         .error(function(response) {
                             motechAlert('ebodac.web.enrollment.enrollSubject.error', 'ebodac.web.enrollment.error', $scope.getMessageFromData(response));
-                            $scope.refreshGrid();
+                            $scope.refreshGridAndStayOnSamePage();
                             $scope.enrollInProgress = false;
                         });
                     }
@@ -492,12 +496,12 @@
                         $http.post('../ebodac/unenrollSubject', subjectId)
                         .success(function(response) {
                             motechAlert('ebodac.web.enrollment.unenrollSubject.success', 'ebodac.web.enrollment.unenrolledSubject');
-                            $scope.refreshGrid();
+                            $scope.refreshGridAndStayOnSamePage();
                             $scope.enrollInProgress = false;
                         })
                         .error(function(response) {
                             motechAlert('ebodac.web.enrollment.unenrollSubject.error', 'ebodac.web.enrollment.error', $scope.getMessageFromData(response));
-                            $scope.refreshGrid();
+                            $scope.refreshGridAndStayOnSamePage();
                             $scope.enrollInProgress = false;
                         });
                     }
@@ -542,17 +546,21 @@
             $scope.lookupRefresh = !$scope.lookupRefresh;
         };
 
+        $scope.refreshGridAndStayOnSamePage = function() {
+            $scope.gridRefresh = !$scope.gridRefresh;
+        }
+
         $scope.enroll = function(campaignName) {
             $scope.enrollInProgress = true;
             $http.get('../ebodac/enrollCampaign/' + $scope.selectedSubjectId + '/' + campaignName)
             .success(function(response) {
                 motechAlert('ebodac.web.enrollment.enrollSubject.success', 'ebodac.web.enrollment.enrolledSubject');
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             })
             .error(function(response) {
                 motechAlert('ebodac.web.enrollment.enrollSubject.error', 'ebodac.web.enrollment.error', $scope.getMessageFromData(response));
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             });
         }
@@ -562,12 +570,12 @@
             $http.get('../ebodac/unenrollCampaign/' + $scope.selectedSubjectId + '/' + campaignName)
             .success(function(response) {
                 motechAlert('ebodac.web.enrollment.unenrollSubject.success', 'ebodac.web.enrollment.unenrolledSubject');
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             })
             .error(function(response) {
                 motechAlert('ebodac.web.enrollment.unenrollSubject.error', 'ebodac.web.enrollment.error', $scope.getMessageFromData(response));
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             });
         }
@@ -577,12 +585,12 @@
             $http.get('../ebodac/reenrollCampaign/' + $scope.selectedSubjectId + '/' + campaignName + '/' + date)
             .success(function(response) {
                 motechAlert('ebodac.web.enrollment.reenrollSubject.success', 'ebodac.web.enrollment.reenrolledSubject');
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             })
             .error(function(response) {
                 motechAlert('ebodac.web.enrollment.reenrollSubject.error', 'ebodac.web.enrollment.error', $scope.getMessageFromData(response));
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             });
         }
@@ -592,12 +600,12 @@
             $http.get('../ebodac/enrollCampaignWithNewDate/' + $scope.selectedSubjectId + '/' + campaignName + '/' + date)
             .success(function(response) {
                 motechAlert('ebodac.web.enrollment.enrollSubject.success', 'ebodac.web.enrollment.enrolledSubject');
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             })
             .error(function(response) {
                 motechAlert('ebodac.web.enrollment.enrollSubject.error', 'ebodac.web.enrollment.error', $scope.getMessageFromData(response));
-                $scope.refreshGrid();
+                $scope.refreshGridAndStayOnSamePage();
                 $scope.enrollInProgress = false;
             });
         }
