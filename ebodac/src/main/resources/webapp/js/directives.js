@@ -228,6 +228,13 @@
                         }
                     }).trigger('reloadGrid');
                 });
+
+                scope.$watch("gridRefresh", function () {
+                    $('#' + attrs.id).jqGrid('setGridParam', {
+                        postData: {
+                        }
+                    }).trigger('reloadGrid');
+                });
             }
         };
     });
@@ -350,6 +357,13 @@
                 scope.$watch("lookupRefresh", function () {
                     $('#' + attrs.id).jqGrid('setGridParam', {
                         page: 1,
+                        postData: {
+                        }
+                    }).trigger('reloadGrid');
+                });
+
+                scope.$watch("gridRefresh", function () {
+                    $('#' + attrs.id).jqGrid('setGridParam', {
                         postData: {
                         }
                     }).trigger('reloadGrid');
