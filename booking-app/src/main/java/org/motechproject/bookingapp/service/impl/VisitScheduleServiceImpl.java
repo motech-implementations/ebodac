@@ -41,7 +41,7 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
     @Override
     public Map<String, String> getPrimeVaccinationDateAndDateRange(String subjectId) {
 
-        Subject subject = subjectDataService.findSubjectBySubjectId(subjectId);
+        Subject subject = subjectDataService.findBySubjectId(subjectId);
 
         LocalDate primeVacDate = null;
         LocalDate earliestDate = null;
@@ -83,7 +83,7 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
     public Map<String, String> calculatePlannedVisitDates(String subjectId, LocalDate primeVaccinationDate) {
         Map<String, String> plannedDates = new HashMap<>();
 
-        Subject subject = subjectDataService.findSubjectBySubjectId(subjectId);
+        Subject subject = subjectDataService.findBySubjectId(subjectId);
 
         if (subject == null) {
             throw new VisitScheduleException(String.format("Cannot calculate Planned Dates, because Participant with Id: %s not found", subjectId));
@@ -114,7 +114,7 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
 
     @Override
     public void savePlannedVisitDates(String subjectId, LocalDate primeVaccinationDate) {
-        Subject subject = subjectDataService.findSubjectBySubjectId(subjectId);
+        Subject subject = subjectDataService.findBySubjectId(subjectId);
 
         if (subject == null) {
             throw new VisitScheduleException(String.format("Cannot save Planned Dates, because Participant with Id: %s not found", subjectId));

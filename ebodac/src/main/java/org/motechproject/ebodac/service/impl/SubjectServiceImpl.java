@@ -90,12 +90,12 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> findSubjectByName(String name) {
-        return subjectDataService.findSubjectsByName(name);
+        return subjectDataService.findByName(name);
     }
 
     @Override
     public Subject findSubjectBySubjectId(String subjectId) {
-        return subjectDataService.findSubjectBySubjectId(subjectId);
+        return subjectDataService.findBySubjectId(subjectId);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> findModifiedSubjects() {
-        return subjectDataService.findSubjectsByModified(true);
+        return subjectDataService.findByModified(true);
     }
 
     @Override
@@ -125,12 +125,12 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> findSubjectsPrimerVaccinatedAtDay(LocalDate date) {
-        return subjectDataService.findSubjectsByPrimerVaccinationDate(date);
+        return subjectDataService.findByPrimerVaccinationDate(date);
     }
 
     @Override
     public List<Subject> findSubjectsBoosterVaccinatedAtDay(LocalDate date) {
-        return subjectDataService.findSubjectsByBoosterVaccinationDate(date);
+        return subjectDataService.findByBoosterVaccinationDate(date);
     }
 
     @Override
