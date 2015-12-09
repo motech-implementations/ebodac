@@ -15,6 +15,8 @@ public class VisitBookingDetails {
     public static final String VISIT_PLANNED_DATE_PROPERTY_NAME = "visit.motechProjectedDate";
     public static final String SUBJECT_PRIME_VACCINATION_DATE_PROPERTY_NAME = "subject.primerVaccinationDate";
     public static final String SUBJECT_NAME_PROPERTY_NAME = "subject.name";
+    public static final String PLANNED_DATE_PROPERTY_NAME = "bookingPlannedDate";
+
 
     @Field
     private Long id;

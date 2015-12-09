@@ -352,6 +352,13 @@
             rowId + ')">' + '<i class="fa fa-fw fa-print"></i>' + '</button>'
         }
 
+        function handleUndefined(value) {
+            if (value == undefined) {
+                value = "";
+            }
+            return value;
+        }
+
         function extendGrid(cellValue, options, rowObject) {
             var rowExtraData = {};
 
@@ -444,6 +451,17 @@
                     viewrecords: true,
                     gridview: true,
                     loadOnce: false,
+                    postData: {
+                        startDate: function() {
+                            return handleUndefined(scope.selectedFilter.startDate);
+                        },
+                        endDate: function() {
+                            return handleUndefined(scope.selectedFilter.endDate);
+                        },
+                        dateFilter: function() {
+                            return handleUndefined(scope.selectedFilter.dateFilter);
+                        }
+                    },
                     beforeSelectRow: function() {
                         return false;
                     },

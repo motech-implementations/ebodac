@@ -148,6 +148,20 @@
             exportWithFilter : true
         };
 
+        $scope.filters = [{
+            name: $scope.msg('bookingApp.screening.today'),
+            dateFilter: "TODAY"
+        },{
+            name: $scope.msg('bookingApp.screening.tomorrow'),
+            dateFilter: "TOMORROW"
+        },{
+            name: $scope.msg('bookingApp.screening.thisWeek'),
+            dateFilter: "THIS_WEEK"
+        },{
+            name: $scope.msg('bookingApp.screening.dateRange'),
+            dateFilter: "DATE_RANGE"
+        }];
+
         $scope.exportEntityInstances = function () {
             $scope.checkboxModel.exportWithFilter = true;
             $('#exportBookingAppInstanceModal').modal('show');
@@ -421,39 +435,52 @@
             }
             return map;
         };
+
+        $scope.exportInstance = function() {
+            var sortColumn, sortDirection, url = "../booking-app/exportInstances/screening";
+            url = url + "?outputFormat=" + $scope.exportFormat;
+            url = url + "&exportRecords=" + $scope.actualExportRecords;
+
+            if ($scope.checkboxModel.exportWithFilter === true) {
+                url = url + "&dateFilter=" + $scope.selectedFilter.dateFilter;
+
+                if ($scope.selectedFilter.startDate) {
+                    url = url + "&startDate=" + $scope.selectedFilter.startDate;
+                }
+
+                if ($scope.selectedFilter.endDate) {
+                    url = url + "&endDate=" + $scope.selectedFilter.endDate;
+                }
+            }
+
+            if ($scope.checkboxModel.exportWithOrder === true) {
+                sortColumn = $('#screenings').getGridParam('sortname');
+                sortDirection = $('#screenings').getGridParam('sortorder');
+
+                url = url + "&sortColumn=" + sortColumn;
+                url = url + "&sortDirection=" + sortDirection;
+            }
+
+            $scope.exportInstanceWithUrl(url);
+        };
+
     });
 
     controllers.controller('BookingAppScreeningCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
 
         $scope.getLookups("../booking-app/screenings/getLookupsForScreening");
 
-        $scope.filters = [{
-            name: $scope.msg('bookingApp.screening.today'),
-            dateFilter: "TODAY"
-        },{
-            name: $scope.msg('bookingApp.screening.tomorrow'),
-            dateFilter: "TOMORROW"
-        },{
-            name: $scope.msg('bookingApp.screening.thisWeek'),
-            dateFilter: "THIS_WEEK"
-        },{
-            name: $scope.msg('bookingApp.screening.dateRange'),
-            dateFilter: "DATE_RANGE"
-        }];
+        $scope.newForm = function(type) {
+            $scope.form = {};
+            $scope.form.type = type;
+            $scope.form.dto = {};
+        };
 
         $scope.selectedFilter = $scope.filters[0];
 
         $scope.selectFilter = function(value) {
             $scope.selectedFilter = $scope.filters[value];
-            if (value !== 3) {
-                $("#screenings").trigger('reloadGrid');
-            }
-        };
-
-        $scope.newForm = function(type) {
-            $scope.form = {};
-            $scope.form.type = type;
-            $scope.form.dto = {};
+            $scope.refreshGrid();
         };
 
         $scope.addScreening = function() {
@@ -581,6 +608,13 @@
         $scope.form = {};
         $scope.form.dto = {};
 
+        $scope.selectedFilter = $scope.filters[0];
+
+        $scope.selectFilter = function(value) {
+            $scope.selectedFilter = $scope.filters[value];
+            $scope.refreshGrid();
+        };
+
         $scope.newForm = function() {
             $scope.form = {};
             $scope.form.dto = {};
@@ -669,6 +703,26 @@
             var sortColumn, sortDirection, url = "../booking-app/exportInstances/primeVaccinationSchedule";
             url = url + "?outputFormat=" + $scope.exportFormat;
             url = url + "&exportRecords=" + $scope.actualExportRecords;
+
+            if ($scope.checkboxModel.exportWithFilter === true) {
+                url = url + "&dateFilter=" + $scope.selectedFilter.dateFilter;
+
+                if ($scope.selectedFilter.startDate) {
+                    url = url + "&startDate=" + $scope.selectedFilter.startDate;
+                }
+
+                if ($scope.selectedFilter.endDate) {
+                    url = url + "&endDate=" + $scope.selectedFilter.endDate;
+                }
+            }
+
+            if ($scope.checkboxModel.exportWithOrder === true) {
+                sortColumn = $('#screenings').getGridParam('sortname');
+                sortDirection = $('#screenings').getGridParam('sortorder');
+
+                url = url + "&sortColumn=" + sortColumn;
+                url = url + "&sortDirection=" + sortDirection;
+            }
 
             $scope.exportInstanceWithUrl(url);
         };

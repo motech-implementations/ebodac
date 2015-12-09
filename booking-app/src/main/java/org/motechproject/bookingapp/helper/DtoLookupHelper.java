@@ -60,23 +60,41 @@ public final class DtoLookupHelper {
     }
 
     public static BookingGridSettings changeLookupForPrimeVaccinationSchedule(BookingGridSettings settings) throws IOException {
-        Map<String, String> fieldsMap = new HashMap<>();
+        Map<String, Object> fieldsMap = new HashMap<>();
+        DateFilter dateFilter = settings.getDateFilter();
 
         if (StringUtils.isBlank(settings.getFields())) {
             settings.setFields("{}");
         }
 
-        if (StringUtils.isBlank(settings.getLookup())) {
+        if(dateFilter != null) {
+            if (StringUtils.isBlank(settings.getLookup())) {
+                settings.setLookup("Find By Participant Name Prime Vaccination Date And Visit Type And Booking Planned Date");
+                fieldsMap.put(VisitBookingDetails.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
+            } else {
+                fieldsMap = getFields(settings.getFields());
+                if ("Find By Participant Name".equals(settings.getLookup())) {
+                    settings.setLookup(settings.getLookup() + " Prime Vaccination Date And Visit Type And Booking Planned Date");
+                } else {
+                    settings.setLookup(settings.getLookup() + " Visit Type And Participant Prime Vaccination Date And Name And Booking Planned Date");
+                    fieldsMap.put(Visit.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
+                }
+            }
+
+            Map<String, String> rangeMap = new HashMap<>();
+            if (DateFilter.DATE_RANGE.equals(dateFilter)) {
+                rangeMap.put("min", settings.getStartDate());
+                rangeMap.put("max", settings.getEndDate());
+            } else {
+                Range<LocalDate> dateRange = dateFilter.getRange();
+                rangeMap.put("min", dateRange.getMin().toString(BookingAppConstants.SIMPLE_DATE_FORMAT));
+                rangeMap.put("max", dateRange.getMax().toString(BookingAppConstants.SIMPLE_DATE_FORMAT));
+            }
+
+            fieldsMap.put(VisitBookingDetails.PLANNED_DATE_PROPERTY_NAME, rangeMap);
+        } else {
             settings.setLookup("Find By Participant Name Prime Vaccination Date And Visit Type");
             fieldsMap.put(VisitBookingDetails.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
-        } else {
-            fieldsMap = getFieldsMap(settings.getFields());
-            if ("Find By Participant Name".equals(settings.getLookup())) {
-                settings.setLookup(settings.getLookup() + " Prime Vaccination Date And Visit Type");
-            } else {
-                settings.setLookup(settings.getLookup() + " Visit Type And Participant Prime Vaccination Date And Name");
-                fieldsMap.put(Visit.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
-            }
         }
 
         fieldsMap.put(VisitBookingDetails.VISIT_TYPE_PROPERTY_NAME, VisitType.PRIME_VACCINATION_DAY.toString());
