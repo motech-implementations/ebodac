@@ -534,14 +534,39 @@
                 var bookingId = $scope.screeningForPrint.volunteer.id;
                 var date = $scope.screeningForPrint.date;
             }
+            /**
+             * Changes for the export in printing paper of the card
+             * The solution should be split by iexplorer Edge and other browsers (even iexplorer 10)
+             * 
+             */
+            var winPrint = window.open("../booking-app/resources/partials/screeningCard.html");
+                    
+            if (navigator.userAgent.indexOf(".NET4") > -1) {
+            	// iexplorer
+            	 var windowOnload = winPrint.onload || function() {
+                 	
+                     $('#bookingId', winPrint.document).html(bookingId);
+                     $('#screeningDate', winPrint.document).html(date);
+                     
+                     winPrint.focus();
+                     winPrint.print();
 
-            var winPrint = window.open("../booking-app/resources/partials/card/screeningCard.html");
-            winPrint.onload = function() {
-                $('#bookingId', winPrint.document).html(bookingId);
-                $('#screeningDate', winPrint.document).html(date);
+                 };
+                                 
+                 winPrint.onload = new function() { windowOnload(); } ;
+            }else{
+            	// Rest of browsers
+            	var onloadFunction = function() {
+                    
+                    $('#bookingId', winPrint.document).html(bookingId);
+                    $('#screeningDate', winPrint.document).html(date);
 
-                winPrint.focus();
-                winPrint.print();
+                    winPrint.focus();
+                    winPrint.print();
+                    
+                };
+                
+                winPrint.onload =  onloadFunction;
             }
         }
     });
