@@ -4,6 +4,7 @@ public enum VisitType {
     SCREENING("Screening"),
     PRIME_VACCINATION_DAY("Prime Vaccination Day"),
     PRIME_VACCINATION_FOLLOW_UP_VISIT("Prime Vaccination Follow-up visit"),
+    PRIME_VACCINATION_DAY_SECOND_FOLLOW_UP_VISIT("Prime Vaccination Day Second Follow-up visit"),
     BOOST_VACCINATION_DAY("Boost Vaccination Day"),
     BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT("Boost Vaccination First Follow-up visit"),
     BOOST_VACCINATION_SECOND_FOLLOW_UP_VISIT("Boost Vaccination Second Follow-up visit"),
