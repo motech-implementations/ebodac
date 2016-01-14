@@ -16,8 +16,8 @@ import java.io.OutputStream;
 
 public abstract class PdfBasicTemplate {
 
-    public static final Font TABLE_FONT = new Font(Font.FontFamily.HELVETICA, 6);
-    public static final Font HEADER_FONT = new Font(Font.FontFamily.HELVETICA, 7, Font.BOLD);
+    public static Font TABLE_FONT = new Font(Font.FontFamily.HELVETICA, 8);
+    public static Font HEADER_FONT = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
 
     private static final Rectangle NEXT_PAGE_RECTANGLE = new Rectangle(20, 36, 580, 762);
 
