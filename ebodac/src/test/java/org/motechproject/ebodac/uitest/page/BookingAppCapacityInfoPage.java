@@ -22,7 +22,7 @@ public class BookingAppCapacityInfoPage extends AbstractBasePage {
     static final By START_DATE = By.xpath("//input[@ng-model='selectedFilter.startDate']");
     static final By END_DATE = By.xpath("//input[@ng-model='selectedFilter.endDate']");
     static final By FIRST_DAY = By.linkText("1");
-    static final By LAST_DAY = By.linkText("28");
+    static final By LAST_DAY = By.linkText("29");
 
     public BookingAppCapacityInfoPage(WebDriver driver) {
         super(driver);

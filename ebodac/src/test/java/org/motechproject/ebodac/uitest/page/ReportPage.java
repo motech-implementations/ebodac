@@ -15,6 +15,8 @@ public class ReportPage extends AbstractBasePage {
 
     static final By FOLLOW_UPS_AFTER_PRIME_INJECTION_REPORT = By.linkText("Follow-ups After Prime Injection Report");
 
+    static final By PARTICIPANT_WHO_OPT_OUT_OF_RECEIVING_MOTECH_MESSAGES_REPORT =By.linkText("Participants Who Opt Out of Receiving MOTECH Messages");
+
     public ReportPage(WebDriver driver) {
         super(driver);
     }
@@ -31,6 +33,9 @@ public class ReportPage extends AbstractBasePage {
         clickWhenVisible(FOLLOW_UPS_AFTER_PRIME_INJECTION_REPORT);
     }
 
+    public void showParticipantWhoOptOutofReceivingMOTECHMessagesReport () throws InterruptedException{
+        clickWhenVisible(PARTICIPANT_WHO_OPT_OUT_OF_RECEIVING_MOTECH_MESSAGES_REPORT);
+    }
     @Override
     public String expectedUrlPath() {
         return URL_ROOT + URL_PATH;
