@@ -69,3 +69,10 @@
     background-color: white;
     cursor: auto;
 }
+
+.ui-priority-secondary,
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-header .ui-priority-secondary {
+    opacity: 1;
+    font-weight: bold;
+}
