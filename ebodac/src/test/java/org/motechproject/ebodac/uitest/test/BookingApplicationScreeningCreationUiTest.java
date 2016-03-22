@@ -36,7 +36,7 @@ public class BookingApplicationScreeningCreationUiTest extends TestBase {
             loginPage.login(user, password);
         }
     }
-
+    @Ignore
     @Test
     public void bookingApplicationScreeningCreationTest() throws InterruptedException {
         ArrayList<Date> dates = new ArrayList<>();

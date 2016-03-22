@@ -13,7 +13,7 @@ import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
 import org.motechproject.ebodac.uitest.page.*;
 
 import static junit.framework.Assert.assertTrue;
-@Ignore
+
 public class GetVisitDataFromRAVEUiTest extends TestBase {
     private LoginPage loginPage;
     private HomePage homePage;
@@ -42,6 +42,7 @@ public class GetVisitDataFromRAVEUiTest extends TestBase {
         raveSettingsHelper = new RAVESettingsHelper(driver);
     }
 
+    @Ignore
     @Test//Test for EBODAC-512
     public void getVisitDataFromRAVETest() throws Exception {
         if(homePage.expectedUrlPath() != currentPage().urlPath()) {
