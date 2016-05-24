@@ -23,6 +23,7 @@ public class HomePage extends AbstractBasePage {
     static final By BOOKING_APP = By.linkText("Booking App");
     static final By ADMIN = By.linkText("Admin");
     static final int SLEEP_500 = 500;
+    static final int SLEEP_1000 = 1000;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -160,7 +161,7 @@ public class HomePage extends AbstractBasePage {
 
     public void openIVRModule() throws InterruptedException {
         clickWhenVisible(IVR);
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_1000);
         clickWhenVisible(IVR);
     }
 }
