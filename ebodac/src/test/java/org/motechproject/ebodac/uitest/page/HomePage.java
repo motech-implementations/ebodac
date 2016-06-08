@@ -1,6 +1,6 @@
 package org.motechproject.ebodac.uitest.page;
 
-import org.motech.page.AbstractBasePage;
+import org.motechproject.uitest.page.AbstractBasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import java.lang.Override;
@@ -22,6 +22,9 @@ public class HomePage extends AbstractBasePage {
     static final By MODULES = By.linkText("Modules");
     static final By BOOKING_APP = By.linkText("Booking App");
     static final By ADMIN = By.linkText("Admin");
+    static final By USER_LANGUAGE_CONTROL = By.cssSelector("span.ng-binding");
+    static final By LANGUAGE_PL = By.linkText("Polski");
+    static final By POPUP_OK = By.id("popup_ok");
     static final int SLEEP_500 = 500;
     static final int SLEEP_1000 = 1000;
 
@@ -31,9 +34,13 @@ public class HomePage extends AbstractBasePage {
 
     @Override
     public String expectedUrlPath() {
-        return URL_ROOT + URL_PATH;
+        return getServerURL() + URL_PATH;
     }
 
+    @Override
+    public void goToPage() {
+
+    }
     public void openEBODACModule() throws InterruptedException {
         clickWhenVisible(EBODAC);
     }
@@ -163,5 +170,11 @@ public class HomePage extends AbstractBasePage {
         clickWhenVisible(IVR);
         Thread.sleep(SLEEP_1000);
         clickWhenVisible(IVR);
+    }
+
+    public void changeUserLanguage() throws InterruptedException {
+        clickWhenVisible(USER_LANGUAGE_CONTROL);
+        clickWhenVisible(LANGUAGE_PL);
+        clickWhenVisible(POPUP_OK);
     }
 }

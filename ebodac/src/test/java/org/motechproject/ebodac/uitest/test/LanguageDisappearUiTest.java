@@ -10,19 +10,18 @@ import org.motechproject.ebodac.uitest.page.HomePage;
 import org.motechproject.ebodac.uitest.page.ParticipantEditPage;
 import org.motechproject.ebodac.uitest.page.ParticipantPage;
 
-import static org.junit.Assert.assertTrue;
 
+public class LanguageDisappearUiTest extends TestBase {
 
-public class DisplayOfSubjectVisitInTabularFormatUiTest extends TestBase {
     private LoginPage loginPage;
     private HomePage homePage;
-    private ParticipantPage participantPage;
-    private ParticipantEditPage participantEditPage;
     private String user;
     private String password;
+    private ParticipantPage participantPage;
+    private ParticipantEditPage participantEditPage;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         user = getTestProperties().getUserName();
         password = getTestProperties().getPassword();
         loginPage = new LoginPage(getDriver());
@@ -36,10 +35,12 @@ public class DisplayOfSubjectVisitInTabularFormatUiTest extends TestBase {
     }
 
     @Test
-    public void displayOfSubjectVisitInTabularFormatTest() throws Exception {
+    public void languagedisappearTest() throws Exception {
+        homePage.openEBODACModule();
+        homePage.changeUserLanguage();
         homePage.openEBODACModule();
         participantPage.openFirstParticipant();
-        assertTrue(participantEditPage.isTable());
+        participantEditPage.changeLanguage("1");
     }
 
     @After

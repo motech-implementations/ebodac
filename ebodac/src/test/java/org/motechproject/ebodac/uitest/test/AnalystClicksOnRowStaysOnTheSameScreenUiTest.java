@@ -1,61 +1,62 @@
 package org.motechproject.ebodac.uitest.test;
 
-import org.junit.After;
-import org.junit.Assert;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.motechproject.ebodac.uitest.page.EBODACPage;
+import org.motechproject.ebodac.uitest.page.EnrollmentPage;
+import org.motechproject.ebodac.uitest.page.HomePage;
 import org.motechproject.uitest.page.LoginPage;
 import org.motechproject.uitest.TestBase;
 import org.motechproject.ebodac.uitest.helper.CreateUsersHelper;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
 import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
 import org.motechproject.ebodac.uitest.helper.UserPropertiesHelper;
-import org.motechproject.ebodac.uitest.page.HomePage;
 
-public class AdminAccessOnlyToEbodacUiTest extends TestBase {
+import static org.junit.Assert.assertFalse;
+
+public class AnalystClicksOnRowStaysOnTheSameScreenUiTest extends TestBase {
 
     private LoginPage loginPage;
     private HomePage homePage;
-    private String l1AdminUser;
-    private String l1AdminPassword;
-    private UITestHttpClientHelper httpClientHelper;
+    private EBODACPage ebodacPage;
+    private EnrollmentPage enrollmentsPage;
+    private String l1analystUser;
+    private String l1analystpassword;
     private UserPropertiesHelper userPropertiesHelper;
+    private UITestHttpClientHelper httpClientHelper;
     private CreateUsersHelper createUsersHelper;
     private String url;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws  Exception {
         url = getServerUrl();
         if (url.contains("localhost")) {
             createUsersHelper = new CreateUsersHelper(getDriver());
             createUsersHelper.createUsersWithLogin(getTestProperties());
-            logout();
         }
+        ebodacPage = new EBODACPage(getDriver());
+        enrollmentsPage = new EnrollmentPage(getDriver());
         userPropertiesHelper = new UserPropertiesHelper();
-        l1AdminUser = userPropertiesHelper.getAdminUserName();
-        l1AdminPassword = userPropertiesHelper.getAdminPassword();
+        l1analystUser = userPropertiesHelper.getAnalystUserName();
+        l1analystpassword = userPropertiesHelper.getAnalystPassword();
         loginPage = new LoginPage(getDriver());
         homePage = new HomePage(getDriver());
         if (url.contains("localhost")) {
             httpClientHelper = new UITestHttpClientHelper(url);
-            httpClientHelper.addParticipant(new TestParticipant() , l1AdminUser , l1AdminPassword);
         }
         if (homePage.expectedUrlPath() != currentPage().urlPath()) {
             loginPage.goToPage();
-            loginPage.login(l1AdminUser, l1AdminPassword);
+            loginPage.login(l1analystUser, l1analystpassword);
         }
     }
 
-    @Ignore
-    @Test //Test for EBODAC-531
-    public void adminAccessOnlyToEbodacUiTest() throws Exception {
-        homePage.clickModules();
-        Assert.assertFalse(homePage.isElementPresent(homePage.DATA_SERVICES));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        logout();
+    @Test
+    public void analystClicksOnRowStaysOnTheSameScreenTest() throws InterruptedException {
+        homePage.openEBODACModule();
+        ebodacPage.goToEnrollment();
+        assertFalse(enrollmentsPage.checkEnroll());
     }
 }
+
+
+
