@@ -13,6 +13,8 @@ public class BookingAppPage extends AbstractBasePage {
     public static final By ADVANCED_SETTINGS = By.linkText("Advanced Settings");
     public static final By SCREENING = By.linkText("Screening");
     public static final By RESCHEDULE_VISIT = By.linkText("Visit Schedule/Reschedule");
+    public static final By PRIME_VACCINATION = By.linkText("Prime Vaccination");
+    public static final By CLINIC_VISIT_SCHEDULE = By.linkText("Prime Vacc. 1st Follow-up");
 
     public BookingAppPage(WebDriver driver) {
         super(driver);
@@ -32,6 +34,14 @@ public class BookingAppPage extends AbstractBasePage {
 
     public void openRescheduleVisit() throws InterruptedException {
         clickWhenVisible(RESCHEDULE_VISIT);
+    }
+
+    public void openPrimeVaccination() throws InterruptedException {
+        clickWhenVisible(PRIME_VACCINATION);
+    }
+
+    public void openClinicVisitSchedule() throws InterruptedException {
+        clickWhenVisible(CLINIC_VISIT_SCHEDULE);
     }
 
     @Override
