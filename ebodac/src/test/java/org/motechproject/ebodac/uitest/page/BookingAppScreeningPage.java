@@ -5,7 +5,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.motechproject.uitest.page.AbstractBasePage;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -57,7 +56,7 @@ public class BookingAppScreeningPage extends AbstractBasePage {
     static final By START_TIME_PICKER = By.xpath("//input[@ng-model='form.dto.startTime']");
     static final By NOW_BUTTON = By.xpath("//button[@data-handler='today']");
     static final By CLINIC_LOCATION_DROP_DOWN = By.xpath("//span[contains(text(), '- Please Choose -')]");
-    static final By CLINIC_LOCACATION_INPUT = By.xpath("//input[@role='combobox']");
+    static final By CLINIC_LOCACATION_KAMBIA_I = By.xpath("//div[contains(text(), 'Kambia I')]");
     static final By SAVE_BUTTON_NG_CLICK = By.xpath("//button[@ng-click='saveScreening(false)']");
     static final By CONFIRM_BUTTON = By.id("popup_ok");
     static final int SLEEP_1000 = 1000;
@@ -114,8 +113,7 @@ public class BookingAppScreeningPage extends AbstractBasePage {
         clickWhenVisible(DONE_BUTTON);
         clickWhenVisible(CLINIC_LOCATION_DROP_DOWN);
         sleep(SLEEP_1000);
-        findElement(CLINIC_LOCACATION_INPUT).sendKeys("k");
-        findElement(CLINIC_LOCACATION_INPUT).sendKeys(Keys.ENTER);
+        clickWhenVisible(CLINIC_LOCACATION_KAMBIA_I);
         clickWhenVisible(SAVE_BUTTON_NG_CLICK);
     }
 

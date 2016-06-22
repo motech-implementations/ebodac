@@ -19,7 +19,7 @@ public class BookingApplicationBindRoomMaxScreeningVisitValueUiTest extends Test
     private String user;
     private String password;
     static final int START_LOOP = 0;
-    static final int END_LOOP = 6;
+    static final int END_LOOP = 5;
 
     @Before
     public void setUp() {
@@ -41,7 +41,7 @@ public class BookingApplicationBindRoomMaxScreeningVisitValueUiTest extends Test
         homePage.clickModules();
         homePage.openBookingAppModule();
         bookingAppPage.openScreening();
-        for(int i = START_LOOP; i < END_LOOP; i++) {
+        for (int i = START_LOOP; i < END_LOOP; i++) {
             bookingAppScreeningPage.bookVisitForScreening();
             bookingAppScreeningPage.confirmBookVistiForScreening();
             bookingAppScreeningPage.clickOnButtonToAddAnotherScreening();
