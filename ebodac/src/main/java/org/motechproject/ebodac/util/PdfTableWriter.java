@@ -59,6 +59,7 @@ public class PdfTableWriter implements TableWriter {
         for (String header: headers) {
             PdfPCell cell = new PdfPCell(new Paragraph(header, PdfBasicTemplate.HEADER_FONT));
             cell.setBackgroundColor(BaseColor.GRAY);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(CELL_PADDING_BOTTOM);
