@@ -59,7 +59,7 @@ public class EBODACPage extends AbstractBasePage {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
-            getLogger().error("sleep - Exception . Reason : " + e.getLocalizedMessage(), e);
+            getLogger().error("sleep - Exc. Reason : " + e.getLocalizedMessage(), e);
         }
 
     }
@@ -96,16 +96,15 @@ public class EBODACPage extends AbstractBasePage {
 
         } catch (NullPointerException e) {
             status = false;
-            getLogger().error("findByParticipantID - NullPointerException . Reason : " + e.getLocalizedMessage(), e);
+            getLogger().error("findByParticipantID - NPE. Reason : " + e.getLocalizedMessage(), e);
         } catch (Exception e) {
             status = false;
-            getLogger().error("findByParticipantID - Exception . Reason : " + e.getLocalizedMessage(), e);
+            getLogger().error("findByParticipantID - Exc. Reason : " + e.getLocalizedMessage(), e);
         }
         return status;
     }
 
     public void showEmailExport() throws InterruptedException {
         clickWhenVisible(EMAIL_REPORTS);
-        
     }
 }
