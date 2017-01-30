@@ -4,163 +4,61 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.uitest.page.LoginPage;
-
-import com.mchange.util.AssertException;
-
-import org.motechproject.uitest.TestBase;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
-import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
-import org.motechproject.ebodac.uitest.page.BookingAppPage;
-import org.motechproject.ebodac.uitest.page.BookingAppScreeningPage;
 import org.motechproject.ebodac.uitest.page.HomePage;
-
-import java.util.ArrayList;
+import org.motechproject.ebodac.uitest.page.bookingapp.BookingAppPage;
+import org.motechproject.ebodac.uitest.page.bookingapp.BookingAppScreeningPage;
 
 import static org.junit.Assert.assertTrue;
 
-public class BookingApplicationScreeningCreationUiTest extends TestBase {
-    private static final int SIX = 6;
-    private static final int FIVE = 5;
-    private static final int FOUR = 4;
-    private static final int THREE = 3;
-    private static final int TWO = 2;
-    private static final int ONE = 1;
-    private static final int ZERO = 0;
-    private static final String DOT = ". ";
-    private static final String EMPTY = "";
-    private static final String NEXT_7_DAYS = "Next 7 days";
-    private static final String NEXT_3_DAYS = "Next 3 days";
-    private static final String DAY_AFTER_TOMORROW = "Day after tomorrow";
-    private static final String TOMORROW = "Tomorrow";
+public class BookingApplicationScreeningCreationUiTest extends EbodacTestBase {
+
     private static final String TODAY = "Today";
+    private static final String TOMORROW = "Tomorrow";
+    private static final String DAY_AFTER_TOMORROW = "Day after tomorrow";
+    private static final String NEXT_3_DAYS = "Next 3 days";
+    private static final String NEXT_7_DAYS = "Next 7 days";
     private static final String DATE_RANGE = "Date range";
-    private String url;
-    private static final String LOCAL_TEST_MACHINE = "localhost";
-    private static final long SLEEP_2SEC = 2000;
-    private UITestHttpClientHelper httpClientHelper;
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private BookingAppPage bookingAppPage;
+
+    private static final LocalDate TODAY_DATE = LocalDate.now();
+    private static final LocalDate TOMORROW_DATE = LocalDate.now().plusDays(1);
+    private static final LocalDate DAY_AFTER_TOMORROW_DATE = LocalDate.now().plusDays(2);
+    private static final LocalDate NEXT_3_DAYS_DATE = LocalDate.now().plusDays(2);
+    private static final LocalDate NEXT_7_DAYS_DATE = LocalDate.now().plusDays(6);
+
     private BookingAppScreeningPage bookingAppScreeningPage;
-    private String user;
-    private String password;
 
     @Before
-    public void setUp() throws Exception {
-        try {
-            loginPage = new LoginPage(getDriver());
-            homePage = new HomePage(getDriver());
-            homePage.resizePage();
-            bookingAppPage = new BookingAppPage(getDriver());
-            bookingAppScreeningPage = new BookingAppScreeningPage(getDriver());
-            user = getTestProperties().getUserName();
-            password = getTestProperties().getPassword();
-            url = getServerUrl();
-            if (url.contains(LOCAL_TEST_MACHINE)) {
-                httpClientHelper = new UITestHttpClientHelper(url);
-                httpClientHelper.addParticipant(new TestParticipant(), user, password);
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            } else if (homePage.expectedUrlPath() != currentPage().urlPath()) {
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            }
-        } catch (NullPointerException e) {
-            getLogger().error("setup - NPE . Reason : " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("setup - Exc . Reason : " + e.getLocalizedMessage(), e);
-        }
+    public void setUp() throws InterruptedException {
+        HomePage homePage = login();
+        homePage.resizePage();
+
+        BookingAppPage bookingAppPage = homePage.goToBookingAppModule();
+        bookingAppScreeningPage = bookingAppPage.openScreening();
     }
 
-    @Test
-    public void bAScreeningVisitCreationTest() throws Exception {
-        String bookingId = EMPTY;
-        try {
-            ArrayList<LocalDate> dates = new ArrayList<>();
-            homePage.clickModules();
-            homePage.sleep(SLEEP_2SEC);
-            homePage.openBookingAppModule();
-            homePage.sleep(SLEEP_2SEC);
-            homePage.resizePage();
-            bookingAppPage.sleep(SLEEP_2SEC);
-            bookingAppPage.openScreening();
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(DATE_RANGE);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingId = removeDotFrombookingAppVisit();
+    @Test //EBODAC-704
+    public void bAScreeningVisitCreationTest() throws InterruptedException {
+        String bookingId = bookingAppScreeningPage.bookScreeningVisit();
+        bookingAppScreeningPage.changeFilterTo(DATE_RANGE);
+        assertTrue(bookingAppScreeningPage.bookingIdExists(bookingId));
 
-            if (EMPTY != bookingId && null != bookingId) {
-                bookingAppScreeningPage.sleep(SLEEP_2SEC);
-                assertTrue(bookingAppScreeningPage.bookingIdExists(bookingId));
-            }
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(TODAY);
-            dates.add(LocalDate.now());
-            assertVisitTest(dates);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(TOMORROW);
-            dates.remove(ZERO);
-            dates.add(LocalDate.now().plusDays(ONE));
-            assertVisitTest(dates);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(DAY_AFTER_TOMORROW);
-            dates.remove(ZERO);
-            dates.add(LocalDate.now().plusDays(TWO));
-            assertVisitTest(dates);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(NEXT_3_DAYS);
-            dates.remove(ZERO);
-            dates.add(LocalDate.now());
-            dates.add(LocalDate.now().plusDays(ONE));
-            dates.add(LocalDate.now().plusDays(TWO));
-            assertVisitTest(dates);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(NEXT_7_DAYS);
-            dates.add(LocalDate.now().plusDays(THREE));
-            dates.add(LocalDate.now().plusDays(FOUR));
-            dates.add(LocalDate.now().plusDays(FIVE));
-            dates.add(LocalDate.now().plusDays(SIX));
-            assertVisitTest(dates);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.changeFilterTo(DATE_RANGE);
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.setDate();
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.exportToPDF();
-            bookingAppScreeningPage.sleep(SLEEP_2SEC);
-            bookingAppScreeningPage.exportToXLS();
+        bookingAppScreeningPage.changeFilterTo(TODAY);
+        assertTrue(bookingAppScreeningPage.areVisitsInDateRange(TODAY_DATE, TODAY_DATE));
+        bookingAppScreeningPage.changeFilterTo(TOMORROW);
+        assertTrue(bookingAppScreeningPage.areVisitsInDateRange(TOMORROW_DATE, TOMORROW_DATE));
+        bookingAppScreeningPage.changeFilterTo(DAY_AFTER_TOMORROW);
+        assertTrue(bookingAppScreeningPage.areVisitsInDateRange(DAY_AFTER_TOMORROW_DATE, DAY_AFTER_TOMORROW_DATE));
+        bookingAppScreeningPage.changeFilterTo(NEXT_3_DAYS);
+        assertTrue(bookingAppScreeningPage.areVisitsInDateRange(TODAY_DATE, NEXT_3_DAYS_DATE));
+        bookingAppScreeningPage.changeFilterTo(NEXT_7_DAYS);
+        assertTrue(bookingAppScreeningPage.areVisitsInDateRange(TODAY_DATE, NEXT_7_DAYS_DATE));
 
-        } catch (AssertException e) {
-            getLogger().error("bAScreeningVisitCreationTest - AEX . Reason : " + e.getLocalizedMessage(), e);
-        } catch (InterruptedException e) {
-            getLogger().error("bAScreeningVisitCreationTest - IEX . Reason : " + e.getLocalizedMessage(), e);
-        } catch (NullPointerException e) {
-            getLogger().error("bAScreeningVisitCreationTest - NPE . Reason : " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("bAScreeningVisitCreationTest - Exc . Reason : " + e.getLocalizedMessage(), e);
-        }
-    }
-
-    public String removeDotFrombookingAppVisit() throws InterruptedException {
-        String result = bookingAppScreeningPage.bookScreeningVisit(); 
-        String temp = result;
-        
-        if (temp.contains(DOT)) {
-            result = temp.replace(DOT, EMPTY);
-        }
-        
-        return result;
-    }
-
-    public void assertVisitTest(ArrayList<LocalDate> dates) {
-        if (bookingAppScreeningPage.hasVisits()) {
-            assertTrue(bookingAppScreeningPage.isFirstBookingOK(dates));
-        }
+        bookingAppScreeningPage.exportToPDF();
+        bookingAppScreeningPage.exportToXLS();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws InterruptedException {
         logout();
     }
 }

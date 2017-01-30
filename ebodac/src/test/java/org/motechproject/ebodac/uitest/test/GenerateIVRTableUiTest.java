@@ -3,71 +3,35 @@ package org.motechproject.ebodac.uitest.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
-import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
+import org.motechproject.ebodac.uitest.page.ebodac.EbodacPage;
 import org.motechproject.ebodac.uitest.page.HomePage;
-import org.motechproject.ebodac.uitest.page.EBODACPage;
-import org.motechproject.ebodac.uitest.page.IVRKPIPage;
-import org.motechproject.uitest.TestBase;
-import org.motechproject.uitest.page.LoginPage;
+import org.motechproject.ebodac.uitest.page.ebodac.statistics.IVRKPIsPage;
+import org.motechproject.ebodac.uitest.page.ebodac.statistics.StatisticsPage;
 
 
-public class GenerateIVRTableUiTest extends TestBase {
+public class GenerateIVRTableUiTest extends EbodacTestBase {
 
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private EBODACPage ebodacPage;
-    private IVRKPIPage ivrkpiPage;
+    private IVRKPIsPage ivrKPIsPage;
 
-    private static final String LOCAL_TEST_MACHINE = "localhost";
-    
     @Before
-    public void setUp() throws Exception {
-        try {
-            String user = getTestProperties().getUserName();
-            String password = getTestProperties().getPassword();
-            loginPage = new LoginPage(getDriver());
-            homePage = new HomePage(getDriver());
-            ebodacPage = new EBODACPage(getDriver());
-            ivrkpiPage = new IVRKPIPage(getDriver());
-            String url = getServerUrl();
-            if (url.contains(LOCAL_TEST_MACHINE)) {
-                UITestHttpClientHelper httpClientHelper = new UITestHttpClientHelper(url);
-                httpClientHelper.addParticipant(new TestParticipant(), user, password);
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            } else if (homePage.expectedUrlPath() != currentPage().urlPath()) {
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            }
-        } catch (NullPointerException e) {
-            getLogger().error("setup - NullPointerException . Reason : " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("setup - Exception . Reason : " + e.getLocalizedMessage(), e);
-        }
+    public void setUp() throws InterruptedException {
+        HomePage homePage = login();
+        homePage.resizePage();
+
+        EbodacPage ebodacPage = homePage.goToEbodacModule();
+
+        StatisticsPage statisticsPage = ebodacPage.goToStatistics();
+        ivrKPIsPage = statisticsPage.goToIVRKPIs();
     }
 
-
     @Test //EBODAC-1000
-    public void generateIVRTableTest() throws Exception {
-        try {
-            homePage.openEBODACModule();
-            homePage.resizePage();
-            ebodacPage.showStatistics();
-            ivrkpiPage.showIVRKPIs();
-            ivrkpiPage.showStatsFromLast30Days();
-            ivrkpiPage.checkIVRColumns();
-        } catch (NumberFormatException e) {
-            getLogger().error("generateIVRTableTest - NumberFormatException . Reason : " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("generateIVRTableTest - Exception . Reason : " + e.getLocalizedMessage(), e);
-        }
-
+    public void generateIVRTableTest() throws InterruptedException {
+        ivrKPIsPage.showStatsFromLast30Days();
+        ivrKPIsPage.checkIVRColumns();
     }
 
     @After
-    public void tearDown() throws Exception {
-
+    public void tearDown() throws InterruptedException {
         logout();
     }
 }

@@ -1,133 +1,51 @@
 package org.motechproject.ebodac.uitest.test;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.uitest.page.LoginPage;
-import org.motechproject.uitest.TestBase;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
-import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
 import org.motechproject.ebodac.uitest.page.HomePage;
-import org.motechproject.ebodac.uitest.page.ParticipantEditPage;
-import org.motechproject.ebodac.uitest.page.ParticipantPage;
-import static org.junit.Assert.assertFalse;
+import org.motechproject.ebodac.uitest.page.ebodac.EbodacPage;
+import org.motechproject.ebodac.uitest.page.ebodac.ParticipantEditPage;
+import org.motechproject.ebodac.uitest.page.ebodac.ParticipantPage;
+import org.openqa.selenium.By;
 
-public class LanguageDisappearUiTest extends TestBase {
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private String user;
-    private String password;
+import static org.junit.Assert.assertTrue;
+
+public class LanguageDisappearUiTest extends EbodacTestBase {
+
+    private static final By LANGUAGE_BUTTON = By.xpath("//ng-form[@name='language']/div[1]/div/button");
+    private static final By LANGUAGE_KRIO = By.xpath("//ng-form[@name='language']/div[1]/div/ul/li[2]/a/label");
+    private static final By LANGUAGE_SUSU = By.xpath("//ng-form[@name='language']/div[1]/div/ul/li[3]/a/label");
+    private static final By LANGUAGE_LIMBA = By.xpath("//ng-form[@name='language']/div[1]/div/ul/li[4]/a/label");
+    private static final By LANGUAGE_ENGLISH = By.xpath("//ng-form[@name='language']/div[1]/div/ul/li[5]/a/label");
+    private static final By LANGUAGE_TEMNE = By.xpath("//ng-form[@name='language']/div[1]/div/ul/li[6]/a/label");
+
     private ParticipantPage participantPage;
-    private ParticipantEditPage participantEditPage;
-    private static final int OFFSET_HTML = 2;
-    private static final String TEST_LOCAL_MACHINE = "localhost";
-    private static final long SLEEP_2SEC = 2000;
-
-    // Map for the languages
-    private Map<String, String> map = new HashMap<String, String>();
-    private UITestHttpClientHelper httpClientHelper;
-    private String url;
-    // Original language
-    private String originalLanguage;
 
     @Before
-    public void setUp() throws Exception {
-        try {
-            user = getTestProperties().getUserName();
-            password = getTestProperties().getPassword();
-            loginPage = new LoginPage(getDriver());
-            homePage = new HomePage(getDriver());
+    public void setUp() throws InterruptedException {
+        HomePage homePage = login();
+        homePage.resizePage();
 
-            url = getServerUrl();
-            if (url.contains(TEST_LOCAL_MACHINE)) {
-                httpClientHelper = new UITestHttpClientHelper(url);
-                httpClientHelper.addParticipant(new TestParticipant(), user, password);
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            } else if (homePage.expectedUrlPath() != currentPage().urlPath()) {
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            }
-        } catch (NullPointerException e) {
-            getLogger().error("setUp - NullPointerException - Reason : " + e.getLocalizedMessage(), e);
+        EbodacPage ebodacPage = homePage.goToEbodacModule();
 
-        } catch (Exception e) {
-            getLogger().error("setUp - Exception - Reason : " + e.getLocalizedMessage(), e);
-        }
+        participantPage = ebodacPage.goToParticipants();
     }
 
-    @Test
-    public void languagedisappearTest() throws Exception {
-        try {
-            // Access to the page
-            homePage.openEBODACModule();
-            homePage.resizePage();
-            homePage.sleep(SLEEP_2SEC);
-            participantPage = new ParticipantPage(getDriver());
-            participantPage.openFirstParticipant();
-            participantEditPage = new ParticipantEditPage(getDriver());
-            // We store the language.
-            originalLanguage = participantEditPage.getLanguage();
-            assertFalse(participantEditPage.changeLanguage("1"));
+    @Test //EBODAC-538
+    public void languagedisappearTest() throws InterruptedException {
+        ParticipantEditPage participantEditPage = participantPage.editFirstParticipant();
 
-        } catch (AssertionError e) {
-            getLogger().error("languagedisappearTest - AssertionError - Reason : " + e.getLocalizedMessage(), e);
-
-        } catch (InterruptedException e) {
-            getLogger().error("languagedisappearTest - InterruptedException - Reason : " + e.getLocalizedMessage(), e);
-
-        } catch (NullPointerException e) {
-            getLogger().error("languagedisappearTest - NullPointerException - Reason : " + e.getLocalizedMessage(), e);
-
-        } catch (Exception e) {
-            getLogger().error("languagedisappearTest - Exception - Reason : " + e.getLocalizedMessage(), e);
-        }
+        participantEditPage.clickWhenVisible(LANGUAGE_BUTTON);
+        assertTrue(participantEditPage.findElement(LANGUAGE_KRIO).isDisplayed());
+        assertTrue(participantEditPage.findElement(LANGUAGE_SUSU).isDisplayed());
+        assertTrue(participantEditPage.findElement(LANGUAGE_LIMBA).isDisplayed());
+        assertTrue(participantEditPage.findElement(LANGUAGE_ENGLISH).isDisplayed());
+        assertTrue(participantEditPage.findElement(LANGUAGE_TEMNE).isDisplayed());
     }
 
     @After
-    public void tearDown() throws Exception {
-        // We need to restore the original language.
-        try {
-            // We get the list of positions languages
-            participantEditPage.setListLanguagePosition();
-            // We use the map to set up the right new language.
-            map = participantEditPage.getMapLangPos();
-            int intPosition = -1;
-            if (!originalLanguage.trim().trim().isEmpty() && originalLanguage != null) {
-                intPosition = new Integer(map.get(originalLanguage)).intValue();
-                Integer htmlposition = new Integer(intPosition + OFFSET_HTML);
-                if (!participantEditPage.changeLanguage(htmlposition.toString())) {
-                    getLogger().error("tearDown - Cannot setup the original language back position : " + htmlposition
-                            + " - Participant Language : " + participantEditPage.getLanguage());
-                }
-            } else {
-                // We cannot setup the original position , we force to have one
-                // right.
-                participantEditPage.changeLanguage(new Integer(2).toString());
-            }
-            // we restore the original language
-
-        } catch (InterruptedException e) {
-            getLogger().error("InterruptedException . Reason : " + e.getLocalizedMessage(), e);
-            // We force to have 1st language if there is an error.
-            participantEditPage.changeLanguage(new Integer(2).toString());
-        } catch (NumberFormatException e) {
-            getLogger().error("NumberFormatException . Reason : " + e.getLocalizedMessage(), e);
-            // We force to have 1st language if there is an error.
-            participantEditPage.changeLanguage(new Integer(2).toString());
-        } catch (Exception e) {
-            getLogger().error("Exception . Reason : " + e.getLocalizedMessage(), e);
-            // We force to have 1st language if there is an error.
-            participantEditPage.changeLanguage(new Integer(2).toString());
-        }
-        // We close the page and the motech.
-        if (!participantEditPage.closeEditPage()) {
-            getLogger().error("Cannot close EditPageParticipant");
-        }
-        // We make a log out.
-
+    public void tearDown() throws InterruptedException {
         logout();
     }
 }

@@ -25,7 +25,7 @@
 
         <div class="btn-group">
             <button type="button" class="btn btn-default">{{selectedFilter.name}}</button>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <button id="dateFilterBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
@@ -36,9 +36,9 @@
         <div class="form-group" ng-if="selectedFilter === filters[5]">
             <div class="input-group">
                 <span class="left input-group-addon">{{msg('ebodac.filter.from')}}</span>
-                <input type="text" class="form-control" mds-date-picker ebodac-reload-trigger placeholder="{{msg('ebodac.datePlaceholder')}}" ng-model="selectedFilter.startDate">
+                <input id="startDateInput" type="text" class="form-control" mds-date-picker ebodac-reload-trigger placeholder="{{msg('ebodac.datePlaceholder')}}" ng-model="selectedFilter.startDate">
                 <span class="middle input-group-addon">{{msg('ebodac.filter.to')}}</span>
-                <input type="text" class="form-control" mds-date-picker ebodac-reload-trigger placeholder="{{msg('ebodac.datePlaceholder')}}" ng-model="selectedFilter.endDate">
+                <input id="endDateInput" type="text" class="form-control" mds-date-picker ebodac-reload-trigger placeholder="{{msg('ebodac.datePlaceholder')}}" ng-model="selectedFilter.endDate">
             </div>
         </div>
     </div>

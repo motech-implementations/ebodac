@@ -2,360 +2,168 @@ package org.motechproject.ebodac.uitest.test;
 
 import org.junit.After;
 import org.junit.Before;
-import org.motechproject.ebodac.uitest.page.ParticipantPage;
-import org.motechproject.ebodac.uitest.page.ReportPage;
-import org.motechproject.ebodac.uitest.page.ParticipantEditPage;
-import org.motechproject.ebodac.uitest.page.VisitPage;
-import org.motechproject.ebodac.uitest.page.VisitEditPage;
-import org.motechproject.ebodac.uitest.page.BoosterVaccinationReportPage;
-import org.motechproject.ebodac.uitest.page.CallDetailRecordPage;
-import org.motechproject.ebodac.uitest.page.DailyClinicVisitScheduleReportPage;
-import org.motechproject.ebodac.uitest.page.EBODACPage;
-import org.motechproject.ebodac.uitest.page.EnrollmentPage;
-import org.motechproject.ebodac.uitest.page.FollowupsAfterPrimeInjectionReportPage;
-import org.motechproject.ebodac.uitest.page.FollowupsMissedClinicVisitsReportPage;
-import org.motechproject.ebodac.uitest.page.MEMissedClinicVisitsReportPage;
-import org.motechproject.ebodac.uitest.page.NumberOfTimesListenedReportPage;
-import org.motechproject.ebodac.uitest.page.ParticipantsWhoOptOutOfMessagesReportPage;
-import org.motechproject.ebodac.uitest.page.PrimeFollowAndBoostReportPage;
-import org.motechproject.ebodac.uitest.page.PrimerVaccinationReportPage;
-import org.motechproject.ebodac.uitest.page.ScreeningReportPage;
-import org.motechproject.ebodac.uitest.page.SMSLogReportPage;
-import org.motechproject.ebodac.uitest.page.SMSPage;
 import org.junit.Test;
-import org.motechproject.uitest.page.LoginPage;
-import org.motechproject.uitest.TestBase;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
-import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
-import org.motechproject.ebodac.uitest.helper.UserPropertiesHelper;
 import org.motechproject.ebodac.uitest.page.HomePage;
-import org.motechproject.ebodac.uitest.page.IVREditPage;
-import org.motechproject.ebodac.uitest.page.IVRPage;
+import org.motechproject.ebodac.uitest.page.SMSPage;
+import org.motechproject.ebodac.uitest.page.ebodac.EbodacPage;
+import org.motechproject.ebodac.uitest.page.ebodac.EnrollmentPage;
+import org.motechproject.ebodac.uitest.page.ebodac.ParticipantEditPage;
+import org.motechproject.ebodac.uitest.page.ebodac.ParticipantPage;
+import org.motechproject.ebodac.uitest.page.ebodac.VisitEditPage;
+import org.motechproject.ebodac.uitest.page.ebodac.VisitPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.BoosterVaccinationReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.CallDetailRecordPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.DailyClinicVisitScheduleReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.FollowupsAfterPrimeInjectionReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.FollowupsMissedClinicVisitsReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.MEMissedClinicVisitsReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.NumberOfTimesListenedReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.ParticipantsWhoOptOutOfMessagesReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.PrimeFollowAndBoostReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.PrimerVaccinationReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.ReportsPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.SMSLogReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.ScreeningReportPage;
+import org.motechproject.ebodac.uitest.page.ivr.IVREditPage;
+import org.motechproject.ebodac.uitest.page.ivr.IVRLogPage;
+import org.motechproject.ebodac.uitest.page.ivr.IVRPage;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class AdminAccessToEbodacTabsUiTest extends TestBase {
+public class AdminAccessToEbodacTabsUiTest extends EbodacTestBase {
 
-    private static final String LOCAL_TEST_MACHINE = "localhost";
-    private static final long SLEEP_2SEC = 2000;
-    private static final long SLEEP_6SEC = 6000;
-    private static final long SLEEP_4SEC = 4000;
-    private String user;
-    private String password;
-    private UITestHttpClientHelper httpClientHelper;
-    private UserPropertiesHelper userPropertiesHelper;
-    private String url;
     // Variables for the pages.
-    private LoginPage loginPage;
     private HomePage homePage;
-    private EBODACPage ebodacPage;
-    private ReportPage reportPage;
-    private ParticipantPage participantPage;
-    private ParticipantEditPage participantEditPage;
-    private VisitPage visitPage;
-    private VisitEditPage visitEditPage;
-    private BoosterVaccinationReportPage boosterVaccinationReportPage;
-    private CallDetailRecordPage callDetailRecordPage;
-    private DailyClinicVisitScheduleReportPage dailyClinicVisitScheduleReportPage;
-    private FollowupsAfterPrimeInjectionReportPage followupsAfterPrimeInjectionReportPage;
-    private FollowupsMissedClinicVisitsReportPage followupsMissedClinicVisitsReportPage;
-    private MEMissedClinicVisitsReportPage meMissedClinicVisitsReportPage;
-    private NumberOfTimesListenedReportPage numberOfTimesListenedReportPage;
-    private ParticipantsWhoOptOutOfMessagesReportPage participantsWhoOptOutOfMessagesReportPage;
-    private PrimeFollowAndBoostReportPage primeFollowAndBoostReportPage;
-    private PrimerVaccinationReportPage primerVaccinationReportPage;
-    private ScreeningReportPage screeningReportPage;
-    private SMSLogReportPage smsLogReportPage;
-    private IVRPage ivrPage;
-    private IVREditPage ivrEditPage;
-    private SMSPage smsPage;
-    private EnrollmentPage enrollmentPage;
+    private EbodacPage ebodacPage;
 
     @Before
-    public void setUp() throws Exception {
-        url = getServerUrl();
-        // We close the session with admin user to try to log in with admin
-        // user.
-        try {
-            userPropertiesHelper = new UserPropertiesHelper();
-            user = userPropertiesHelper.getAdminUserName();
-            password = userPropertiesHelper.getAdminPassword();
-            loginPage = new LoginPage(getDriver());
-            homePage = new HomePage(getDriver());
-            ebodacPage = new EBODACPage(getDriver());
+    public void setUp() throws InterruptedException {
+        // We close the session with admin user to try to log in with admin user.
+        homePage = loginAsAdmin();
 
-            url = getServerUrl();
+        homePage.resizePage();
 
-            if (url.contains(LOCAL_TEST_MACHINE)) {
-                httpClientHelper = new UITestHttpClientHelper(url);
-                httpClientHelper.addParticipant(new TestParticipant(), user, password);
-                loginPage.goToPage();
-                loginPage.login(user, password);
-                // Load the rest of the pages
-            } else if (homePage.expectedUrlPath() != currentPage().urlPath()) {
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            }
-            loadEbodacPages();
+        ebodacPage = homePage.goToEbodacModule();
+    }
 
-            // Start Ebodac
-            startEbodac();
-        } catch (NullPointerException e) {
-            getLogger().error("setUp - NullPointerException Reason : " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("setUp - Exception Reason : " + e.getLocalizedMessage(), e);
-        }
+    @Test // Test for EBODAC-531
+    public void adminAccessOnlyToEbodacUiTest() throws InterruptedException {
+        // Participants Asserts
+        testAdminParticipantsTab();
 
+        // Visits Asserts
+        testAdminVisitsTab();
+
+        // Report Asserts
+        testAdminWithReports();
+
+        // Enrolment Tab
+        testAdminEnrolmentTab();
+
+        // IVR Module
+        testAdminIVRModule();
+
+        // SMS Module
+        testAdminSMSModule();
     }
 
     /**
      * This method check if the EBODAC page opens and if it is possible if there
      * are name, house hold and head of household .
-     * 
-     * @throws Exception
-     */
-    public void testAdminEbodacHome() throws Exception {
-        try {
-            homePage.openEBODACModule();
-            homePage.resizePage();
-            
-            ebodacPage.showParticipants();
-            ebodacPage.sleep(SLEEP_2SEC);
-            participantPage.openFirstParticipant();
-            participantPage.sleep(SLEEP_6SEC);
-            assertTrue(participantEditPage.isNameEditable());
-            participantEditPage.sleep(SLEEP_2SEC);
-            assertTrue(participantEditPage.isHouseholdNameEditable());
-            participantEditPage.sleep(SLEEP_2SEC);
-            assertTrue(participantEditPage.isHeadOfHouseholdEditable());
-            participantEditPage.sleep(SLEEP_2SEC);
-        } catch (AssertionError e) {
-            getLogger().error("testAdminEbodacHome - AEr. Error . Reason : " + e.getLocalizedMessage(), e);
-        } catch (NullPointerException e) {
-            getLogger().error("testAdminEbodacHome - NPE. Reason :  " + e.getLocalizedMessage(), e);
-        } catch (InterruptedException e) {
-            getLogger().error("testAdminEbodacHome - IEx. - Reason :  " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("testAdminEbodacHome - Exc. - Reason :  " + e.getLocalizedMessage(), e);
-        }
-    }
-
-    /**
-     * We use this method to load all the pages needed for the test.
-     * 
-     * @return the list of pages loaded for the test
+     *
      * @throws InterruptedException
      */
-    public void loadEbodacPages() throws InterruptedException {
-
-        reportPage = new ReportPage(getDriver());
-        enrollmentPage = new EnrollmentPage(getDriver());
-        boosterVaccinationReportPage = new BoosterVaccinationReportPage(getDriver());
-        callDetailRecordPage = new CallDetailRecordPage(getDriver());
-        dailyClinicVisitScheduleReportPage = new DailyClinicVisitScheduleReportPage(getDriver());
-        followupsAfterPrimeInjectionReportPage = new FollowupsAfterPrimeInjectionReportPage(getDriver());
-        followupsMissedClinicVisitsReportPage = new FollowupsMissedClinicVisitsReportPage(getDriver());
-        meMissedClinicVisitsReportPage = new MEMissedClinicVisitsReportPage(getDriver());
-        numberOfTimesListenedReportPage = new NumberOfTimesListenedReportPage(getDriver());
-        primeFollowAndBoostReportPage = new PrimeFollowAndBoostReportPage(getDriver());
-        participantsWhoOptOutOfMessagesReportPage = new ParticipantsWhoOptOutOfMessagesReportPage(getDriver());
-        primerVaccinationReportPage = new PrimerVaccinationReportPage(getDriver());
-        screeningReportPage = new ScreeningReportPage(getDriver());
-        smsLogReportPage = new SMSLogReportPage(getDriver());
-        participantPage = new ParticipantPage(getDriver());
-        participantEditPage = new ParticipantEditPage(getDriver());
-        smsPage = new SMSPage(getDriver());
-        ivrPage = new IVRPage(getDriver());
-        ivrEditPage = new IVREditPage(getDriver());
-        visitPage = new VisitPage(getDriver());
-        visitEditPage = new VisitEditPage(getDriver());
+    public void testAdminParticipantsTab() throws InterruptedException {
+        ParticipantPage participantPage = ebodacPage.goToParticipants();
+        ParticipantEditPage participantEditPage = participantPage.editFirstParticipant();
+        assertTrue(participantEditPage.isNameEditable());
+        assertTrue(participantEditPage.isHouseholdNameEditable());
+        assertTrue(participantEditPage.isHeadOfHouseholdEditable());
     }
 
-    public void startEbodac() throws InterruptedException {
-        // Load Ebodac Page
-        homePage.clickModules();
-        homePage.clickOnEbodac();
-        ebodacPage = new EBODACPage(getDriver());
+    private void testAdminVisitsTab() throws InterruptedException {
+        VisitPage visitPage = ebodacPage.goToVisit();
+
+        VisitEditPage visitEditPage = visitPage.editFirstVisit();
+        assertTrue(visitEditPage.isPlannedVisitDateEditable());
+        assertFalse(visitEditPage.isActualVisitDateEditable());
+        assertFalse(visitEditPage.isVisitTypeEditable());
     }
 
-    @Test // Test for EBODAC-531
-    public void adminAccessOnlyToEbodacUiTest() throws Exception {
-        try {
-            // We try to access to the Ebodac
-
-            // Ebodac Asserts.
-            testAdminEbodacHome();
-            // Visits Asserts
-            testAdminVisitsTab();
-
-            // Report Asserts
-            testAdminWithReports();
-
-            // Enrolment Tab
-            testAdminEnrolmentTab();
-
-            // IVR Module
-            testAdminIVRModule();
-
-            // SMS Module
-            testAdminSMSModule();
-        } catch (AssertionError e) {
-            getLogger().error("adminAccessOnlyToEbodacUiTest - Assertion Error " + e.getLocalizedMessage(), e);
-
-        } catch (NullPointerException e) {
-            getLogger().error(
-                    "adminAccessOnlyToEbodacUiTest - NullPointerException . Reason = " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("adminAccessOnlyToEbodacUiTest - Error . Reason = " + e.getLocalizedMessage(), e);
-        }
-
-    }
-
-    public void testAdminSMSModule() {
-        smsPage.goToPage();
-        assertTrue(smsPage.logExists());
-    }
-
-    public void testAdminIVRModule() throws Exception {
-        ebodacPage.sleep(SLEEP_2SEC);
-        homePage.openIVRModule();
-        ivrPage.openLog();
-        ivrPage.openFirstRecord();
-        assertFalse(ivrEditPage.isFromEditable());
-    }
-
-    public void testAdminVisitsTab() throws Exception {
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.goToVisit();
-        ebodacPage.showVisits();
-        visitPage.sleep(SLEEP_6SEC);
-        if (visitPage.hasVisitsVisible()) {
-            visitPage.clickVisit();
-            visitEditPage.isPlannedVisitDateEditable();
-            visitEditPage.isActualVisitDateEditable();
-            assertFalse(visitEditPage.isVisitTypeEditable());
-            visitEditPage.changeVisit();
-        }
-    }
-
-    public void testAdminEnrolmentTab() throws Exception {
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.goToEnrollment();
+    private void testAdminEnrolmentTab() throws InterruptedException {
+        EnrollmentPage enrollmentPage = ebodacPage.goToEnrollment();
         // It should be allowed to enrol unenroll participants.
-        enrollmentPage.clickAction();
-        enrollmentPage.clickOK();
-        enrollmentPage.sleep(SLEEP_2SEC);
-        if (enrollmentPage.error()) {
-            enrollmentPage.clickOK();
-            enrollmentPage.sleep(SLEEP_2SEC);
-            enrollmentPage.nextAction();
-        }
-        enrollmentPage.sleep(SLEEP_2SEC);
-        if (enrollmentPage.enrolled()) {
-            assertTrue(enrollmentPage.enrolled());
-            enrollmentPage.sleep(SLEEP_2SEC);
-            enrollmentPage.clickOK();
-        }
-        enrollmentPage.sleep(SLEEP_2SEC);
-        if (enrollmentPage.unenrolled()) {
-            assertTrue(enrollmentPage.unenrolled());
-            enrollmentPage.sleep(SLEEP_2SEC);
-            enrollmentPage.clickOK();
-        }
-
+        assertTrue(enrollmentPage.enrollParticipant());
+        assertTrue(enrollmentPage.unenrollParticipant());
     }
 
-    public void testAdminWithReports() throws Exception {
-
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showPrimeVaccinationReport();
-        primerVaccinationReportPage.sleep(SLEEP_4SEC);
+    private void testAdminWithReports() throws InterruptedException {
+        ReportsPage reportsPage = ebodacPage.gotoReports();
+        PrimerVaccinationReportPage primerVaccinationReportPage = reportsPage.goToPrimeVaccinationReport();
         assertTrue(primerVaccinationReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showBoostVaccinationReport();
-        boosterVaccinationReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        BoosterVaccinationReportPage boosterVaccinationReportPage = reportsPage.goToBoostVaccinationReport();
         assertTrue(boosterVaccinationReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showDailyClinicVisitReportSchedule();
-        dailyClinicVisitScheduleReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        DailyClinicVisitScheduleReportPage dailyClinicVisitScheduleReportPage = reportsPage.goToDailyClinicVisitReportSchedule();
         assertTrue(dailyClinicVisitScheduleReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showFollowUpsAfterPrimeInjectionReport();
-        followupsAfterPrimeInjectionReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        FollowupsAfterPrimeInjectionReportPage followupsAfterPrimeInjectionReportPage = reportsPage.goToFollowUpsAfterPrimeInjectionReport();
         assertTrue(followupsAfterPrimeInjectionReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showParticipantsWhoOptOutOfMessages();
-        participantsWhoOptOutOfMessagesReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        ParticipantsWhoOptOutOfMessagesReportPage participantsWhoOptOutOfMessagesReportPage = reportsPage.goToParticipantsWhoOptOutOfMessages();
         assertTrue(participantsWhoOptOutOfMessagesReportPage.existTable());
 
         // Report FollowupsMissedClinicVisits
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showFollowUpsMissedClinicReport();
-        followupsMissedClinicVisitsReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        FollowupsMissedClinicVisitsReportPage followupsMissedClinicVisitsReportPage = reportsPage.goToFollowUpsMissedClinicReport();
         assertTrue(followupsMissedClinicVisitsReportPage.existTable());
 
         // Report MEMissed Clinics Visits Reports.
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showMEMissedClinicVisitsReport();
-        meMissedClinicVisitsReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        MEMissedClinicVisitsReportPage meMissedClinicVisitsReportPage = reportsPage.goToMEMissedClinicVisitsReport();
         assertTrue(meMissedClinicVisitsReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showNumberOfTimesReport();
-        numberOfTimesListenedReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        NumberOfTimesListenedReportPage numberOfTimesListenedReportPage = reportsPage.goToNumberOfTimesReport();
         assertTrue(numberOfTimesListenedReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showScreeningReport();
-        screeningReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        ScreeningReportPage screeningReportPage = reportsPage.goToScreeningReport();
         assertTrue(screeningReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showPrimeFollowAndBoostReport();
-        primeFollowAndBoostReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        PrimeFollowAndBoostReportPage primeFollowAndBoostReportPage = reportsPage.goToPrimeFollowAndBoostReport();
         assertTrue(primeFollowAndBoostReportPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showCallDetailRecord();
-        callDetailRecordPage.sleep(SLEEP_2SEC);
+        reportsPage = ebodacPage.gotoReports();
+        CallDetailRecordPage callDetailRecordPage = reportsPage.goToCallDetailRecord();
         assertTrue(callDetailRecordPage.existTable());
 
-        ebodacPage.sleep(SLEEP_2SEC);
-        ebodacPage.gotoReports();
-        reportPage.sleep(SLEEP_2SEC);
-        reportPage.showSMSLog();
-        smsLogReportPage.sleep(SLEEP_4SEC);
+        reportsPage = ebodacPage.gotoReports();
+        SMSLogReportPage smsLogReportPage = reportsPage.goToSMSLog();
         assertTrue(smsLogReportPage.existTable());
     }
 
+    private void testAdminIVRModule() throws InterruptedException {
+        IVRPage ivrPage = homePage.goToIVRModule();
+        IVRLogPage ivrLogPage = ivrPage.goToLogPage();
+        IVREditPage ivrEditPage = ivrLogPage.editFirstRecord();
+        assertFalse(ivrEditPage.isSaveButtonVisible());
+    }
+
+    private void testAdminSMSModule() throws InterruptedException {
+        SMSPage smsPage = homePage.goToSMSModule();
+        assertTrue(smsPage.logExists());
+    }
+
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws InterruptedException {
         logout();
     }
 }

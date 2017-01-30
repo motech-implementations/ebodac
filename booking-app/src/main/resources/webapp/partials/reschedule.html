@@ -36,11 +36,11 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">{{msg('bookingApp.form.label.lookup')}}</label>
                 <div class="col-sm-7">
-                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button id="selectLookupBtn" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         {{selectedLookup.lookupName || msg('bookingApp.form.select')}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul id="lookupList" class="dropdown-menu">
                         <li ng-repeat="lookup in lookups">
                             <a ng-click="selectLookup(lookup)">{{lookup.lookupName}}</a>
                         </li>
@@ -62,10 +62,10 @@
 
             <div class="form-group margin-before3">
                 <div class="col-sm-offset-4 col-sm-7">
-                    <buton type="button" class="btn btn-danger" ng-click="removeLookup()">
+                    <button id="lookupClearBtn" type="button" class="btn btn-danger" ng-click="removeLookup()">
                         {{msg('bookingApp.btn.clear')}}
-                    </buton>
-                    <button type="button" class="btn btn-primary" ng-click="filterInstancesByLookup()">
+                    </button>
+                    <button id="lookupFindBtn" type="button" class="btn btn-primary" ng-click="filterInstancesByLookup()">
                         {{msg('bookingApp.btn.find')}}
                     </button>
                 </div>

@@ -1,38 +1,25 @@
 package org.motechproject.ebodac.uitest.page;
 
-import org.motechproject.uitest.page.AbstractBasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 
-public class SMSPage extends AbstractBasePage {
+public class SMSPage extends HomePage {
 
-    public static final String URL_PATH = "/home#/mds/dataBrowser";
+    public static final String URL_PATH = "/home#/sms";
 
-    static final By LOG = By.linkText("Log");
+    private static final By LOG = By.linkText("Log");
+
     public SMSPage(WebDriver driver) {
         super(driver);
     }
 
-
-
     @Override
     public String expectedUrlPath() {
-        return getServerURL() + URL_PATH;
+        return URL_PATH;
     }
 
-    @Override
-    public void goToPage() {
-
-    }
     public boolean logExists() {
-        try {
-            if (findElement(LOG) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
+        return isElementPresent(LOG);
     }
 }

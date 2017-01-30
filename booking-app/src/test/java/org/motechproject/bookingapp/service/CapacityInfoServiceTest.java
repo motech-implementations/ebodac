@@ -57,7 +57,7 @@ public class CapacityInfoServiceTest {
     }
 
     @Test
-    public void shouldCalculateClinicCapacity() throws Exception {
+    public void shouldCalculateClinicCapacity() {
 
         BookingGridSettings bookingGridSettings = createBookingGridSettings(1, 10, DateFilter.DATE_RANGE, "2017-1-1", "2017-1-2");
 
@@ -90,7 +90,7 @@ public class CapacityInfoServiceTest {
     }
 
     @Test
-    public void shouldReturnZerosForEmptyDateRange() throws Exception {
+    public void shouldReturnZerosForEmptyDateRange() {
         BookingGridSettings bookingGridSettings = createBookingGridSettings(1, 10, null, "", "");
         List<Clinic> clinics = new ArrayList<>(Arrays.asList(new Clinic("siteId", "first", 20, 5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                 new Clinic("siteId", "second", 20, 10, 2, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));

@@ -1,89 +1,49 @@
 package org.motechproject.ebodac.uitest.test;
 
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.joda.time.LocalDate;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
-import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
-import org.motechproject.ebodac.uitest.page.EBODACPage;
+import org.motechproject.ebodac.uitest.page.ebodac.EbodacPage;
 import org.motechproject.ebodac.uitest.page.HomePage;
-import org.motechproject.ebodac.uitest.page.VisitEditPage;
-import org.motechproject.ebodac.uitest.page.VisitPage;
-import org.motechproject.uitest.TestBase;
-import org.motechproject.uitest.page.LoginPage;
+import org.motechproject.ebodac.uitest.page.ebodac.VisitEditPage;
+import org.motechproject.ebodac.uitest.page.ebodac.VisitPage;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class UnableToChangeVisitDateUiTest extends TestBase {
-    private static final int SLEEP_2SEC = 2000;
-    private static final String LOCAL_TEST_MACHINE = "localhost";
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private EBODACPage ebodacPage;
+public class UnableToChangeVisitDateUiTest extends EbodacTestBase {
+
     private VisitPage visitPage;
-    private VisitEditPage visitEditPage;
-    private String user;
-    private String password;
-    private UITestHttpClientHelper httpClientHelper;
-    private String url;
 
     @Before
-    public void setUp() throws Exception {
-        try {
-            user = getTestProperties().getUserName();
-            password = getTestProperties().getPassword();
-            loginPage = new LoginPage(getDriver());
-            homePage = new HomePage(getDriver());
-            ebodacPage = new EBODACPage(getDriver());
-            visitEditPage = new VisitEditPage(getDriver());
-            visitPage = new VisitPage(getDriver());
-            url = getServerUrl();
-            if (url.contains(LOCAL_TEST_MACHINE)) {
-                httpClientHelper = new UITestHttpClientHelper(url);
-                httpClientHelper.addParticipant(new TestParticipant(), user, password);
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            } else if (homePage.expectedUrlPath() != currentPage().urlPath()) {
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            }
-        } catch (NullPointerException e) {
-            getLogger().error("setUp - NullPointerException - Reason : " + e.getLocalizedMessage(), e);
+    public void setUp() throws InterruptedException {
+        HomePage homePage = login();
+        homePage.resizePage();
 
-        } catch (Exception e) {
-            getLogger().error("setUp - Exception - Reason : " + e.getLocalizedMessage(), e);
-        }
-
+        EbodacPage ebodacPage = homePage.goToEbodacModule();
+        visitPage = ebodacPage.goToVisit();
     }
 
-    @Test
-    public void unableToChangVisitDateTest() throws Exception {
-        try {
-            homePage.openEBODACModule();
-            homePage.resizePage();
-            homePage.sleep(SLEEP_2SEC);
-            ebodacPage.goToVisit();
-            visitPage.sortByPlannedDateColumn();
-            visitPage.clickVisit();
-            String date = LocalDate.now().toString("yyyy-MM-dd");
-            visitEditPage.changePlannedDate(date);
-            visitEditPage.sleep(SLEEP_2SEC);
-            assertTrue(visitEditPage.changeVisit());
-        } catch (AssertionError e) {
-            getLogger().error("unableToChangVisitDateTest - AssertionError - Reason : " + e.getLocalizedMessage(), e);
+    @Test //EBODAC-469
+    public void unableToChangVisitDateTest() throws InterruptedException {
+        visitPage.findTestVisit();
+        String oldDate = visitPage.getTestVisitPlannedDate();
+        VisitEditPage visitEditPage = visitPage.editTestVisit();
+        String date = LocalDate.now().toString("yyyy-MM-dd");
+        visitEditPage.changePlannedDate(date);
+        assertTrue(visitEditPage.saveVisit());
 
-        } catch (NullPointerException e) {
-            getLogger().error("unableToChangVisitDateTest - NullPointerException - Reason : " + e.getLocalizedMessage(),
-                    e);
-
-        } catch (Exception e) {
-            getLogger().error("unableToChangVisitDateTest - Exception - Reason : " + e.getLocalizedMessage(), e);
-        }
-
+        visitPage.findTestVisit();
+        String newDate = visitPage.getTestVisitPlannedDate();
+        visitEditPage = visitPage.editTestVisit();
+        assertEquals(date, newDate);
+        visitEditPage.changePlannedDate(oldDate);
+        assertTrue(visitEditPage.saveVisit());
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws InterruptedException {
         logout();
     }
 }

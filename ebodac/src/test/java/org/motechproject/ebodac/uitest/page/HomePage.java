@@ -1,199 +1,204 @@
 package org.motechproject.ebodac.uitest.page;
 
-import org.motechproject.uitest.page.AbstractBasePage;
+import org.motechproject.ebodac.uitest.page.bookingapp.BookingAppPage;
+import org.motechproject.ebodac.uitest.page.ebodac.EbodacPage;
+import org.motechproject.ebodac.uitest.page.ivr.IVRPage;
+import org.motechproject.uitest.page.MotechPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import java.lang.Override;
-import java.lang.String;
+import org.openqa.selenium.WebElement;
 
-public class HomePage extends AbstractBasePage {
+import java.util.Iterator;
+import java.util.Set;
 
-    // public static final String URL_PATH = "/home";
-    public static final String URL_PATH = "/home#/ebodac/subjects";
-    static final By EBODAC = By.linkText("EBODAC");
-    static final By SECURITY = By.linkText("Security");
-    public static final By DATA_SERVICES = By.linkText("Data Services");
-    static final By EMAIL = By.linkText("Email");
-    static final By MESSAGE_CAMPAIGN = By.linkText("Message Campaign");
-    static final By IVR = By.linkText("IVR");
-    static final By SMS = By.linkText("SMS");
-    static final By SCHEDULER = By.linkText("Scheduler");
-    static final By TASKS = By.linkText("Tasks");
-    static final By MODULES = By.linkText("Modules");
-    static final By BOOKING_APP = By.linkText("Booking App");
-    static final By ADMIN = By.linkText("Admin");
-    static final By USER_LANGUAGE_CONTROL = By.cssSelector("span.ng-binding");
-    static final By LANGUAGE_PL = By.linkText("Polski");
-    static final By POPUP_OK = By.id("popup_ok");
-    static final int SLEEP_500 = 500;
-    static final int SLEEP_1000 = 1000;
-    static final int WIDTH = 1920;
-    static final int HEIGHT = 1080;
+public class HomePage extends MotechPage {
+
+    private static final By EBODAC = By.linkText("EBODAC");
+    private static final By SECURITY = By.linkText("Security");
+    private static final By DATA_SERVICES = By.linkText("Data Services");
+    private static final By EMAIL = By.linkText("Email");
+    private static final By MESSAGE_CAMPAIGN = By.linkText("Message Campaign");
+    private static final By IVR = By.linkText("IVR");
+    private static final By SMS = By.linkText("SMS");
+    private static final By SCHEDULER = By.linkText("Scheduler");
+    private static final By TASKS = By.linkText("Tasks");
+    private static final By MODULES = By.linkText("Modules");
+    private static final By BOOKING_APP = By.linkText("Booking App");
+    private static final By ADMIN = By.linkText("Admin");
+
+    private static final By GRID_TABLE = By.xpath("//table[@class='ui-jqgrid-htable']");
+    private static final By INSTANCES_TABLE_LOADING = By.id("load_instancesTable");
+    private static final By IVR_FILTERS = By.className("filter-header");
+
+    private static final int WIDTH = 1920;
+    private static final int HEIGHT = 1080;
+
+    private static final int TIME_500 = 500;
+    private static final int TIME_10000 = 10000;
 
     public HomePage(WebDriver driver) {
         super(driver);
-    }
-
-    @Override
-    public String expectedUrlPath() {
-        return getServerURL() + URL_PATH;
-    }
-
-    @Override
-    public void goToPage() {
-
-    }
-
-    public EBODACPage openEBODACModule() throws InterruptedException {
-        clickWhenVisible(EBODAC);
-        return new EBODACPage(getDriver());
-    }
-
-    public void openBookingAppModule() throws InterruptedException {
-        clickWhenVisible(BOOKING_APP);
-    }
-
-    public boolean isEBODACModulePresent() throws InterruptedException {
-        try {
-            if (findElement(EBODAC) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isDataServicesModulePresent() throws InterruptedException {
-        try {
-            if (findElement(DATA_SERVICES) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public void openDataServicesModule() throws InterruptedException {
-        clickWhenVisible(DATA_SERVICES);
-    }
-
-    public void openSecurity() throws InterruptedException {
-        clickWhenVisible(SECURITY);
-    }
-
-    public boolean isEmailModulePresent() throws InterruptedException {
-        try {
-            if (findElement(EMAIL) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isMessageCampaignModulePresent() throws InterruptedException {
-        try {
-            if (findElement(MESSAGE_CAMPAIGN) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isIVRModulePresent() throws InterruptedException {
-        try {
-            if (findElement(IVR) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isSMSModulePresent() throws InterruptedException {
-        try {
-            if (findElement(SMS) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isSchedulerModulePresent() throws InterruptedException {
-        try {
-            if (findElement(SCHEDULER) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isTasksModulePresent() throws InterruptedException {
-        try {
-            if (findElement(TASKS) != null) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public void clickOnEbodac() throws InterruptedException {
-        Thread.sleep(SLEEP_500);
-        clickOn(EBODAC);
-    }
-
-    public void clickModules() throws InterruptedException {
-        clickWhenVisible(MODULES);
     }
 
     public void openAdmin() throws InterruptedException {
         clickWhenVisible(ADMIN);
     }
 
-    public boolean isElementPresent(By by) {
-        try {
-            findElement(by);
-            return true;
-        } catch (Exception e) {
+    public void openSecurity() throws InterruptedException {
+        clickWhenVisible(SECURITY);
+    }
+
+    public void openModules() throws InterruptedException {
+        clickWhenVisible(MODULES);
+    }
+
+    public BookingAppPage goToBookingAppModule() throws InterruptedException {
+        openModules();
+        clickWhenVisible(BOOKING_APP);
+        waitUntilBlockUiIsGone();
+        return new BookingAppPage(getDriver());
+    }
+
+    public DataServicesPage goToDataServicesModule() throws InterruptedException {
+        openModules();
+        clickWhenVisible(DATA_SERVICES);
+        waitUntilBlockUiIsGone();
+        return new DataServicesPage(getDriver());
+    }
+
+    public EbodacPage goToEbodacModule() throws InterruptedException {
+        openModules();
+        clickWhenVisible(EBODAC);
+        waitUntilBlockUiIsGone();
+        return new EbodacPage(getDriver());
+    }
+
+    public IVRPage goToIVRModule() throws InterruptedException {
+        openModules();
+        clickWhenVisible(IVR);
+        waitUntilBlockUiIsGone();
+
+        WebElement filters = findElement(IVR_FILTERS);
+
+        Long startTime = System.currentTimeMillis();
+        while (filters.isDisplayed() && (System.currentTimeMillis() - startTime) < TIME_10000) {
+            clickOn(IVR);
+            sleep500();
+        }
+        return new IVRPage(getDriver());
+    }
+
+    public SMSPage goToSMSModule() throws InterruptedException {
+        openModules();
+        clickWhenVisible(SMS);
+        waitUntilBlockUiIsGone();
+        return new SMSPage(getDriver());
+    }
+
+    public boolean isDataServicesModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(DATA_SERVICES);
+    }
+
+    public boolean isEBODACModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(EBODAC);
+    }
+
+    public boolean isEmailModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(EMAIL);
+    }
+
+    public boolean isMessageCampaignModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(MESSAGE_CAMPAIGN);
+    }
+
+    public boolean isIVRModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(IVR);
+    }
+
+    public boolean isSMSModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(SMS);
+    }
+
+    public boolean isSchedulerModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(SCHEDULER);
+    }
+
+    public boolean isTasksModulePresent() throws InterruptedException {
+        openModules();
+        return isElementPresent(TASKS);
+    }
+
+    public boolean closePdfIfIsOpen(String originalHandle) {
+        Set<String> handles = getDriver().getWindowHandles();
+
+        Long startTime = System.currentTimeMillis();
+        while (handles.size() < 2 && (System.currentTimeMillis() - startTime) < TIME_10000) {
+            handles = getDriver().getWindowHandles();
+            sleep500();
+        }
+
+        if (handles.size() < 2) {
             return false;
         }
+
+        handles.remove(originalHandle);
+
+        Iterator<String> it = handles.iterator();
+
+        if (handles.size() > 1) {
+            it.next();
+        }
+
+        getDriver().switchTo().window(it.next());
+        getDriver().close();
+
+        getDriver().switchTo().window(originalHandle);
+
+        return true;
     }
 
-    public void openIVRModule() throws InterruptedException {
-        clickWhenVisible(IVR);
-        Thread.sleep(SLEEP_1000);
-        clickWhenVisible(IVR);
+    public String getWindowHandle() {
+        return getDriver().getWindowHandle();
     }
 
-    public void changeUserLanguage() throws InterruptedException {
-        clickWhenVisible(USER_LANGUAGE_CONTROL);
-        clickWhenVisible(LANGUAGE_PL);
-        clickWhenVisible(POPUP_OK);
+    public boolean existTable() {
+        return (!findElement(GRID_TABLE).getAttribute("innerHTML").isEmpty());
     }
 
     public void resizePage() {
         getDriver().manage().window().setSize(new Dimension(WIDTH, HEIGHT));
     }
 
-    public void sleep(long sleep) {
+    private void sleep(long sleep) {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
             getLogger().error("waitTimeout - Exception . Reason : " + e.getLocalizedMessage(), e);
         }
+    }
 
+    public void sleep500() {
+        sleep(TIME_500);
+    }
+
+    public boolean isElementPresent(By by) {
+        return !getDriver().findElements(by).isEmpty();
+    }
+
+    public void waitUntilInstancesTableLoadingIsGone() {
+        waitForElementToBeHidden(INSTANCES_TABLE_LOADING);
+    }
+
+    public boolean isElementEditable(By by) {
+        String readonly = findElement(by).getAttribute("readonly");
+        return readonly == null || !(readonly.contains("readonly") || readonly.contains("true"));
     }
 }

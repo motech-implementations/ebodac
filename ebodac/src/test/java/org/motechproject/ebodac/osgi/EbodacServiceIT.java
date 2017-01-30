@@ -29,9 +29,6 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -138,8 +135,7 @@ public class EbodacServiceIT extends BasePaxIT {
         subject.setSiteName("siteName");
         subjectDataService.create(subject);
 
-        DateFormat df = new SimpleDateFormat(EbodacConstants.CSV_DATE_FORMAT);
-        String filename = CSV_DIR + "motech_" + df.format(new Date()) + ".csv";
+        String filename = CSV_DIR + "motech_" + DateTime.now().toString(EbodacConstants.CSV_DATE_FORMAT) + ".csv";
         InputStream in = getClass().getResourceAsStream("/sampleRaveFile.csv");
         assertNotNull(in);
 
@@ -215,8 +211,7 @@ public class EbodacServiceIT extends BasePaxIT {
         subject.setSiteName("siteName");
         subjectDataService.create(subject);
 
-        DateFormat df = new SimpleDateFormat(EbodacConstants.CSV_DATE_FORMAT);
-        String filename = CSV_DIR + "motech_" + df.format(new Date()) + ".csv";
+        String filename = CSV_DIR + "motech_" + DateTime.now().toString(EbodacConstants.CSV_DATE_FORMAT) + ".csv";
         InputStream in = getClass().getResourceAsStream("/sampleRaveFile.csv");
         assertNotNull(in);
 
@@ -257,8 +252,7 @@ public class EbodacServiceIT extends BasePaxIT {
         subject.setSiteName("siteName");
         subjectDataService.create(subject);
 
-        DateFormat df = new SimpleDateFormat(EbodacConstants.CSV_DATE_FORMAT);
-        String filename = CSV_DIR + "motech_" + df.format(new Date()) + ".csv";
+        String filename = CSV_DIR + "motech_" + DateTime.now().toString(EbodacConstants.CSV_DATE_FORMAT) + ".csv";
         InputStream in = getClass().getResourceAsStream("/raveFileWithBrokenData.csv");
         assertNotNull(in);
 
