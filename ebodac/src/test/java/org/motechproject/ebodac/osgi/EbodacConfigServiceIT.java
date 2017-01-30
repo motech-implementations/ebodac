@@ -26,7 +26,7 @@ public class EbodacConfigServiceIT extends BasePaxIT {
     private ConfigService configService;
 
     @Test
-    public void testEbodacSettingsServicePresent() throws Exception {
+    public void testEbodacSettingsServicePresent() {
         assertNotNull(configService.getConfig());
     }
 }

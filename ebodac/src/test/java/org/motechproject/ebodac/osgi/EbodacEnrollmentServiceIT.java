@@ -1,4 +1,4 @@
-package org.motechproject.ebodac.osgi;
+package org.motechproject.ebodac.osgi; //NO CHECKSTYLE FileLength
 
 import org.joda.time.LocalDate;
 import org.junit.After;

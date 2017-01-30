@@ -355,11 +355,11 @@
                         sortable: false,
                         formatter: function(cellValue, options, rowObject) {
                                        if (rowObject.status === 'Enrolled') {
-                                           return "<button ng-click='unenroll(\"" + rowObject.subject.subjectId + "\")'" +
+                                           return "<button id='unenroll" + options.rowId + "' ng-click='unenroll(\"" + rowObject.subject.subjectId + "\")'" +
                                                    " type='button' class='btn btn-danger compileBtn' ng-disabled='enrollInProgress'>" +
                                                    scope.msg('ebodac.web.enrollment.btn.unenroll') + "</button>";
                                        } else if (rowObject.status === 'Unenrolled' || rowObject.status === 'Initial') {
-                                           return "<button ng-click='enroll(\"" + rowObject.subject.subjectId + "\")'" +
+                                           return "<button id='enroll" + options.rowId + "' ng-click='enroll(\"" + rowObject.subject.subjectId + "\")'" +
                                                    " type='button' class='btn btn-success compileBtn' ng-disabled='enrollInProgress'>" +
                                                    scope.msg('ebodac.web.enrollment.btn.enroll') + "</button>";
                                        }

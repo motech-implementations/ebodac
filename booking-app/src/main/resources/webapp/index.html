@@ -17,9 +17,7 @@
     <div class="header-footer" style="overflow:auto;">
         <ul id="content-tabs" class="nav nav-tabs">
             <li ng-hide="active('#/bookingApp/settings')" ng-class="active('#/bookingApp/' + tab) || active(tab === 'visitLimitation' ? '#/mds/dataBrowser' : ('#/bookingApp/' + tab))" ng-repeat="tab in BOOKING_AVAILABLE_TABS">
-                <a href="#/bookingApp/{{tab}}">
-                    {{msg('bookingApp.' + tab)}}
-                </a>
+                <a id="{{tab + '-tab'}}" href="#/bookingApp/{{tab}}">{{msg('bookingApp.' + tab)}}</a>
             </li>
             <li ng-show="active('#/bookingApp/settings')" ng-class="active('#/bookingApp/settings')"><a href="#/bookingApp/settings">{{msg('bookingApp.settings.title')}}</a></li>
         </ul>

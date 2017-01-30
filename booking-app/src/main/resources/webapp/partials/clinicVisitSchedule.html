@@ -19,28 +19,28 @@
             <td class="col-md-2">
                 {{selectedSubject.name}}
             </td>
-            <td ng-if="selectedSubject.primerVaccinationDate" class="col-md-2">
+            <td id="primeVacDate" ng-if="selectedSubject.primerVaccinationDate" class="col-md-2">
                 {{primeVac.date}}
             </td>
             <td ng-if="!selectedSubject.primerVaccinationDate" class="col-md-2">
                 <input type="text" id="primeVacDateInput" class="form-control datepicker" readonly='true' booking-app-date-picker min="dateRange.min" max="dateRange.max" ng-model="primeVac.date">
             </td>
-            <td  class="col-md-2">
+            <td id="primeVacFirstFollowUp" class="col-md-2">
                 {{visitPlannedDates.PRIME_VACCINATION_FIRST_FOLLOW_UP_VISIT}}
             </td>
         </tr>
         </tbody>
     </table>
 
-    <button ng-if="!selectedSubject.primerVaccinationDate" type="button" class="btn btn-success" ng-disabled="!checkSubjectAndPrimeVacDate()" ng-click="save()">
+    <button id="saveBtn" ng-if="!selectedSubject.primerVaccinationDate" type="button" class="btn btn-success" ng-disabled="!checkSubjectAndPrimeVacDate()" ng-click="save()">
         <i class="fa fa-fw fa-save"></i> {{msg('bookingApp.schedule.save')}}
     </button>
 
-    <button type="button" class="btn btn-primary" ng-disabled="!checkSubjectAndPrimeVacDate()" ng-click="print()">
+    <button id="printBtn" type="button" class="btn btn-primary" ng-disabled="!checkSubjectAndPrimeVacDate()" ng-click="print()">
         <i class="fa fa-fw fa-print"></i> {{msg('bookingApp.schedule.print')}}
     </button>
 
-    <button type="button" class="btn btn-default" ng-if="!selectedSubject.primerVaccinationDate" ng-click="cancel()">
+    <button id="cancelBtn" type="button" class="btn btn-default" ng-if="!selectedSubject.primerVaccinationDate" ng-click="cancel()">
         {{msg('bookingApp.schedule.cancel')}}
     </button>
 

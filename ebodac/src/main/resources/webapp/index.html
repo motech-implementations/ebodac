@@ -16,7 +16,7 @@
             <li ng-show="active('#/ebodac/settings')" ng-class="active('#/ebodac/settings')"><a href="#/ebodac/settings">{{msg('ebodac.web.settings.title')}}</a></li>
 
             <li ng-hide="active('#/ebodac/settings')" ng-class="active('#/ebodac/' + tab) || active(tab === selectedTab ? '#/mds/dataBrowser' : ('#/ebodac/' + tab))" ng-repeat="tab in EBODAC_AVAILABLE_TABS">
-                <a href="#/ebodac/{{tab}}">{{msg('ebodac.web.' + tab + '.title')}}</a>
+                <a id="{{tab + '-tab'}}" href="#/ebodac/{{tab}}">{{msg('ebodac.web.' + tab + '.title')}}</a>
             </li>
         </ul>
     </div>

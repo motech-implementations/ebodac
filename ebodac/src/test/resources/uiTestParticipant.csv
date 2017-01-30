@@ -1,0 +1,11 @@
+SiteNumber,Subject,BRTHDT,SEX,STAGE,PRMDT,BOOSTDT,VACDSDT,TRDSDT,VISIT,VISITDT,VISITDTPRJ
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Screening,2016-08-10,
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Prime Vaccination Day,,2116-09-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Prime Vaccination First Follow-up visit,,2116-09-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Boost Vaccination Day,,2116-10-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Boost Vaccination First Follow-up visit,,2117-01-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Boost Vaccination Second Follow-up visit,,2117-03-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Boost Vaccination Third Follow-up visit,,2117-03-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,First Long-term Follow-up visit,,2117-06-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Second Long-term Follow-up visit,,2117-09-03
+B05-SL10001,%1$s,1981-10-09,M,2,,,,,Third Long-term Follow-up visit,,2117-12-03

@@ -13,22 +13,22 @@
                     </div>
                     <div class="booking-app input-group">
                         <span class="left input-group-addon">{{msg('bookingApp.visitReschedule.plannedDate')}}</span>
-                        <input type="text" class="form-control datepicker" readonly='true' booking-app-date-picker min="form.dto.minDate" max="form.dto.maxDate" placeholder="{{msg('bookingApp.datePlaceholder')}}" ng-model="form.dto.plannedDate">
+                        <input id="plannedDateInput" type="text" class="form-control datepicker" readonly='true' booking-app-date-picker min="form.dto.minDate" max="form.dto.maxDate" placeholder="{{msg('bookingApp.datePlaceholder')}}" ng-model="form.dto.plannedDate">
                         <span class="input-group-addon validator" ng-class="{'alert-danger': form.dto.plannedDate === '', 'alert-success': form.dto.plannedDate}"><i class="fa fa-fw fa-check"></i></span>
                     </div>
                     <div class="booking-app input-group">
                         <span class="left input-group-addon">{{msg('bookingApp.visitReschedule.time')}}</span>
-                        <input type="text" class="form-control" mds-time-picker placeholder="{{msg('bookingApp.startTimePlaceholder')}}" ng-model="form.dto.startTime">
+                        <input id="startTimeInput" type="text" class="form-control" mds-time-picker placeholder="{{msg('bookingApp.startTimePlaceholder')}}" ng-model="form.dto.startTime">
                         <span class="input-group-addon validator" ng-class="{'alert-danger': form.dto.startTime === '', 'alert-success': form.dto.startTime}"><i class="fa fa-fw fa-check"></i></span>
                     </div>
                     <div class="booking-app input-group prime-vaccination-schedule-modal">
                         <span class="left input-group-addon">{{msg('bookingApp.ignoreDateLimitation')}}</span>
-                        <input type="checkbox" class="col-md-2" ng-model="form.dto.ignoreDateLimitation">
+                        <input id="ignoreDateLimit" type="checkbox" class="col-md-2" ng-model="form.dto.ignoreDateLimitation">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-primary ng-binding" ng-disabled="!formIsFilled()" ng-click="saveVisitReschedule(false)">
+                        <button id="saveBtn" type="button" class="btn btn-primary ng-binding" ng-disabled="!formIsFilled()" ng-click="saveVisitReschedule(false)">
                             <i class="fa fa-fw fa-save"></i> {{msg('bookingApp.save')}}
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.cancel')}}</button>
@@ -36,15 +36,15 @@
                 </div>
             </div>
             <div ng-if="!form.dto">
-                <div class="modal-body">
+                <div id="rescheduleStatusMessage" class="modal-body">
                     {{rescheduleModalBody}}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary ng-binding" ng-click="print()">
+                    <button id="printBtn" type="button" class="btn btn-primary ng-binding" ng-click="print()">
                         <i class="fa fa-fw fa-print"></i> {{msg('bookingApp.screening.printCard')}}
                     </button>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.close')}}</button>
+                        <button id="closeBtn" type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.close')}}</button>
                     </div>
                 </div>
             </div>

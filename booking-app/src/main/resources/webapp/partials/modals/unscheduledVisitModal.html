@@ -17,38 +17,38 @@
                     </div>
                     <div class="booking-app input-group unscheduled-visit-modal">
                         <span class="left input-group-addon">{{msg('bookingApp.date')}}</span>
-                        <input type="text" class="form-control datepicker" readonly='true' booking-app-date-picker for-date="{{form.dto.date}}" placeholder="{{msg('bookingApp.datePlaceholder')}}" ng-model="form.dto.date">
+                        <input id="dateInput" type="text" class="form-control datepicker" readonly='true' booking-app-date-picker for-date="{{form.dto.date}}" placeholder="{{msg('bookingApp.datePlaceholder')}}" ng-model="form.dto.date">
                         <span class="input-group-addon validator" ng-class="{'alert-danger': form.dto.date === '', 'alert-success': form.dto.date}"><i class="fa fa-fw fa-check"></i></span>
                     </div>
                     <div class="booking-app input-group unscheduled-visit-modal">
                         <span class="left input-group-addon">{{msg('bookingApp.startTime')}}</span>
-                        <input type="text" class="form-control" mds-time-picker placeholder="{{msg('bookingApp.startTimePlaceholder')}}" ng-model="form.dto.startTime">
+                        <input id="startTimeInput" type="text" class="form-control" mds-time-picker placeholder="{{msg('bookingApp.startTimePlaceholder')}}" ng-model="form.dto.startTime">
                         <span class="input-group-addon validator" ng-class="{'alert-danger': form.dto.startTime === '', 'alert-success': form.dto.startTime}"><i class="fa fa-fw fa-check"></i></span>
                     </div>
                     <div class="booking-app input-group">
                         <span class="left input-group-addon">{{msg('bookingApp.uncheduledVisit.purpose')}}</span>
-                        <input type="text" class="form-control" placeholder="{{msg('bookingApp.uncheduledVisit.purposePlaceholder')}}" aria-describedby="basic-addon1" ng-model="form.dto.purpose">
+                        <input id="purposeInput" type="text" class="form-control" placeholder="{{msg('bookingApp.uncheduledVisit.purposePlaceholder')}}" aria-describedby="basic-addon1" ng-model="form.dto.purpose">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-primary ng-binding" ng-disabled="!formIsFilled()" ng-click="saveUnscheduledVisit(false)">
+                        <button id="saveBtn" type="button" class="btn btn-primary ng-binding" ng-disabled="!formIsFilled()" ng-click="saveUnscheduledVisit(false)">
                             <i class="fa fa-fw fa-save"></i> {{msg('bookingApp.save')}}
                         </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.cancel')}}</button>
+                        <button id="cancelBtn" type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.cancel')}}</button>
                     </div>
                 </div>
             </div>
             <div ng-if="!form.dto">
-                <div class="modal-body">
+                <div id="successMsg" class="modal-body">
                     {{msg('bookingApp.uncheduledVisit.updateSuccessful')}}
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" role="group">
-                        <button type="button" ng-hide="true" class="btn btn-primary ng-binding" ng-click="printFrom('updated')">
+                        <button id="printBtn" type="button" ng-hide="true" class="btn btn-primary ng-binding" ng-click="printFrom('updated')">
                             <i class="fa fa-fw fa-print"></i> {{msg('bookingApp.printCard')}}
                         </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.close')}}</button>
+                        <button id="closeBtn" type="button" class="btn btn-default" data-dismiss="modal">{{msg('bookingApp.close')}}</button>
                     </div>
                 </div>
             </div>

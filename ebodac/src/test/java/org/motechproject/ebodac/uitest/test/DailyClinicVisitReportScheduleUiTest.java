@@ -3,85 +3,33 @@ package org.motechproject.ebodac.uitest.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.uitest.page.LoginPage;
-import org.motechproject.uitest.TestBase;
-import org.motechproject.ebodac.uitest.helper.TestParticipant;
-import org.motechproject.ebodac.uitest.helper.UITestHttpClientHelper;
-import org.motechproject.ebodac.uitest.page.DailyClinicVisitScheduleReportPage;
-import org.motechproject.ebodac.uitest.page.EBODACPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.DailyClinicVisitScheduleReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.EbodacPage;
 import org.motechproject.ebodac.uitest.page.HomePage;
-import org.motechproject.ebodac.uitest.page.ReportPage;
+import org.motechproject.ebodac.uitest.page.ebodac.reports.ReportsPage;
+
 import static org.junit.Assert.assertFalse;
 
-public class DailyClinicVisitReportScheduleUiTest extends TestBase {
-    private String url;
-    private static final String LOCAL_TEST_MACHINE = "localhost";
-    private static final long SLEEP_2SEC = 2000;
-    private UITestHttpClientHelper httpClientHelper;
-    private String user;
-    private String password;
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private EBODACPage ebodacPage;
-    private ReportPage reportPage;
-    private DailyClinicVisitScheduleReportPage dailyClinicVisitScheduleReportPage;
+public class DailyClinicVisitReportScheduleUiTest extends EbodacTestBase {
+
+    private ReportsPage reportsPage;
 
     @Before
-    public void setUp() throws Exception {
-        try {
-            user = getTestProperties().getUserName();
-            password = getTestProperties().getPassword();
-            loginPage = new LoginPage(getDriver());
-            homePage = new HomePage(getDriver());
-            ebodacPage = new EBODACPage(getDriver());
-            reportPage = new ReportPage(getDriver());
-            dailyClinicVisitScheduleReportPage = new DailyClinicVisitScheduleReportPage(getDriver());
-            url = getServerUrl();
-            if (url.contains(LOCAL_TEST_MACHINE)) {
-                httpClientHelper = new UITestHttpClientHelper(url);
-                httpClientHelper.addParticipant(new TestParticipant(), user, password);
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            } else if (homePage.expectedUrlPath() != currentPage().urlPath()) {
-                loginPage.goToPage();
-                loginPage.login(user, password);
-            }
-        } catch (NullPointerException e) {
-            getLogger().error("setup - NullPointerException . Reason : " + e.getLocalizedMessage(), e);
-        } catch (Exception e) {
-            getLogger().error("setup - Exception . Reason : " + e.getLocalizedMessage(), e);
-        }
+    public void setUp() throws InterruptedException {
+        HomePage homePage = login();
+        EbodacPage ebodacPage = homePage.goToEbodacModule();
+
+        reportsPage = ebodacPage.gotoReports();
     }
 
-    @Test
-    public void dailyClinicVisitReportScheduleTest() throws Exception {
-        try {
-            homePage.openEBODACModule();
-            ebodacPage.sleep(SLEEP_2SEC);
-            ebodacPage.gotoReports();
-            reportPage.sleep(SLEEP_2SEC);
-            reportPage.showDailyClinicVisitReportSchedule();
-            assertFalse(dailyClinicVisitScheduleReportPage.isReportEmpty());
-
-        } catch (AssertionError e) {
-            getLogger().error(
-                    "dailyClinicVisitReportScheduleTest - AssertionError . Reason : " + e.getLocalizedMessage(), e);
-        } catch (InterruptedException e) {
-            getLogger().error(
-                    "dailyClinicVisitReportScheduleTest - NullPointerException . Reason : " + e.getLocalizedMessage(),
-                    e);
-        } catch (NullPointerException e) {
-            getLogger().error(
-                    "dailyClinicVisitReportScheduleTest - NullPointerException . Reason : " + e.getLocalizedMessage(),
-                    e);
-        } catch (Exception e) {
-            getLogger().error("dailyClinicVisitReportScheduleTest - Exception . Reason : " + e.getLocalizedMessage(),
-                    e);
-        }
+    @Test //EBODAC-805
+    public void dailyClinicVisitReportScheduleTest() throws InterruptedException {
+        DailyClinicVisitScheduleReportPage dailyClinicVisitScheduleReportPage = reportsPage.goToDailyClinicVisitReportSchedule();
+        assertFalse(dailyClinicVisitScheduleReportPage.isReportEmpty());
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws InterruptedException {
         logout();
     }
 }
