@@ -1813,7 +1813,7 @@
     "type": "OFFSET",
     "messages": [
       {
-        "name": "Clinic Visit Reminder: 1 week",
+        "name": "Clinic Visit Reminder (Third marklate): 1 week",
         "formats": [
           "IVR",
           "SMS"
@@ -1821,12 +1821,12 @@
         "languages": [
           "en"
         ],
-        "messageKey": "clinic-visit-reminder-1-week-stage-2",
+        "messageKey": "clinic-visit-reminder-(third-marklate)-1-week-stage-2",
         "timeOffset": "-7 Days",
         "startTime": "8:00"
       },
       {
-        "name": "Clinic Visit Reminder: 1 day",
+        "name": "Clinic Visit Reminder (Third marklate): 1 day",
         "formats": [
           "IVR",
           "SMS"
@@ -1834,12 +1834,12 @@
         "languages": [
           "en"
         ],
-        "messageKey": "clinic-visit-reminder-1-day-stage-2",
+        "messageKey": "clinic-visit-reminder-(third-marklate)-1-day-stage-2",
         "timeOffset": "-1 Day",
         "startTime": "8:00"
       },
       {
-        "name": "Clinic Visit Missed appointment 1",
+        "name": "Missed Dose: 3rd",
         "formats": [
           "IVR",
           "SMS"
@@ -1847,7 +1847,7 @@
         "languages": [
           "en"
         ],
-        "messageKey": "clinic-visit-missed-appointment-1-stage-2",
+        "messageKey": "missed-dose-3rd-stage-2",
         "timeOffset": "4 Days",
         "startTime": "8:00"
       }
