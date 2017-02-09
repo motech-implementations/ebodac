@@ -9,6 +9,8 @@ public class Config {
 
     private List<String> clinicExtendedFields;
 
+    private List<String> boosterRelatedMessages;
+
     public Config() {
     }
 
@@ -32,5 +34,16 @@ public class Config {
 
     public void setClinicExtendedFields(List<String> clinicExtendedFields) {
         this.clinicExtendedFields = clinicExtendedFields;
+    }
+
+    public List<String> getBoosterRelatedMessages() {
+        if (boosterRelatedMessages == null) {
+            boosterRelatedMessages = new ArrayList<>();
+        }
+        return boosterRelatedMessages;
+    }
+
+    public void setBoosterRelatedMessages(List<String> boosterRelatedMessages) {
+        this.boosterRelatedMessages = boosterRelatedMessages;
     }
 }

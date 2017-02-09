@@ -454,6 +454,8 @@
         $scope.availableMainFields = [];
         $scope.availableExtendedFields = [];
 
+        $scope.availableCampaigns = [];
+
         $scope.mainFieldsChanged = function(change) {
             var value;
 
@@ -498,6 +500,18 @@
             });
         };
 
+        $scope.boostRelCampaignsChanged = function(change) {
+            var value;
+
+            if (change.added) {
+                value = change.added.text;
+                $scope.config.boosterRelatedMessages.push(value);
+            } else if (change.removed) {
+                value = change.removed.text;
+                $scope.config.boosterRelatedMessages.removeObject(value);
+            }
+        };
+
         $http.get('../booking-app/booking-app-config')
             .success(function(response){
                 var i;
@@ -518,6 +532,18 @@
                     .error(function(response) {
                         $scope.errors.push($scope.msg('bookingApp.settings.advancedSettings.clinicFields.error', response));
                     });
+
+                $http.get('../ebodac/availableCampaigns')
+                    .success(function(response){
+                        $scope.availableCampaigns = response;
+                        $timeout(function() {
+                            $('#boostRelCampaigns').select2('val', $scope.config.boosterRelatedMessages);
+                        }, 50);
+
+                    })
+                    .error(function(response) {
+                        $scope.errors.push($scope.msg('ebodac.web.settings.enroll.disconVacCampaigns.error', response));
+                    });
             })
             .error(function(response) {
                 $scope.errors.push($scope.msg('bookingApp.settings.noConfig', response));
@@ -530,6 +556,8 @@
                 $('#clinicMainFields').select2('val', $scope.config.clinicMainFields);
                 $('#clinicExtendedFields').select2('val', $scope.config.clinicExtendedFields);
             }, 50);
+
+            $('#boostRelCampaigns').select2('val', $scope.config.boosterRelatedMessages);
         };
 
         function hideMsgLater(index) {
