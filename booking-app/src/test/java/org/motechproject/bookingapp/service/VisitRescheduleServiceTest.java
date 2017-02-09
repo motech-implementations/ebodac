@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.motechproject.bookingapp.domain.Config;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
 import org.motechproject.bookingapp.dto.VisitRescheduleDto;
 import org.motechproject.bookingapp.domain.VisitScheduleOffset;
@@ -14,13 +15,11 @@ import org.motechproject.bookingapp.service.impl.VisitRescheduleServiceImpl;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.commons.api.Range;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.ebodac.domain.Config;
 import org.motechproject.ebodac.domain.enums.Language;
 import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.motechproject.ebodac.repository.VisitDataService;
-import org.motechproject.ebodac.service.ConfigService;
 import org.motechproject.ebodac.service.EbodacEnrollmentService;
 import org.motechproject.ebodac.service.LookupService;
 import org.motechproject.ebodac.web.domain.Records;
@@ -54,7 +53,10 @@ public class VisitRescheduleServiceTest {
     private VisitRescheduleService visitRescheduleService = new VisitRescheduleServiceImpl();
 
     @Mock
-    private ConfigService configService;
+    private org.motechproject.ebodac.service.ConfigService ebodacConfigService;
+
+    @Mock
+    private ConfigService bookingAppConfigService;
 
     @Mock
     private VisitScheduleOffsetService visitScheduleOffsetService;
@@ -114,12 +116,15 @@ public class VisitRescheduleServiceTest {
 
         when(visitScheduleOffsetService.getAllAsMap()).thenReturn(offsetMap);
 
-        Config config = new Config();
-        List<String> boosterRelatedMessage = new ArrayList<>(Arrays.asList("Boost Vaccination First Follow-up visit - stage 2"));
-        config.setActiveStageId(2L);
-        config.setBoosterRelatedMessages(boosterRelatedMessage);
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(2L);
 
-        when(configService.getConfig()).thenReturn(config);
+        Config bookingAppConfig = new Config();
+        List<String> boosterRelatedMessage = new ArrayList<>(Arrays.asList("Boost Vaccination First Follow-up visit - stage 2"));
+        bookingAppConfig.setBoosterRelatedMessages(boosterRelatedMessage);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(bookingAppConfig);
 
         List<VisitRescheduleDto> expectedDtos = new ArrayList<>(Arrays.asList(
                 new VisitRescheduleDto(visitBookingDetailses.get(0), new Range<>(new LocalDate(2217, 2, 6), new LocalDate(2217, 2, 13)), false, false),

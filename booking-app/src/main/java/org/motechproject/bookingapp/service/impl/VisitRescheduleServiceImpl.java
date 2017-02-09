@@ -12,23 +12,23 @@ import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.helper.VisitLimitationHelper;
 import org.motechproject.bookingapp.repository.ClinicDataService;
 import org.motechproject.bookingapp.repository.VisitBookingDetailsDataService;
+import org.motechproject.bookingapp.service.ConfigService;
 import org.motechproject.bookingapp.service.VisitRescheduleService;
 import org.motechproject.bookingapp.service.VisitScheduleOffsetService;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.commons.api.Range;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.ebodac.constants.EbodacConstants;
-import org.motechproject.ebodac.domain.Config;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.motechproject.ebodac.repository.VisitDataService;
-import org.motechproject.ebodac.service.ConfigService;
 import org.motechproject.ebodac.service.EbodacEnrollmentService;
 import org.motechproject.ebodac.service.LookupService;
 import org.motechproject.ebodac.util.QueryParamsBuilder;
 import org.motechproject.ebodac.web.domain.Records;
 import org.motechproject.mds.query.QueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -62,7 +62,12 @@ public class VisitRescheduleServiceImpl implements VisitRescheduleService {
     private VisitLimitationHelper visitLimitationHelper;
 
     @Autowired
-    private ConfigService configService;
+    @Qualifier("configService")
+    private org.motechproject.ebodac.service.ConfigService ebodacConfigService;
+
+    @Autowired
+    @Qualifier("bookingAppConfigService")
+    private ConfigService bookingAppConfigService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -72,9 +77,8 @@ public class VisitRescheduleServiceImpl implements VisitRescheduleService {
         Records<VisitBookingDetails> detailsRecords = lookupService.getEntities(VisitBookingDetails.class, settings.getLookup(), settings.getFields(), queryParams);
 
         Map<Long, Map<VisitType, VisitScheduleOffset>> offsetMap = visitScheduleOffsetService.getAllAsMap();
-        Config config = configService.getConfig();
-        List<String> boosterRelatedMessages = config.getBoosterRelatedMessages();
-        Long activeStageId = config.getActiveStageId();
+        List<String> boosterRelatedMessages = bookingAppConfigService.getConfig().getBoosterRelatedMessages();
+        Long activeStageId = ebodacConfigService.getConfig().getActiveStageId();
 
         List<VisitRescheduleDto> dtos = new ArrayList<>();
 
@@ -178,9 +182,8 @@ public class VisitRescheduleServiceImpl implements VisitRescheduleService {
 
         if (!dto.getIgnoreDateLimitation()) {
             Map<Long, Map<VisitType, VisitScheduleOffset>> offsetMap = visitScheduleOffsetService.getAllAsMap();
-            Config config = configService.getConfig();
-            List<String> boosterRelatedMessages = config.getBoosterRelatedMessages();
-            Long activeStageId = config.getActiveStageId();
+            List<String> boosterRelatedMessages = bookingAppConfigService.getConfig().getBoosterRelatedMessages();
+            Long activeStageId = ebodacConfigService.getConfig().getActiveStageId();
 
             Range<LocalDate> dateRange = calculateEarliestAndLatestDate(visit, offsetMap, boosterRelatedMessages, activeStageId);
 
