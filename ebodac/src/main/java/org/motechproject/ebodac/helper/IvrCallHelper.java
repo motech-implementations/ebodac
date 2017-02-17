@@ -59,8 +59,9 @@ public class IvrCallHelper {
         Long actualStageId = getActualStageId(enrollment, subject.getStageId(), config.getActiveStageId());
 
         if (config.getSendIvrCalls() != null && config.getSendIvrCalls() && checkIfCallsForThisStageAreEnabled(config, actualStageId)) {
+            LocalDate screeningDate = SubjectAgeRangeHelper.getScreeningActualDate(subject);
             String messageKeyWithAgeRange = messageKey + SubjectAgeRangeHelper.getAgeRangeMessageCode(subject.getDateOfBirth(),
-                    LocalDate.now(), actualStageId, config.getSubjectAgeRangeList());
+                    screeningDate, actualStageId, config.getSubjectAgeRangeList());
 
             String votoLanguageId = getVotoLanguageId(subject.getLanguage(), externalId);
             String votoMessageId = getVotoMessageId(messageKeyWithAgeRange, externalId);
