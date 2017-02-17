@@ -22,11 +22,13 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.ebodac.constants.EbodacConstants;
 import org.motechproject.ebodac.domain.Config;
 import org.motechproject.ebodac.domain.Enrollment;
-import org.motechproject.ebodac.domain.SubjectAgeRange;
-import org.motechproject.ebodac.domain.enums.Language;
 import org.motechproject.ebodac.domain.Subject;
+import org.motechproject.ebodac.domain.SubjectAgeRange;
+import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.VotoLanguage;
 import org.motechproject.ebodac.domain.VotoMessage;
+import org.motechproject.ebodac.domain.enums.Language;
+import org.motechproject.ebodac.domain.enums.VisitType;
 import org.motechproject.ebodac.exception.EbodacInitiateCallException;
 import org.motechproject.ebodac.repository.EnrollmentDataService;
 import org.motechproject.ebodac.repository.VotoLanguageDataService;
@@ -728,11 +730,16 @@ public class IvrCallHelperTest {
         String votoMessageId = "456";
         String votoLanguageId = "789";
 
+        Visit visit = new Visit();
+        visit.setType(VisitType.SCREENING);
+        visit.setDate(LocalDate.now());
+
         Subject subject = new Subject();
         subject.setSubjectId(externalId);
         subject.setPhoneNumber(subjectPhoneNumber);
         subject.setLanguage(Language.English);
         subject.setDateOfBirth(LocalDate.now().minusYears(5));
+        subject.setVisits(Collections.singletonList(visit));
         when(subjectService.findSubjectBySubjectId(externalId)).thenReturn(subject);
 
         Enrollment enrollment = new Enrollment(externalId, campaignName, LocalDate.now(), 1L);
@@ -775,11 +782,16 @@ public class IvrCallHelperTest {
         String votoMessageId = "456";
         String votoLanguageId = "789";
 
+        Visit visit = new Visit();
+        visit.setType(VisitType.SCREENING);
+        visit.setDate(LocalDate.now());
+
         Subject subject = new Subject();
         subject.setSubjectId(externalId);
         subject.setPhoneNumber(subjectPhoneNumber);
         subject.setLanguage(Language.English);
         subject.setDateOfBirth(LocalDate.now().minusYears(40));
+        subject.setVisits(Collections.singletonList(visit));
         when(subjectService.findSubjectBySubjectId(externalId)).thenReturn(subject);
 
         Enrollment enrollment = new Enrollment(externalId, campaignName, LocalDate.now(), 1L);

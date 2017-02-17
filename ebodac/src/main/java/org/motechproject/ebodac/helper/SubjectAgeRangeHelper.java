@@ -3,7 +3,10 @@ package org.motechproject.ebodac.helper;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.motechproject.commons.api.Range;
+import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.SubjectAgeRange;
+import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.domain.enums.VisitType;
 
 import java.util.List;
 
@@ -11,6 +14,16 @@ public final class SubjectAgeRangeHelper {
     private static final String AGE = "-age:";
 
     private SubjectAgeRangeHelper() {
+    }
+
+    public static LocalDate getScreeningActualDate(Subject subject) {
+        for (Visit visit : subject.getVisits()) {
+            if (VisitType.SCREENING.equals(visit.getType())) {
+                return visit.getDate();
+            }
+        }
+
+        return null;
     }
 
     public static String getAgeRangeMessageCode(LocalDate dateOfBirth, LocalDate referenceDate,
@@ -40,9 +53,9 @@ public final class SubjectAgeRangeHelper {
         return dateOfBirthRange;
     }
 
-    private static SubjectAgeRange getSubjectAgeRange(LocalDate dateOfBirth, LocalDate referenceDate,
+    private static SubjectAgeRange getSubjectAgeRange(LocalDate dateOfBirth, LocalDate referenceDate, //NO CHECKSTYLE CyclomaticComplexity
                                                       Long stageId, List<SubjectAgeRange> subjectAgeRangeList) {
-        if (dateOfBirth == null || !dateOfBirth.isBefore(referenceDate)) {
+        if (dateOfBirth == null || referenceDate == null || !dateOfBirth.isBefore(referenceDate)) {
             return null;
         }
 

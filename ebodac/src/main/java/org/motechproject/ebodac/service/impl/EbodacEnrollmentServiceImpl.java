@@ -736,8 +736,9 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         String campaignName = enrollment.getCampaignName();
         Long stageId = enrollment.getStageId();
 
+        LocalDate screeningDate = SubjectAgeRangeHelper.getScreeningActualDate(subject);
         Range<LocalDate> dateOfBirthRange = SubjectAgeRangeHelper.calculateDateOfBirthRange(subject.getDateOfBirth(),
-                enrollment.getReferenceDate(), enrollment.getStageId(), configService.getConfig().getSubjectAgeRangeList());
+                screeningDate, enrollment.getStageId(), configService.getConfig().getSubjectAgeRangeList());
 
         List<Subject> subjects = subjectDataService.findByPhoneNumberAndDateOfBirthRange(phoneNumber, dateOfBirthRange);
 
