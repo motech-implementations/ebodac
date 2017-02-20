@@ -201,4 +201,15 @@ public class HomePage extends MotechPage {
         String readonly = findElement(by).getAttribute("readonly");
         return readonly == null || !(readonly.contains("readonly") || readonly.contains("true"));
     }
+
+    public boolean checkColumn(By column) {
+        try {
+            if (findElement(column) == null) {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

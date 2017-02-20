@@ -13,17 +13,6 @@ public abstract class AbstractKPIsPage extends EbodacPage {
         super(driver);
     }
 
-    public boolean checkColumn(By column) {
-        try {
-            if (findElement(column) == null) {
-                return false;
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public void showStatsFromLast30Days() throws InterruptedException {
         clickWhenVisible(STAT_PERIOD_BUTTON);
         clickWhenVisible(LAST_30_DAYS);
