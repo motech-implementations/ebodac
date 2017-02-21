@@ -21,7 +21,7 @@ public class ReportsPage extends EbodacPage {
     private static final By PRIME_FOLLOW_AND_BOOST_REPORT = By.id("day8AndDay57Report");
     private static final By SMS_LOG = By.id("SMSLog");
 
-    private static final By REPORT_TABLE = By.id("load_reportTable");
+    private static final By REPORT_TABLE_LOADING = By.id("load_reportTable");
 
     public ReportsPage(WebDriver driver) {
         super(driver);
@@ -44,43 +44,43 @@ public class ReportsPage extends EbodacPage {
     public DailyClinicVisitScheduleReportPage goToDailyClinicVisitReportSchedule() throws InterruptedException {
         clickWhenVisible(DAILY_CLINIC_VISIT_SCHEDULE_REPORT);
         //wait for grid to load the data (when "Loading..." disappear)
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new DailyClinicVisitScheduleReportPage(getDriver());
     }
 
     public FollowupsAfterPrimeInjectionReportPage goToFollowUpsAfterPrimeInjectionReport() throws InterruptedException {
         clickWhenVisible(FOLLOW_UPS_AFTER_PRIME_INJECTION_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new FollowupsAfterPrimeInjectionReportPage(getDriver());
     }
 
     public FollowupsMissedClinicVisitsReportPage goToFollowUpsMissedClinicReport() throws InterruptedException {
         clickWhenVisible(FOLLOW_UPS_MISSED_CLINIC_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new FollowupsMissedClinicVisitsReportPage(getDriver());
     }
 
     public NumberOfTimesListenedReportPage goToNumberOfTimesReport() throws InterruptedException {
         clickWhenVisible(NUMBER_OF_TIMES_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new NumberOfTimesListenedReportPage(getDriver());
     }
 
     public MEMissedClinicVisitsReportPage goToMEMissedClinicVisitsReport() throws InterruptedException {
         clickWhenVisible(MEMISSED_CLINIC_VISITS_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new MEMissedClinicVisitsReportPage(getDriver());
     }
 
     public ParticipantsWhoOptOutOfMessagesReportPage goToParticipantsWhoOptOutOfMessages() throws InterruptedException {
         clickWhenVisible(PARTICIPANTS_WHO_OPT_OUT_OF_MESSAGES_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new ParticipantsWhoOptOutOfMessagesReportPage(getDriver());
     }
 
     public ScreeningReportPage goToScreeningReport() throws InterruptedException {
         clickWhenVisible(SCREENING_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new ScreeningReportPage(getDriver());
     }
 
@@ -93,7 +93,7 @@ public class ReportsPage extends EbodacPage {
 
     public PrimeFollowAndBoostReportPage goToPrimeFollowAndBoostReport() throws InterruptedException {
         clickWhenVisible(PRIME_FOLLOW_AND_BOOST_REPORT);
-        waitForElementToBeHidden(REPORT_TABLE);
+        waitForElementToBeHidden(REPORT_TABLE_LOADING);
         return new PrimeFollowAndBoostReportPage(getDriver());
     }
 
