@@ -7,8 +7,6 @@ public class PrimeFollowAndBoostReportPage extends BaseReportPage {
 
     public static final String URL_PATH = "/home#/ebodac/reports/day8AndDay57Report";
 
-    private static final By LOOKUP = By.id("lookupDialogButton");
-    private static final By LOOKUP_DROPDOWN = By.id("selectLookupBtn");
     private static final By VISIT_TYPE_AND_ACTUAL_VISIT_DATE_LOOKUP = By.linkText("Find By Visit Type And Actual Visit Date");
     private static final By VISIT_TYPE_AND_SITE_NAME_LOOKUP = By.linkText("Find By Visit Type And Site Name");
     private static final By VISIT_TYPE_PLANNED_VISIT_DATE_AND_SITE_NAME_LOOKUP = By.linkText("Find By Visit Type Planned Visit Date And Site Name");
@@ -28,14 +26,6 @@ public class PrimeFollowAndBoostReportPage extends BaseReportPage {
     @Override
     public String expectedUrlPath() {
         return URL_PATH;
-    }
-
-    public void openLookup() throws InterruptedException {
-        clickWhenVisible(LOOKUP);
-    }
-
-    public void openDropdown() throws InterruptedException {
-        clickWhenVisible(LOOKUP_DROPDOWN);
     }
 
     public boolean areLookupsPresent() {
