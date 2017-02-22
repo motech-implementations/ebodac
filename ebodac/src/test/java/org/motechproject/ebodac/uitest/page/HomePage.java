@@ -29,12 +29,14 @@ public class HomePage extends MotechPage {
 
     private static final By GRID_TABLE = By.xpath("//table[@class='ui-jqgrid-htable']");
     private static final By INSTANCES_TABLE_LOADING = By.id("load_instancesTable");
+    private static final By INSTANCE_TABLE = By.id("entityInstancesTable");
     private static final By IVR_FILTERS = By.className("filter-header");
 
     private static final int WIDTH = 1920;
     private static final int HEIGHT = 1080;
 
     private static final int TIME_500 = 500;
+    private static final int TIME_1000 = 500;
     private static final int TIME_10000 = 10000;
 
     public HomePage(WebDriver driver) {
@@ -189,11 +191,16 @@ public class HomePage extends MotechPage {
         sleep(TIME_500);
     }
 
+    public void sleep1000() {
+        sleep(TIME_1000);
+    }
+
     public boolean isElementPresent(By by) {
         return !getDriver().findElements(by).isEmpty();
     }
 
     public void waitUntilInstancesTableLoadingIsGone() {
+        findElement(INSTANCE_TABLE);
         waitForElementToBeHidden(INSTANCES_TABLE_LOADING);
     }
 

@@ -3,8 +3,8 @@ package org.motechproject.ebodac.uitest.test;
 import org.junit.Before;
 import org.motechproject.ebodac.uitest.helper.EbodacTestProperties;
 import org.motechproject.ebodac.uitest.page.HomePage;
+import org.motechproject.ebodac.uitest.page.LoginPage;
 import org.motechproject.uitest.TestBase;
-import org.motechproject.uitest.page.LoginPage;
 
 public class EbodacTestBase extends TestBase {
     private static final EbodacTestProperties TEST_PROPERTIES = EbodacTestProperties.instance();
@@ -40,8 +40,7 @@ public class EbodacTestBase extends TestBase {
     public HomePage login(String username, String password) {
         loginPage.goToPage();
         assertPage(loginPage);
-        loginPage.login(username, password);
-        HomePage homePage = new HomePage(getDriver());
+        HomePage homePage = loginPage.login(username, password);
         homePage.waitUntilBlockUiIsGone();
         return homePage;
     }

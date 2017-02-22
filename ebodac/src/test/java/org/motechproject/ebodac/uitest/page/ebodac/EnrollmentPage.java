@@ -8,7 +8,7 @@ public class EnrollmentPage extends EbodacPage {
 
     public static final String URL_PATH = "home#/ebodac/enrollment";
 
-    private static final String TEST_PARTICIPANT_ID = "9990000004";
+    private static final String TEST_PARTICIPANT_ID = "9990000099";
 
     private static final String ENROLL_SUCCESS_TITLE = "Enrolled";
     private static final String UNENROLL_SUCCESS_TITLE = "Unenrolled";

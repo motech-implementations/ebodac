@@ -94,6 +94,7 @@ public class AdminAccessToEbodacTabsUiTest extends EbodacTestBase {
     private void testAdminEnrolmentTab() throws InterruptedException {
         EnrollmentPage enrollmentPage = ebodacPage.goToEnrollment();
         // It should be allowed to enrol unenroll participants.
+        enrollmentPage.findTestParticipant();
         assertTrue(enrollmentPage.enrollParticipant());
         assertTrue(enrollmentPage.unenrollParticipant());
     }
