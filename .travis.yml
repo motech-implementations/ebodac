@@ -4,7 +4,6 @@ jdk:
 
 env:
   - TEST=it
-  - TEST=ui
 
 services:
   - mysql

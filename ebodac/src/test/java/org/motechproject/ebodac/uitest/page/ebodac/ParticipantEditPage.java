@@ -9,7 +9,7 @@ public class ParticipantEditPage extends EbodacPage {
 
     public static final String URL_PATH = "/home#/mds/dataBrowser";
 
-    private static final String LANGUAGE_PATH = "//ng-form[@name='language']/div[1]/div/ul/li[%d]/a/label";
+    private static final String LANGUAGE_PATH = "//ng-form[@name='language']/div[1]/div/ul/li/a/label[contains(text(), '%s')]";
     private static final By SELECTED_LANGUAGE = By.xpath("//ng-form[@name='language']/div[1]/div/button");
 
     private static final By PHONE_NUMBER_FIELD = By.id("phoneNumberForm");
@@ -65,8 +65,8 @@ public class ParticipantEditPage extends EbodacPage {
     }
 
     public void changeLanguage(Language language) throws InterruptedException {
-        int languagePos = language == null ? 1 : (language.ordinal() + 2);
-        By xpathLanguage = By.xpath(String.format(LANGUAGE_PATH, languagePos));
+        By xpathLanguage = By.xpath(String.format(LANGUAGE_PATH, language));
+        getLogger().error("Language pos: " + language);
 
         clickWhenVisible(SELECTED_LANGUAGE);
         clickOn(xpathLanguage);

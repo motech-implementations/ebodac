@@ -8,7 +8,7 @@ public class BookingAppRescheduleVisitPage extends BookingAppPage {
 
     public static final String URL_PATH = "/home#/bookingApp/reschedule";
 
-    private static final String TEST_PARTICIPANT_ID = "9990000004";
+    private static final String TEST_PARTICIPANT_ID = "9990000099";
     private static final String HOUR_12_MINUTE_00 = "12:00";
     private static final String VISIT_PLANNED_DATE_UPDATED_SUCCESSFULLY = "Visit Planned Date updated successfully.";
     private static final int DAY_BEFORE_CHANGE = 5;

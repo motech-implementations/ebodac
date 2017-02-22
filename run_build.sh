@@ -6,16 +6,7 @@ function runUITests {
 }
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-    if [ "$TEST" = "it" ]; then
-        echo "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES\n" | mysql -u root
-        mvn clean install -PIT -U
-    elif [ "$TEST" = "ui" ]; then
-        if [ "$UI_TESTS_ENABLED" = "true" ]; then
-            runUITests
-        else
-            echo "UI Tests skipped"
-        fi
-    fi
+     runUITests
 elif [ "$TRAVIS_EVENT_TYPE" = "api" ] && [ "$RUN_UI_TESTS" = "true" ]; then
     runUITests
 fi
