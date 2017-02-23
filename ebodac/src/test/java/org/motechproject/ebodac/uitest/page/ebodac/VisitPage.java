@@ -7,7 +7,7 @@ public class VisitPage extends EbodacPage {
 
     private static final String URL_PATH = "/home#/ebodac/visits";
 
-    private static final String TEST_PARTICIPANT_ID = "9990000004";
+    private static final String TEST_PARTICIPANT_ID = "9990000099";
     private static final String INNER_HTML = "innerHTML";
     private static final String NO_RECORDS_TO_VIEW = "No records to view";
 
@@ -56,6 +56,8 @@ public class VisitPage extends EbodacPage {
     }
 
     private void findParticipantById(String participantId) throws InterruptedException {
+        waitUntilBlockUiIsGone();
+        waitUntilInstancesTableLoadingIsGone();
         clickWhenVisible(LOOKUP_DIALOG_BUTTON);
         clickWhenVisible(SELECT_LOOKUP_BUTTON);
         clickWhenVisible(FIND_BY_PARTICIPANT_ID);

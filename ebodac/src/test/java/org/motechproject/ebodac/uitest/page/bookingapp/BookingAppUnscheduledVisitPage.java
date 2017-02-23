@@ -1,14 +1,18 @@
 package org.motechproject.ebodac.uitest.page.bookingapp;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
 public class BookingAppUnscheduledVisitPage extends BookingAppPage {
 
     public static final String URL_PATH = "/home#/bookingApp/unscheduledVisit";
-    private static final String TEST_PARTICIPANT_ID = "9990000004";
+    private static final String TEST_PARTICIPANT_ID = "9990000099";
+    private static final int TIME_10000 = 10000;
 
     private static final By TEST_PARTICIPANT = By.xpath("//*[@id='select2-drop']/ul/li/div[contains(text(), '" + TEST_PARTICIPANT_ID + "')]");
+    private static final By PARTICIPANT_SELECT_LIST = By.xpath("//*[@id='select2-drop']/ul/li");
+    private static final By SEARCH = By.id("s2id_autogen2_search");
     private static final By BOOK_UNSCHEDULED_VISIT_BUTTON = By.id("addUnscheduledBtn");
     private static final By PARTICIPANT_DROP_DOWN = By.id("s2id_participantSelect");
     private static final By UNSCHEDULED_VISIT_DATE_PICKER = By.id("dateInput");
@@ -37,6 +41,14 @@ public class BookingAppUnscheduledVisitPage extends BookingAppPage {
 
     public void clickOnParticipantIdDropDownAndChooseTestParticipant() throws InterruptedException {
         clickWhenVisible(PARTICIPANT_DROP_DOWN);
+
+        Long startTime = System.currentTimeMillis();
+        while (findElements(PARTICIPANT_SELECT_LIST).size() < 2 && System.currentTimeMillis() - startTime < TIME_10000) {
+            findElement(SEARCH).sendKeys(Keys.ESCAPE);
+            sleep500();
+            clickWhenVisible(PARTICIPANT_DROP_DOWN);
+        }
+
         clickWhenVisible(TEST_PARTICIPANT);
     }
 

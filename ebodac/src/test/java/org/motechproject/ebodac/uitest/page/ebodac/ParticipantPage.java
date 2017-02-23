@@ -7,7 +7,7 @@ public class ParticipantPage extends EbodacPage {
 
     public static final String URL_PATH = "/home#/ebodac/subjects";
 
-    private static final String TEST_PARTICIPANT_ID = "9990000004";
+    private static final String TEST_PARTICIPANT_ID = "9990000099";
 
     private static final By PARTICIPANT_ROW = By.xpath("//*[@id='instancesTable']/tbody/tr[2]");
     private static final By LOOKUP_DIALOG_BUTTON = By.id("lookupDialogButton");
