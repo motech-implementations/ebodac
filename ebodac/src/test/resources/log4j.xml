@@ -34,6 +34,14 @@
         <level value="OFF"/>
     </logger>
 
+    <logger name="org.motechproject.uitest">
+        <level value="DEBUG"/>
+    </logger>
+
+    <logger name="org.motechproject.ebodac.uitest">
+        <level value="DEBUG"/>
+    </logger>
+
     <root>
         <priority value="ERROR"/>
         <appender-ref ref="CONSOLE"/>

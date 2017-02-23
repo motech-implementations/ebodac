@@ -32,6 +32,7 @@ public class BookingApplicationUiCreationOfTheTabClinicVisitScheduletUiTest exte
 
         bookingAppClinicVisitSchedulePage.clickOnPrimeVacDayDate();
         bookingAppClinicVisitSchedulePage.clickOnFirstDayInCalendar();
+        bookingAppClinicVisitSchedulePage.sleep1000();
         assertTrue(bookingAppClinicVisitSchedulePage.checkIfPrimeVacFirstFollowUpCalculated());
 
         bookingAppClinicVisitSchedulePage.clickPrintButton();
