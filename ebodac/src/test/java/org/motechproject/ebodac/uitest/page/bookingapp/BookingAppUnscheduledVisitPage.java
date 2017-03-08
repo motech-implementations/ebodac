@@ -3,6 +3,7 @@ package org.motechproject.ebodac.uitest.page.bookingapp;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class BookingAppUnscheduledVisitPage extends BookingAppPage {
 
@@ -15,7 +16,7 @@ public class BookingAppUnscheduledVisitPage extends BookingAppPage {
     private static final By SEARCH = By.id("s2id_autogen2_search");
     private static final By BOOK_UNSCHEDULED_VISIT_BUTTON = By.id("addUnscheduledBtn");
     private static final By PARTICIPANT_DROP_DOWN = By.id("s2id_participantSelect");
-    private static final By UNSCHEDULED_VISIT_DATE_PICKER = By.id("dateInput");
+    private static final By UNSCHEDULED_VISIT_DATE_INPUT = By.id("dateInput");
     private static final By UNSCHEDULED_VISIT_DATE_PICKER_TODAY_BUTTON = By.xpath("//button[@data-handler='today']");
     private static final By UNSCHEDULED_VISIT_DATE_PICKER_DONE_BUTTON = By.xpath("//button[@data-handler='hide']");
     private static final By UNSCHEDULED_VISIT_START_TIME_INPUT = By.id("startTimeInput");
@@ -43,21 +44,29 @@ public class BookingAppUnscheduledVisitPage extends BookingAppPage {
         clickWhenVisible(PARTICIPANT_DROP_DOWN);
 
         Long startTime = System.currentTimeMillis();
-        while (findElements(PARTICIPANT_SELECT_LIST).size() < 2 && System.currentTimeMillis() - startTime < TIME_10000) {
-            findElement(SEARCH).sendKeys(Keys.ESCAPE);
-            sleep500();
-            clickWhenVisible(PARTICIPANT_DROP_DOWN);
+        while (System.currentTimeMillis() - startTime < TIME_10000) {
+            if (getDriver().findElements(PARTICIPANT_SELECT_LIST).size() == 0) {
+                clickWhenVisible(PARTICIPANT_DROP_DOWN);
+                sleep500();
+            } else if (getDriver().findElements(PARTICIPANT_SELECT_LIST).size() < 2) {
+                findElement(SEARCH).sendKeys(Keys.ESCAPE);
+                sleep500();
+                clickWhenVisible(PARTICIPANT_DROP_DOWN);
+            } else {
+                break;
+            }
         }
 
         clickWhenVisible(TEST_PARTICIPANT);
     }
 
     public void setDatesForUnscheduledVisit() throws InterruptedException {
-        clickWhenVisible(UNSCHEDULED_VISIT_DATE_PICKER);
+        clickWhenVisible(UNSCHEDULED_VISIT_DATE_INPUT);
         clickWhenVisible(UNSCHEDULED_VISIT_DATE_PICKER_TODAY_BUTTON);
         clickWhenVisible(UNSCHEDULED_VISIT_DATE_PICKER_DONE_BUTTON);
-        findElement(UNSCHEDULED_VISIT_START_TIME_INPUT).sendKeys("23:59");
-        clickWhenVisible(UNSCHEDULED_VISIT_DATE_PICKER_DONE_BUTTON);
+        WebElement timeInput = findElement(UNSCHEDULED_VISIT_START_TIME_INPUT);
+        timeInput.sendKeys("23:59");
+        timeInput.sendKeys(Keys.ESCAPE);
     }
 
     public void clickOnButtonToSaveUnscheduledVisit() throws InterruptedException {

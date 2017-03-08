@@ -55,6 +55,6 @@ public class VisitEditPage extends EbodacPage {
     public void changePlannedDate(String date) {
         findElement(PLANNED_VISIT_DATE).clear();
         findElement(PLANNED_VISIT_DATE).sendKeys(date);
-        findElement(PLANNED_VISIT_DATE).sendKeys(Keys.ENTER);
+        findElement(PLANNED_VISIT_DATE).sendKeys(Keys.ESCAPE);
     }
 }

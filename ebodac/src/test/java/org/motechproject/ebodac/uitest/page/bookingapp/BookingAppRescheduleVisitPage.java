@@ -2,7 +2,9 @@
 package org.motechproject.ebodac.uitest.page.bookingapp;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class BookingAppRescheduleVisitPage extends BookingAppPage {
 
@@ -26,7 +28,6 @@ public class BookingAppRescheduleVisitPage extends BookingAppPage {
     private static final By PRINT_CARD = By.id("printBtn");
     private static final By DATE_FIELD = By.id("plannedDateInput");
     private static final By TIME_FIELD = By.id("startTimeInput");
-    private static final By TIME_PICKER_DONE_BUTTON = By.xpath("//*[@id='ui-datepicker-div']/div[3]/button[2]");
     private static final By DIALOG_TEXT = By.id("rescheduleStatusMessage");
     private static final By POPUP_OK = By.id("popup_ok");
 
@@ -62,10 +63,13 @@ public class BookingAppRescheduleVisitPage extends BookingAppPage {
             clickWhenVisible(IGNORE_EARLIEST_LATEST_DATE);
         }
         clickWhenVisible(DATE_FIELD);
+        sleep500();
         clickWhenVisible(By.linkText(Integer.toString(day)));
 
-        setTextToFieldNoEnter(TIME_FIELD, HOUR_12_MINUTE_00);
-        clickWhenVisible(TIME_PICKER_DONE_BUTTON);
+        WebElement timeInput = findElement(TIME_FIELD);
+        timeInput.clear();
+        timeInput.sendKeys(HOUR_12_MINUTE_00);
+        timeInput.sendKeys(Keys.ESCAPE);
 
         clickWhenVisible(SAVE_BUTTON);
         clickWhenVisible(POPUP_OK);
@@ -82,7 +86,7 @@ public class BookingAppRescheduleVisitPage extends BookingAppPage {
         clickWhenVisible(PRINT_CARD);
     }
 
-    public void clickCose() throws InterruptedException {
+    public void clickClose() throws InterruptedException {
         clickWhenVisible(CLOSE_BUTTON);
     }
 

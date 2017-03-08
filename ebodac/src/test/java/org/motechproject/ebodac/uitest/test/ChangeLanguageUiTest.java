@@ -35,8 +35,6 @@ public class ChangeLanguageUiTest extends EbodacTestBase {
         participantPage.findTestParticipant();
         // We access to the edit page of the participant
         ParticipantEditPage participantEditPage = participantPage.editFirstParticipant();
-        // We store the language.
-        Language originalLanguage = participantEditPage.getLanguage();
 
         // Change the language
         participantEditPage.changeLanguage(Language.English);
@@ -46,7 +44,7 @@ public class ChangeLanguageUiTest extends EbodacTestBase {
         participantEditPage = participantPage.editFirstParticipant();
         assertEquals(Language.English, participantEditPage.getLanguage());
 
-        participantEditPage.changeLanguage(originalLanguage);
+        participantEditPage.changeLanguage(Language.Temne);
         participantEditPage.saveParticipant();
     }
 

@@ -9,9 +9,7 @@ public class ParticipantEditPage extends EbodacPage {
 
     public static final String URL_PATH = "/home#/mds/dataBrowser";
 
-    private static final String LANGUAGE_PATH = "//ng-form[@name='language']/div[1]/div/ul/li/a/label[contains(text(), '%s')]";
     private static final By SELECTED_LANGUAGE = By.xpath("//ng-form[@name='language']/div[1]/div/button");
-
     private static final By PHONE_NUMBER_FIELD = By.id("phoneNumberForm");
     private static final By NAME_FIELD = By.xpath("//ng-form[@name='name']/div/input");
     private static final By HOUSEHOLD_NAME_FIELD = By.xpath("//ng-form[@name='householdName']/div/input");
@@ -38,6 +36,8 @@ public class ParticipantEditPage extends EbodacPage {
     public void changePhoneNumber(String number) {
         WebElement phoneNumberField = findElement(PHONE_NUMBER_FIELD);
         phoneNumberField.clear();
+        sleep500();
+        phoneNumberField.clear();
         phoneNumberField.sendKeys(number);
     }
 
@@ -56,6 +56,7 @@ public class ParticipantEditPage extends EbodacPage {
     public void saveParticipant() throws InterruptedException {
         clickWhenVisible(SAVE_BUTTON);
         clickWhenVisible(CONFIRMATION_BUTTON);
+
         waitUntilBlockUiIsGone();
         waitUntilInstancesTableLoadingIsGone();
     }
@@ -65,11 +66,9 @@ public class ParticipantEditPage extends EbodacPage {
     }
 
     public void changeLanguage(Language language) throws InterruptedException {
-        By xpathLanguage = By.xpath(String.format(LANGUAGE_PATH, language));
-        getLogger().error("Language pos: " + language);
-
         clickWhenVisible(SELECTED_LANGUAGE);
-        clickOn(xpathLanguage);
+        clickWhenVisible(By.linkText(language.name()));
+        sleep500();
     }
 
     /**

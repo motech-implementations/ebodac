@@ -28,10 +28,10 @@ public class BookingApplicationRescheduleVisitUiTest extends EbodacTestBase {
         assertTrue(bookingAppRescheduleVisitPage.rescheduleVisit());
         bookingAppRescheduleVisitPage.printCard();
         assertTrue(bookingAppRescheduleVisitPage.closePdfIfIsOpen(handle));
-        bookingAppRescheduleVisitPage.clickCose();
+        bookingAppRescheduleVisitPage.clickClose();
         bookingAppRescheduleVisitPage.chooseTestVisit();
         assertTrue(bookingAppRescheduleVisitPage.changeBackTheDate());
-        bookingAppRescheduleVisitPage.clickCose();
+        bookingAppRescheduleVisitPage.clickClose();
     }
 
     @After
