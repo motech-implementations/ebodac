@@ -2,6 +2,7 @@ package org.motechproject.ebodac.uitest.page;
 
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -95,13 +96,17 @@ public class DataServicesPage extends HomePage {
         chooseLookupByName(LOOKUP_BY_PARTICIPANT_ID_AND_VISIT_TYPE);
         findByParticipantIdAndVisitType(FIRST_TEST_PARTICIPANT_ID, VisitType.SCREENING);
         editFirstEntity();
-        findElement(BOOKING_ACTUAL_DATE_FIELD).clear();
+        WebElement actualDateInput = findElement(BOOKING_ACTUAL_DATE_FIELD);
+        actualDateInput.clear();
+        actualDateInput.sendKeys(Keys.ESCAPE);
         saveEntity();
 
         chooseLookupByName(LOOKUP_BY_PARTICIPANT_ID_AND_VISIT_TYPE);
         findByParticipantIdAndVisitType(FIRST_TEST_PARTICIPANT_ID, VisitType.PRIME_VACCINATION_DAY);
         editFirstEntity();
-        findElement(BOOKING_PLANNED_DATE_FIELD).clear();
+        WebElement plannedDateInput = findElement(BOOKING_PLANNED_DATE_FIELD);
+        plannedDateInput.clear();
+        plannedDateInput.sendKeys(Keys.ESCAPE);
         saveEntity();
     }
 
@@ -113,6 +118,7 @@ public class DataServicesPage extends HomePage {
         WebElement element = findElement(BOOKING_PLANNED_DATE_FIELD);
         element.clear();
         element.sendKeys("1016-10-28");
+        element.sendKeys(Keys.ESCAPE);
         saveEntity();
     }
 }

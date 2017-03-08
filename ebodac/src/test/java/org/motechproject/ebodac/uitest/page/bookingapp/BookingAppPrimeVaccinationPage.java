@@ -1,6 +1,7 @@
 package org.motechproject.ebodac.uitest.page.bookingapp;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -24,7 +25,6 @@ public class BookingAppPrimeVaccinationPage extends BookingAppPage {
     private static final By DATE_PICKER_TODAY_BUTTON = By.xpath("//*[@id='ui-datepicker-div']/div[2]/button[1]");
     private static final By DATE_PICKER_DONE_BUTTON = By.xpath("//*[@id='ui-datepicker-div']/div[2]/button[2]");
     private static final By PRIME_VAC_TIME_INPUT = By.id("primeVacTimeInput");
-    private static final By TIME_PICKER_DONE_BUTTON = By.xpath("//*[@id='ui-datepicker-div']/div[3]/button[2]");
     private static final By SAVE_BUTTON = By.id("saveBtn");
     private static final By POPUP_OK = By.id("popup_ok");
     private static final By PRINT_BUTTON = By.id("printBtn");
@@ -113,7 +113,7 @@ public class BookingAppPrimeVaccinationPage extends BookingAppPage {
         WebElement element = findElement(PRIME_VAC_TIME_INPUT);
         element.clear();
         element.sendKeys(TIME_10_29);
-        clickWhenVisible(TIME_PICKER_DONE_BUTTON);
+        element.sendKeys(Keys.ESCAPE);
     }
 
     public void saveAndConfirmChanges() throws InterruptedException {

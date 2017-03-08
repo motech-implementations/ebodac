@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -31,7 +32,6 @@ public class BookingAppScreeningPage extends BookingAppPage {
     private static final By TODAY_BUTTON = By.xpath("//button[@data-handler='today']");
     private static final By DONE_BUTTON = By.xpath("//button[@data-handler='hide']");
     private static final By TIME_FIELD = By.id("startTimeInput");
-    private static final By TIME_DONE = By.xpath("//button[@data-handler='hide']");
     private static final By CLINIC_LOCATION = By.id("s2id_clinicSelect");
     private static final By SAVE_BUTTON = By.id("saveBtn");
     private static final By POPUP_OK = By.id("popup_ok");
@@ -68,11 +68,13 @@ public class BookingAppScreeningPage extends BookingAppPage {
 
     public String bookScreeningVisit() throws InterruptedException {
         clickWhenVisible(ADD_SCREENING_BUTTON);
+        sleep500();
         clickWhenVisible(DATE_FIELD);
         clickWhenVisible(TODAY_BUTTON);
         clickWhenVisible(DONE_BUTTON);
-        setTextToFieldNoEnter(TIME_FIELD, DateTime.now().toString("HH:mm"));
-        clickWhenVisible(TIME_DONE);
+        WebElement timeInput = findElement(TIME_FIELD);
+        timeInput.sendKeys(DateTime.now().toString("HH:mm"));
+        timeInput.sendKeys(Keys.ESCAPE);
         clickWhenVisible(CLINIC_LOCATION);
         clickWhenVisible(FIRST_TEST_CLINIC);
         clickWhenVisible(SAVE_BUTTON);
@@ -150,11 +152,13 @@ public class BookingAppScreeningPage extends BookingAppPage {
 
     public void bookVisitForScreening() throws InterruptedException {
         clickWhenVisible(ADD_SCREENING_BUTTON);
+        sleep500();
         clickWhenVisible(DATE_FIELD);
         clickWhenVisible(TODAY_BUTTON);
         clickWhenVisible(DONE_BUTTON);
-        setTextToFieldNoEnter(TIME_FIELD, DateTime.now().toString("HH:mm"));
-        clickWhenVisible(TIME_DONE);
+        WebElement timeInput = findElement(TIME_FIELD);
+        timeInput.sendKeys(DateTime.now().toString("HH:mm"));
+        timeInput.sendKeys(Keys.ESCAPE);
         clickWhenVisible(CLINIC_LOCATION);
         clickWhenVisible(SECOND_TEST_CLINIC);
         clickWhenVisible(SAVE_BUTTON);

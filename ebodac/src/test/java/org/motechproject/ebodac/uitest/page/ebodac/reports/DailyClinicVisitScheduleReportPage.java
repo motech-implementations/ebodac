@@ -4,7 +4,9 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.assertTrue;
@@ -77,8 +79,12 @@ public class DailyClinicVisitScheduleReportPage extends BaseReportPage {
 
     public void findByVisitPlannedDateRangeAndCheckResult(String from, String to) throws InterruptedException {
         selectLookup(FIND_BY_VISIT_PLANNED_DATE_RANGE);
-        findElement(LOOKUP_RANGE_FROM_INPUT).sendKeys(from);
-        findElement(LOOKUP_RANGE_TO_INPUT).sendKeys(to);
+        WebElement fromInput = findElement(LOOKUP_RANGE_FROM_INPUT);
+        fromInput.sendKeys(from);
+        fromInput.sendKeys(Keys.ESCAPE);
+        WebElement toInput = findElement(LOOKUP_RANGE_TO_INPUT);
+        toInput.sendKeys(to);
+        toInput.sendKeys(Keys.ESCAPE);
         clickFind();
 
         assertTrue(isDateInRange(findElement(RECORD_DATE).getText(), from, to));
@@ -86,8 +92,12 @@ public class DailyClinicVisitScheduleReportPage extends BaseReportPage {
 
     public void findByVisitPlannedDateRangeAndTypeAndCheckResult(String from, String to, VisitType type) throws InterruptedException {
         selectLookup(FIND_BY_VISIT_PLANNED_DATE_RANGE_AND_TYPE);
-        findElement(LOOKUP_RANGE_FROM_INPUT).sendKeys(from);
-        findElement(LOOKUP_RANGE_TO_INPUT).sendKeys(to);
+        WebElement fromInput = findElement(LOOKUP_RANGE_FROM_INPUT);
+        fromInput.sendKeys(from);
+        fromInput.sendKeys(Keys.ESCAPE);
+        WebElement toInput = findElement(LOOKUP_RANGE_TO_INPUT);
+        toInput.sendKeys(to);
+        toInput.sendKeys(Keys.ESCAPE);
         Select select = new Select(findElement(LOOKUP_SECOND_SELECT));
         select.selectByVisibleText(type.getMotechValue());
         clickFind();
