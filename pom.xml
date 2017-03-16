@@ -227,7 +227,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-uitestframework</artifactId>
-            <version>0.27.1-SNAPSHOT</version>
+            <version>0.27.1</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
