@@ -4,6 +4,8 @@ public class IvrEngagementStatisticDto {
 
     private String subjectId;
 
+    private Long stageId;
+
     private Long callsExpected;
 
     private Long pushedSuccessfully;
@@ -23,6 +25,14 @@ public class IvrEngagementStatisticDto {
 
     public void setSubjectId(String subjectId) {
         this.subjectId = subjectId;
+    }
+
+    public Long getStageId() {
+        return stageId;
+    }
+
+    public void setStageId(Long stageId) {
+        this.stageId = stageId;
     }
 
     public Long getCallsExpected() {
