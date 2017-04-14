@@ -573,9 +573,10 @@
                     rownumbers: true,
                     rowNum: 50,
                     rowList: [10, 20, 50, 100],
-                    colNames: ['rowId', scope.msg('ebodac.web.statistics.subjectId'), scope.msg('ebodac.web.statistics.callsExpected'),
-                               scope.msg('ebodac.web.statistics.pushedSuccessfully'), scope.msg('ebodac.web.statistics.received'),
-                               scope.msg('ebodac.web.statistics.activelyListened'), scope.msg('ebodac.web.statistics.failed')],
+                    colNames: ['rowId', scope.msg('ebodac.web.statistics.subjectId'), scope.msg('ebodac.web.statistics.stageId'),
+                               scope.msg('ebodac.web.statistics.callsExpected'), scope.msg('ebodac.web.statistics.pushedSuccessfully'),
+                               scope.msg('ebodac.web.statistics.received'), scope.msg('ebodac.web.statistics.activelyListened'),
+                               scope.msg('ebodac.web.statistics.failed')],
                     colModel: [{
                        name: 'rowId',
                        index: 'rowId',
@@ -584,6 +585,10 @@
                     }, {
                        name: 'subjectId',
                        index: 'subjectId',
+                       align: 'center'
+                    }, {
+                       name: 'stageId',
+                       index: 'stageId',
                        align: 'center'
                     }, {
                         name: 'callsExpected',
