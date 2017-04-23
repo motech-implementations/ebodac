@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -34,6 +35,15 @@ public class ExportServiceImpl implements ExportService {
     private LookupService lookupService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public void exportEntityToPDF(OutputStream outputStream, Class<?> entityDtoType, Class<?> entityType,
+                                  Map<String, String> headerMap, String lookup, String lookupFields, QueryParams queryParams)
+            throws IOException {
+        org.motechproject.mds.service.impl.csv.writer.PdfTableWriter tableWriter =
+                new org.motechproject.mds.service.impl.csv.writer.PdfTableWriter(outputStream);
+        exportEntity(entityDtoType, entityType, headerMap, tableWriter, lookup, lookupFields, queryParams);
+    }
 
     @Override
     public void exportEntityToPDF(PdfBasicTemplate template, Class<?> entityDtoType, Class<?> entityType,

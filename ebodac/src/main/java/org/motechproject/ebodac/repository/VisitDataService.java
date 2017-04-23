@@ -110,6 +110,13 @@ public interface VisitDataService extends MotechDataService<Visit> {
             @LookupField(name = "subject.stageId") Long stageId,
             @LookupField(name = "subject.siteName") String siteName);
 
+    @Lookup
+    List<Visit> findByStageId(@LookupField(name = "subject.stageId") Long stageId);
+
+    @Lookup
+    List<Visit> findByPlannedDateRangeAndStageId(@LookupField(name = "motechProjectedDate") Range<LocalDate> dateRange,
+                                                 @LookupField(name = "subject.stageId") Long stageId);
+
     /**
      * Day 8 and Day 58 Report Lookups
      */

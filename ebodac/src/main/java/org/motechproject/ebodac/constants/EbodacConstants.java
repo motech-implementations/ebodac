@@ -308,6 +308,30 @@ public final class EbodacConstants {
         }
     };
 
+    public static final String VISIT_ENTITY = "Visit";
+    public static final String SUBJECT_FIELD = "subject";
+    public static final String SUBJECT_ID_FIELD = "subject.subjectId";
+    public static final String STAGE_ID_FIELD = "subject.stageId";
+    public static final String STAGE_ID_FIELD_DISPLAY_NAME = "Stage ID";
+
+    public static final String VISIT_EXPORT_FILE_NAME = "Visit";
+    public static final Map<String, String> VISIT_AVAILABLE_FIELDS_MAP = new LinkedHashMap<String, String>() {
+        {
+            put("Participant",          "subject.subjectId");
+            put("Stage ID",             "subject.stageId");
+            put("Planned Visit Date",   "motechProjectedDate");
+            put("Actual Visit Date",    "date");
+            put("Visit Type",           "type");
+            put("RAVE Planned Date",    "dateProjected");
+            put("Modification Date",    "modificationDate");
+            put("Creation Date",        "creationDate");
+            put("Modified By",          "modifiedBy");
+            put("Owner",                "owner");
+            put("Created By",           "creator");
+            put("Id",                   "id");
+        }
+    };
+
     public static final String MANAGE_EBODAC_PERMISSION = "manageEbodac";
     public static final String EMAIL_REPORTS_TAB_PERMISSION = "emailReports";
 

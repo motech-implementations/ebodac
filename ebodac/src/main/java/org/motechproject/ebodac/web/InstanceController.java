@@ -8,14 +8,14 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.ebodac.constants.EbodacConstants;
 import org.motechproject.ebodac.domain.IvrAndSmsStatisticReport;
-import org.motechproject.ebodac.dto.IvrAndSmsStatisticReportDto;
-import org.motechproject.ebodac.dto.MissedVisitsReportDto;
-import org.motechproject.ebodac.dto.OptsOutOfMotechMessagesReportDto;
 import org.motechproject.ebodac.domain.ReportBoosterVaccination;
 import org.motechproject.ebodac.domain.ReportPrimerVaccination;
 import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.SubjectEnrollments;
 import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.dto.IvrAndSmsStatisticReportDto;
+import org.motechproject.ebodac.dto.MissedVisitsReportDto;
+import org.motechproject.ebodac.dto.OptsOutOfMotechMessagesReportDto;
 import org.motechproject.ebodac.exception.EbodacExportException;
 import org.motechproject.ebodac.exception.EbodacLookupException;
 import org.motechproject.ebodac.helper.DtoLookupHelper;
@@ -32,6 +32,8 @@ import org.motechproject.ebodac.web.domain.GridSettings;
 import org.motechproject.ebodac.web.domain.Records;
 import org.motechproject.mds.dto.CsvImportResults;
 import org.motechproject.mds.dto.EntityDto;
+import org.motechproject.mds.dto.FieldBasicDto;
+import org.motechproject.mds.dto.FieldDto;
 import org.motechproject.mds.ex.csv.CsvImportException;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.CsvImportExportService;
@@ -57,7 +59,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang.CharEncoding.UTF_8;
@@ -132,6 +136,10 @@ public class InstanceController {
         } else if (className.equals(ReportBoosterVaccination.class.getName())) {
             exportEntity(settings, exportRecords, outputFormat, response, EbodacConstants.BOOSTER_VACCINATION_REPORT_REPORT_NAME,
                     null, ReportBoosterVaccination.class, EbodacConstants.BOOSTER_VACCINATION_REPORT_MAP, settings.getFields());
+        } else if (className.equals(Visit.class.getName())) {
+            exportEntity(settings, exportRecords, outputFormat, response, EbodacConstants.VISIT_EXPORT_FILE_NAME,
+                    null, Visit.class, getSelectedFieldsMap(EbodacConstants.VISIT_AVAILABLE_FIELDS_MAP,
+                            settings.getSelectedFields()), settings.getFields());
         } else if (Constants.ExportFormat.PDF.equals(outputFormat)) {
             response.setContentType("application/pdf");
 
@@ -331,6 +339,31 @@ public class InstanceController {
         return mapper.writeValueAsString(records);
     }
 
+    @RequestMapping(value = "/entities/{entityName}/{entityId}/entityFields", method = RequestMethod.GET)
+    @ResponseBody
+    public List<FieldDto> getEntityFields(@PathVariable Long entityId, @PathVariable String entityName) {
+        List<FieldDto> fields = entityService.getEntityFields(entityId);
+        List<FieldDto> fieldsToAdd = new ArrayList<>();
+        int pos = 0;
+
+        if (EbodacConstants.VISIT_ENTITY.equals(entityName)) {
+            for (FieldDto field : fields) {
+                pos++;
+                if (EbodacConstants.SUBJECT_FIELD.equals(field.getBasic().getName())) {
+                    fieldsToAdd.add(copyFiledWithNewName(field, EbodacConstants.STAGE_ID_FIELD, EbodacConstants.STAGE_ID_FIELD_DISPLAY_NAME));
+                    field.getBasic().setName(EbodacConstants.SUBJECT_ID_FIELD);
+                    break;
+                }
+            }
+        }
+
+        if (!fieldsToAdd.isEmpty()) {
+            fields.addAll(pos, fieldsToAdd);
+        }
+
+        return fields;
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -368,8 +401,13 @@ public class InstanceController {
                 PdfBasicTemplate template = exportTemplatesHelper.createTemplateForPdf(fileNameBeginning, entityType,
                         settings, exportRecords, oldLookupFields, response.getOutputStream());
 
-                exportService.exportEntityToPDF(template, entityDtoType, entityType, headerMap,
-                        settings.getLookup(), settings.getFields(), queryParams);
+                if (template == null) {
+                    exportService.exportEntityToPDF(response.getOutputStream(), entityDtoType, entityType, headerMap,
+                            settings.getLookup(), settings.getFields(), queryParams);
+                } else {
+                    exportService.exportEntityToPDF(template, entityDtoType, entityType, headerMap,
+                            settings.getLookup(), settings.getFields(), queryParams);
+                }
             } else if (EbodacConstants.CSV_EXPORT_FORMAT.equals(outputFormat)) {
                 exportService.exportEntityToCSV(response.getWriter(), entityDtoType, entityType, headerMap,
                         settings.getLookup(), settings.getFields(), queryParams);
@@ -384,6 +422,27 @@ public class InstanceController {
             LOGGER.debug(e.getMessage(), e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    private FieldDto copyFiledWithNewName(FieldDto oldField, String name, String displayName) {
+        FieldBasicDto basicOld = oldField.getBasic();
+        FieldBasicDto basic = new FieldBasicDto(displayName, name, basicOld.isRequired(), basicOld.isUnique(),
+                basicOld.getDefaultValue(), basicOld.getTooltip(), basicOld.getPlaceholder());
+
+        return new FieldDto(oldField.getId(), oldField.getEntityId(), oldField.getType(), basic, oldField.isReadOnly(),
+                oldField.isNonEditable(), oldField.isNonDisplayable(), oldField.isUiFilterable(), oldField.isUiChanged(),
+                oldField.getMetadata(), oldField.getValidation(), oldField.getSettings(), oldField.getLookups());
+    }
+
+    private Map<String, String> getSelectedFieldsMap(Map<String, String> availableFieldsMap, List<String> selectedFields) {
+        Map<String, String> selectedFieldsMap = new LinkedHashMap<>();
+
+        for (String field : selectedFields) {
+            if (availableFieldsMap.containsKey(field)) {
+                selectedFieldsMap.put(field, availableFieldsMap.get(field));
+            }
+        }
+        return selectedFieldsMap;
     }
 
     private Map<String, Object> getFields(GridSettings gridSettings) throws IOException {

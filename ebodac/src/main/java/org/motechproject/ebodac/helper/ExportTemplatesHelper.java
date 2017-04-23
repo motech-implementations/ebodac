@@ -67,6 +67,8 @@ public class ExportTemplatesHelper {
                     StringUtils.isBlank(from) ? "" : from, StringUtils.isBlank(to) ? "" : to);
         } else if ("MandEMissedClinicVisitsReport".equals(reportName) || "NumberOfTimesParticipantsListenedToEachMessageReport".equals(reportName)) {
             template = new PdfReportCLandscapeTemplate(outputStream);
+        } else if ("Visit".equals(reportName)) {
+            template = null;
         } else {
             template = new PdfReportCTemplate(outputStream);
         }
