@@ -17,6 +17,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.EnumDisplayName;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.NonEditable;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.util.SecurityMode;
 
 
@@ -36,15 +37,18 @@ public class Visit {
     @Field
     private Long id;
 
+    @UIDisplayable(position = 0)
     @NonEditable
     @Field(displayName = "Participant")
     private Subject subject;
 
+    @UIDisplayable(position = 3)
     @NonEditable
     @Field(displayName = "Visit Type", required = true)
     @EnumDisplayName(enumField = "motechValue")
     private VisitType type;
 
+    @UIDisplayable(position = 2)
     @NonEditable
     @Field(displayName = "Actual Visit Date")
     private LocalDate date;
@@ -53,6 +57,7 @@ public class Visit {
     @Field(displayName = "RAVE Planned Date")
     private LocalDate dateProjected;
 
+    @UIDisplayable(position = 1)
     @Field(displayName = "Planned Visit Date")
     private LocalDate motechProjectedDate;
 

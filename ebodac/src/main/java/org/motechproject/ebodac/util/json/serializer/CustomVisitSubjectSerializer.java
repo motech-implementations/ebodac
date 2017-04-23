@@ -12,7 +12,10 @@ public class CustomVisitSubjectSerializer extends JsonSerializer<Subject> {
     @Override
     public void serialize(Subject subject, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         if (subject != null) {
-            jsonGenerator.writeString(subject.getSubjectId());
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField("subjectId", subject.getSubjectId());
+            jsonGenerator.writeNumberField("stageId", subject.getStageId());
+            jsonGenerator.writeEndObject();
         }
     }
 }

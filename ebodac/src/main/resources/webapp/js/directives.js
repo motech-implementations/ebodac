@@ -128,7 +128,7 @@
     }
 
     function buildGridColModel(colModel, fields, scope, ignoreHideFields) {
-        var i, cmd, field;
+        var i, cmd, field, relFieldName;
 
         for (i = 0; i < fields.length; i += 1) {
             field = fields[i];
@@ -141,10 +141,21 @@
                    label: field.basic.displayName,
                    name: field.basic.name,
                    index: field.basic.name,
-                   jsonmap: field.basic.name,
+                   jsonmap: field.basic.name.split('.')[0],
                    width: 220,
                    hidden: ignoreHideFields? false : !isSelectedField(field.basic.name, scope.selectedFields)
                 };
+
+                if (field.basic.name.indexOf(".") !== -1) {
+                    relFieldName = field.basic.name.split('.')[1];
+                    cmd.formatter = function(cellValue, options, rowObject) {
+                        if (!cellValue || !cellValue[relFieldName]) {
+                            return '';
+                        }
+
+                        return cellValue[relFieldName];
+                    }
+                }
 
                 colModel.push(cmd);
             }
@@ -646,7 +657,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "../mds/entities/" + scope.selectedEntity.id + "/entityFields",
+                    url: "../ebodac/entities/" + scope.selectedEntity.name + "/" + scope.selectedEntity.id + "/entityFields",
                     dataType: "json",
                     success: function (result) {
                         var colModel = [], i, noSelectedFields = true, spanText,

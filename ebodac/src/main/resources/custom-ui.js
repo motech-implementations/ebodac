@@ -273,7 +273,7 @@ $scope.retrieveAndSetEntityData = function(entityUrl, callback) {
 
         $scope.setModuleEntity($scope.selectedEntity.module, $scope.selectedEntity.name);
 
-        $http.get('../mds/entities/'+$scope.selectedEntity.id+'/entityFields').success(function (data) {
+        $http.get('../ebodac/entities/'+$scope.selectedEntity.name+'/'+$scope.selectedEntity.id+'/entityFields').success(function (data) {
             $scope.allEntityFields = data;
             $scope.setAvailableFieldsForDisplay();
 
@@ -304,7 +304,7 @@ $scope.retrieveAndSetEntityData = function(entityUrl, callback) {
                 }
 
                 var filterableFields = $scope.entityAdvanced.browsing.filterableFields,
-                    i, field, types;
+                    i, field, types, fieldName;
                 for (i = 0; i < $scope.allEntityFields.length; i += 1) {
                     field = $scope.allEntityFields[i];
 
@@ -314,7 +314,7 @@ $scope.retrieveAndSetEntityData = function(entityUrl, callback) {
                         $rootScope.filters.push({
                             displayName: field.basic.displayName,
                             type: field.type.typeClass,
-                            field: field.basic.name,
+                            field: field.basic.name.split('.')[0],
                             types: types
                         });
                     }
@@ -322,7 +322,8 @@ $scope.retrieveAndSetEntityData = function(entityUrl, callback) {
                 $scope.selectedFields = [];
                 for (i = 0; i < $scope.allEntityFields.length; i += 1) {
                     field = $scope.allEntityFields[i];
-                    if ($.inArray(field.basic.name, $scope.entityAdvanced.userPreferences.visibleFields) !== -1) {
+                    fieldName = field.basic.name.split('.')[0];
+                    if ($.inArray(fieldName, $scope.entityAdvanced.userPreferences.visibleFields) !== -1) {
                         $scope.selectedFields.push(field);
                     }
                 }
@@ -364,4 +365,49 @@ $scope.editInstance = function(id, module, entityName) {
 
             unblockUI();
         }, angularHandler('mds.error', 'mds.error.cannotUpdateInstance'));
+};
+
+$scope.addFieldForDataBrowser = function(selected, checked) {
+    var field, i,
+        selectedName = selected.split('.')[0],
+        updatePref = true,
+        fieldsData = {
+            field: selectedName,
+            action: 'ADD'
+        };
+
+    if (!checked) {
+        fieldsData.action = 'REMOVE';
+        if ($scope.isFieldSelected(selected)) {
+            for (i = 0; i < $scope.selectedFields.length; i += 1) {
+                field = $scope.selectedFields[i];
+                if (field.basic.name === selected) {
+                    $scope.selectedFields.remove(i, i);
+                }
+            }
+
+            for (i = 0; i < $scope.selectedFields.length; i += 1) {
+                if ($scope.selectedFields[i].basic.name.split('.')[0] === selectedName) {
+                    updatePref = false;
+                }
+            }
+        }
+    } else {
+        if (!$scope.isFieldSelected(selected)) {
+            for (i = 0; i < $scope.availableFieldsForDisplay.length; i += 1) {
+                field = $scope.availableFieldsForDisplay[i];
+                if (field.basic.name === selected) {
+                    $scope.selectedFields.push(field);
+                }
+            }
+        }
+    }
+
+    if (updatePref) {
+        $http.post('../mds/entities/' + $scope.selectedEntity.id + "/preferences/fields", fieldsData)
+        .error(function () {
+            handleResponse('mds.error', 'mds.preferences.error.fields', '');
+            unblockUI();
+        });
+    }
 };
