@@ -128,7 +128,7 @@
     }
 
     function buildGridColModel(colModel, fields, scope, ignoreHideFields) {
-        var i, cmd, field, relFieldName;
+        var i, cmd, field;
 
         for (i = 0; i < fields.length; i += 1) {
             field = fields[i];
@@ -147,8 +147,9 @@
                 };
 
                 if (field.basic.name.indexOf(".") !== -1) {
-                    relFieldName = field.basic.name.split('.')[1];
                     cmd.formatter = function(cellValue, options, rowObject) {
+                        var relFieldName = options.colModel.index.split('.')[1];
+
                         if (!cellValue || !cellValue[relFieldName]) {
                             return '';
                         }
