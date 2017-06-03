@@ -38,12 +38,13 @@ public class EbodacEmailClient {
     public Boolean hasNewJobCompletionMessage(String host, String user, String password) {
         LOGGER.info("Started checking for job completion emails");
         Properties properties = new Properties();
+        properties.setProperty("mail.store.protocol", "imaps");
 
         Session session = Session.getDefaultInstance(properties);
 
         Boolean jobCompletion = false;
         try {
-            Store store = session.getStore("imap");
+            Store store = session.getStore("imaps");
 
             store.connect(host, user, password);
 
