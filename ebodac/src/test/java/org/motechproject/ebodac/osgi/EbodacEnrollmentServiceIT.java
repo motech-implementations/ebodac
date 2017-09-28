@@ -1058,7 +1058,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         if ("1".equals(stage)) {
             assertEquals(14, subjectEnrollments.getEnrollments().size());
         } else {
-            assertEquals(10, subjectEnrollments.getEnrollments().size());
+            assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
 
         final String campaignCompletedString = "org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.";
@@ -1743,7 +1743,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         if ("1".equals(stage)) {
             assertEquals(14, subjectEnrollments.getEnrollments().size());
         } else {
-            assertEquals(10, subjectEnrollments.getEnrollments().size());
+            assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
 
         List<String> campaignNamesList = new ArrayList<>();
@@ -1789,7 +1789,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         if ("1".equals(stage)) {
             assertEquals(14, subjectEnrollments.getEnrollments().size());
         } else {
-            assertEquals(10, subjectEnrollments.getEnrollments().size());
+            assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
 
         List<String> campaignNamesList = new ArrayList<>();
@@ -1840,7 +1840,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         if ("1".equals(stage)) {
             assertEquals(14, subjectEnrollments.getEnrollments().size());
         } else {
-            assertEquals(10, subjectEnrollments.getEnrollments().size());
+            assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
 
         for (String campaignName : boosterRelatedMessages) {
@@ -1856,7 +1856,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         if ("1".equals(stage)) {
             assertEquals(11, subjectEnrollments.getEnrollments().size());
         } else {
-            assertEquals(7, subjectEnrollments.getEnrollments().size());
+            assertEquals(9, subjectEnrollments.getEnrollments().size());
         }
 
         for (String campaignName : boosterRelatedMessages) {
