@@ -63,7 +63,8 @@ public final class EbodacConstants {
             "Fifth Long-term Follow-up visit", "Sixth Long-term Follow-up visit", "Seventh Long-term Follow-up visit", "Prime Vaccination Day - stage 2",
             "Booster related messages - stage 2", "Prime Vaccination First Follow-up visit - stage 2", "Prime Vaccination Second Follow-up visit - stage 2",
             "Boost Vaccination Day - stage 2", "Boost Vaccination First Follow-up visit - stage 2", "Boost Vaccination Second Follow-up visit - stage 2",
-            "Boost Vaccination Third Follow-up visit - stage 2", "First Long-term Follow-up visit - stage 2", "Second Long-term Follow-up visit - stage 2"));
+            "Boost Vaccination Third Follow-up visit - stage 2", "First Long-term Follow-up visit - stage 2", "Second Long-term Follow-up visit - stage 2",
+            "Third Long-term Follow-up visit - stage 2", "Fourth Long-term Follow-up visit - stage 2"));
 
     public static final String STAGE = " - stage ";
 
