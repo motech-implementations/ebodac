@@ -16,6 +16,12 @@ public enum VisitType {
     FIFTH_LONG_TERM_FOLLOW_UP_VISIT("Fifth Long-term Follow-up visit", "LFU5 (24MPP)"),
     SIXTH_LONG_TERM_FOLLOW_UP_VISIT("Sixth Long-term Follow-up visit", "LFU6 (30MPP)"),
     SEVENTH_LONG_TERM_FOLLOW_UP_VISIT("Seventh Long-term Follow-up visit", "LFU7 (36MPP)"),
+    THIRD_VACCINATION_DAY("Third Vaccination Day", "2YPP"),
+    FIRST_POST_THIRD_VACCINATION_VISIT("First Post Third Vaccination visit", "D5P3V"),
+    SECOND_POST_THIRD_VACCINATION_VISIT("Second Post Third Vaccination visit", "D8P3V"),
+    THIRD_POST_THIRD_VACCINATION_VISIT("Third Post Third Vaccination visit", "D22P3V"),
+    FOURTH_POST_THIRD_VACCINATION_VISIT("Fourth Post Third Vaccination visit", "6MP3V"),
+    FIFTH_POST_THIRD_VACCINATION_VISIT("Fifth Post Third Vaccination visit", "D360P3V"),
     UNSCHEDULED_VISIT("Unscheduled Visit");
 
     private String motechValue;
