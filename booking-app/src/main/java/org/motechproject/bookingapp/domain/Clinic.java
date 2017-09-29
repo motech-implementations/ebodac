@@ -90,6 +90,30 @@ public class Clinic {
     @Field(required = true, defaultValue = "10")
     private Integer maxSeventhLongTermFollowUpVisits;
 
+    @UIDisplayable(position = 19)
+    @Field(required = true, defaultValue = "5")
+    private Integer maxThirdVaccinationVisits;
+
+    @UIDisplayable(position = 20)
+    @Field(required = true, defaultValue = "10")
+    private Integer maxFirstPostThirdVaccinationVisits;
+
+    @UIDisplayable(position = 21)
+    @Field(required = true, defaultValue = "10")
+    private Integer maxSecondPostThirdVaccinationVisits;
+
+    @UIDisplayable(position = 22)
+    @Field(required = true, defaultValue = "10")
+    private Integer maxThirdPostThirdVaccinationVisits;
+
+    @UIDisplayable(position = 23)
+    @Field(required = true, defaultValue = "10")
+    private Integer maxFourthPostThirdVaccinationVisits;
+
+    @UIDisplayable(position = 24)
+    @Field(required = true, defaultValue = "10")
+    private Integer maxFifthPostThirdVaccinationVisits;
+
     @NonEditable(display = false)
     @Field
     private String owner;
@@ -102,7 +126,9 @@ public class Clinic {
                   Integer maxBoosterFirstFollowUpVisits, Integer maxBoosterSecondFollowUpVisits, Integer maxBoosterThirdFollowUpVisits,
                   Integer maxFirstLongTermFollowUpVisits, Integer maxSecondLongTermFollowUpVisits, Integer maxThirdLongTermFollowUpVisits,
                   Integer maxFourthLongTermFollowUpVisits, Integer maxFifthLongTermFollowUpVisits, Integer maxSixthLongTermFollowUpVisits,
-                  Integer maxSeventhLongTermFollowUpVisits) {
+                  Integer maxSeventhLongTermFollowUpVisits, Integer maxThirdVaccinationVisits, Integer maxFirstPostThirdVaccinationVisits,
+                  Integer maxSecondPostThirdVaccinationVisits, Integer maxThirdPostThirdVaccinationVisits,
+                  Integer maxFourthPostThirdVaccinationVisits, Integer maxFifthPostThirdVaccinationVisits) {
         this.siteId = siteId;
         this.location = location;
         this.numberOfRooms = numberOfRooms;
@@ -122,6 +148,12 @@ public class Clinic {
         this.maxFifthLongTermFollowUpVisits = maxFifthLongTermFollowUpVisits;
         this.maxSixthLongTermFollowUpVisits = maxSixthLongTermFollowUpVisits;
         this.maxSeventhLongTermFollowUpVisits = maxSeventhLongTermFollowUpVisits;
+        this.maxThirdVaccinationVisits = maxThirdVaccinationVisits;
+        this.maxFirstPostThirdVaccinationVisits = maxFirstPostThirdVaccinationVisits;
+        this.maxSecondPostThirdVaccinationVisits = maxSecondPostThirdVaccinationVisits;
+        this.maxThirdPostThirdVaccinationVisits = maxThirdPostThirdVaccinationVisits;
+        this.maxFourthPostThirdVaccinationVisits = maxFourthPostThirdVaccinationVisits;
+        this.maxFifthPostThirdVaccinationVisits = maxFifthPostThirdVaccinationVisits;
     }
 
     public Long getId() {
@@ -240,6 +272,10 @@ public class Clinic {
         return maxThirdLongTermFollowUpVisits;
     }
 
+    public void setMaxThirdLongTermFollowUpVisits(Integer maxThirdLongTermFollowUpVisits) {
+        this.maxThirdLongTermFollowUpVisits = maxThirdLongTermFollowUpVisits;
+    }
+
     public Integer getMaxFourthLongTermFollowUpVisits() {
         return maxFourthLongTermFollowUpVisits;
     }
@@ -272,8 +308,52 @@ public class Clinic {
         this.maxSeventhLongTermFollowUpVisits = maxSeventhLongTermFollowUpVisits;
     }
 
-    public void setMaxThirdLongTermFollowUpVisits(Integer maxThirdLongTermFollowUpVisits) {
-        this.maxThirdLongTermFollowUpVisits = maxThirdLongTermFollowUpVisits;
+    public Integer getMaxThirdVaccinationVisits() {
+        return maxThirdVaccinationVisits;
+    }
+
+    public void setMaxThirdVaccinationVisits(Integer maxThirdVaccinationVisits) {
+        this.maxThirdVaccinationVisits = maxThirdVaccinationVisits;
+    }
+
+    public Integer getMaxFirstPostThirdVaccinationVisits() {
+        return maxFirstPostThirdVaccinationVisits;
+    }
+
+    public void setMaxFirstPostThirdVaccinationVisits(Integer maxFirstPostThirdVaccinationVisits) {
+        this.maxFirstPostThirdVaccinationVisits = maxFirstPostThirdVaccinationVisits;
+    }
+
+    public Integer getMaxSecondPostThirdVaccinationVisits() {
+        return maxSecondPostThirdVaccinationVisits;
+    }
+
+    public void setMaxSecondPostThirdVaccinationVisits(Integer maxSecondPostThirdVaccinationVisits) {
+        this.maxSecondPostThirdVaccinationVisits = maxSecondPostThirdVaccinationVisits;
+    }
+
+    public Integer getMaxThirdPostThirdVaccinationVisits() {
+        return maxThirdPostThirdVaccinationVisits;
+    }
+
+    public void setMaxThirdPostThirdVaccinationVisits(Integer maxThirdPostThirdVaccinationVisits) {
+        this.maxThirdPostThirdVaccinationVisits = maxThirdPostThirdVaccinationVisits;
+    }
+
+    public Integer getMaxFourthPostThirdVaccinationVisits() {
+        return maxFourthPostThirdVaccinationVisits;
+    }
+
+    public void setMaxFourthPostThirdVaccinationVisits(Integer maxFourthPostThirdVaccinationVisits) {
+        this.maxFourthPostThirdVaccinationVisits = maxFourthPostThirdVaccinationVisits;
+    }
+
+    public Integer getMaxFifthPostThirdVaccinationVisits() {
+        return maxFifthPostThirdVaccinationVisits;
+    }
+
+    public void setMaxFifthPostThirdVaccinationVisits(Integer maxFifthPostThirdVaccinationVisits) {
+        this.maxFifthPostThirdVaccinationVisits = maxFifthPostThirdVaccinationVisits;
     }
 
     public Integer getMaxCapacityByDay() {
