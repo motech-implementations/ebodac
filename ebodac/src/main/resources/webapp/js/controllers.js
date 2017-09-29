@@ -260,6 +260,18 @@
             }
         };
 
+        $scope.thirdVacRelCampaignsChanged = function(change) {
+            var value;
+
+            if (change.added) {
+                value = change.added.text;
+                $scope.config.thirdVaccinationRelatedMessages.push(value);
+            } else if (change.removed) {
+                value = change.removed.text;
+                $scope.config.thirdVaccinationRelatedMessages.removeObject(value);
+            }
+        };
+
         $http.get('../ebodac/ebodac-config')
             .success(function(response){
                 var i;
@@ -272,6 +284,7 @@
                         $timeout(function() {
                             $('#disconVacCampaigns').select2('val', $scope.config.disconVacCampaignsList);
                             $('#boostRelCampaigns').select2('val', $scope.config.boosterRelatedMessages);
+                            $('#thirdVacRelCampaigns').select2('val', $scope.config.thirdVaccinationRelatedMessages);
                         }, 50);
 
                     })
@@ -287,6 +300,7 @@
             $scope.config = angular.copy($scope.originalConfig);
             $('#disconVacCampaigns').select2('val', $scope.config.disconVacCampaignsList);
             $('#boostRelCampaigns').select2('val', $scope.config.boosterRelatedMessages);
+            $('#thirdVacRelCampaigns').select2('val', $scope.config.thirdVaccinationRelatedMessages);
         };
 
         function hideMsgLater(index) {
