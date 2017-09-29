@@ -77,6 +77,18 @@ public class VisitLimitationHelper {
                 return clinic.getMaxSixthLongTermFollowUpVisits();
             case SEVENTH_LONG_TERM_FOLLOW_UP_VISIT:
                 return clinic.getMaxSeventhLongTermFollowUpVisits();
+            case THIRD_VACCINATION_DAY:
+                return clinic.getMaxThirdVaccinationVisits();
+            case FIRST_POST_THIRD_VACCINATION_VISIT:
+                return clinic.getMaxFirstPostThirdVaccinationVisits();
+            case SECOND_POST_THIRD_VACCINATION_VISIT:
+                return clinic.getMaxSecondPostThirdVaccinationVisits();
+            case THIRD_POST_THIRD_VACCINATION_VISIT:
+                return clinic.getMaxThirdPostThirdVaccinationVisits();
+            case FOURTH_POST_THIRD_VACCINATION_VISIT:
+                return clinic.getMaxFourthPostThirdVaccinationVisits();
+            case FIFTH_POST_THIRD_VACCINATION_VISIT:
+                return clinic.getMaxFifthPostThirdVaccinationVisits();
             default:
                 throw new IllegalArgumentException(String.format("Cannot find max visits number in Clinic for Visit Type: %s",
                         visitType.getMotechValue()));
