@@ -101,7 +101,7 @@ public class VisitRescheduleServiceImpl implements VisitRescheduleService {
                 notVaccinated = false;
             }
 
-            dtos.add(new VisitRescheduleDto(details, dateRange, boosterRelated, notVaccinated));
+            dtos.add(new VisitRescheduleDto(details, dateRange, boosterRelated, thirdVaccinationRelated, notVaccinated));
         }
 
         return new Records<>(detailsRecords.getPage(), detailsRecords.getTotal(), detailsRecords.getRecords(), dtos);

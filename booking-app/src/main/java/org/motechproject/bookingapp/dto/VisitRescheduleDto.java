@@ -47,6 +47,8 @@ public class VisitRescheduleDto {
 
     private Boolean boosterRelated;
 
+    private Boolean thirdVaccinationRelated;
+
     private Boolean notVaccinated;
 
     public VisitRescheduleDto() {
@@ -73,9 +75,10 @@ public class VisitRescheduleDto {
     }
 
     public VisitRescheduleDto(VisitBookingDetails details, Range<LocalDate> dateRange,
-                              Boolean boosterRelated, Boolean notVaccinated) {
+                              Boolean boosterRelated, Boolean thirdVaccinationRelated, Boolean notVaccinated) {
         this(details);
         this.boosterRelated = boosterRelated;
+        this.thirdVaccinationRelated = thirdVaccinationRelated;
         this.notVaccinated = notVaccinated;
         calculateEarliestAndLatestDate(dateRange);
     }
@@ -211,6 +214,14 @@ public class VisitRescheduleDto {
 
     public void setBoosterRelated(Boolean boosterRelated) {
         this.boosterRelated = boosterRelated;
+    }
+
+    public Boolean getThirdVaccinationRelated() {
+        return thirdVaccinationRelated;
+    }
+
+    public void setThirdVaccinationRelated(Boolean thirdVaccinationRelated) {
+        this.thirdVaccinationRelated = thirdVaccinationRelated;
     }
 
     public Boolean getNotVaccinated() {
