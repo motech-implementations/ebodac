@@ -11,6 +11,8 @@ public class Config {
 
     private List<String> boosterRelatedMessages;
 
+    private List<String> thirdVaccinationRelatedMessages;
+
     public Config() {
     }
 
@@ -45,5 +47,16 @@ public class Config {
 
     public void setBoosterRelatedMessages(List<String> boosterRelatedMessages) {
         this.boosterRelatedMessages = boosterRelatedMessages;
+    }
+
+    public List<String> getThirdVaccinationRelatedMessages() {
+        if (thirdVaccinationRelatedMessages == null) {
+            thirdVaccinationRelatedMessages = new ArrayList<>();
+        }
+        return thirdVaccinationRelatedMessages;
+    }
+
+    public void setThirdVaccinationRelatedMessages(List<String> thirdVaccinationRelatedMessages) {
+        this.thirdVaccinationRelatedMessages = thirdVaccinationRelatedMessages;
     }
 }
