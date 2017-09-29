@@ -559,6 +559,7 @@
             rowExtraData.latestDate = rowObject.latestDate;
             rowExtraData.ignoreDateLimitation = rowObject.ignoreDateLimitation;
             rowExtraData.boosterRelated = rowObject.boosterRelated;
+            rowExtraData.thirdVaccinationRelated = rowObject.thirdVaccinationRelated;
             rowExtraData.notVaccinated = rowObject.notVaccinated;
 
             gridDataExtension[options.rowId] = rowExtraData;
@@ -671,6 +672,8 @@
                                 if (extraRowData.notVaccinated) {
                                     if (extraRowData.boosterRelated) {
                                         message = "bookingApp.visitReschedule.participantNotBoostVaccinated";
+                                    } else if (extraRowData.thirdVaccinationRelated) {
+                                        message = "bookingApp.visitReschedule.participantNotThirdVaccinated";
                                     } else {
                                         message = "bookingApp.visitReschedule.participantNotPrimeVaccinated";
                                     }
