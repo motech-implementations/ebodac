@@ -70,6 +70,8 @@ public class Config {
 
     private List<String> boosterRelatedMessages;
 
+    private List<String> thirdVaccinationRelatedMessages;
+
     private Long activeStageId;
 
     private List<SubjectAgeRange> subjectAgeRangeList;
@@ -375,6 +377,17 @@ public class Config {
 
     public void setBoosterRelatedMessages(List<String> boosterRelatedMessages) {
         this.boosterRelatedMessages = boosterRelatedMessages;
+    }
+
+    public List<String> getThirdVaccinationRelatedMessages() {
+        if (thirdVaccinationRelatedMessages == null) {
+            thirdVaccinationRelatedMessages = new ArrayList<>();
+        }
+        return thirdVaccinationRelatedMessages;
+    }
+
+    public void setThirdVaccinationRelatedMessages(List<String> thirdVaccinationRelatedMessages) {
+        this.thirdVaccinationRelatedMessages = thirdVaccinationRelatedMessages;
     }
 
     public Long getActiveStageId() {
