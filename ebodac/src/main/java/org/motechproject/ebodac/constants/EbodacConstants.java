@@ -60,10 +60,13 @@ public final class EbodacConstants {
             "Booster related messages", "Prime Vaccination First Follow-up visit", "Boost Vaccination Day", "Boost Vaccination First Follow-up visit",
             "Boost Vaccination Second Follow-up visit", "Boost Vaccination Third Follow-up visit", "First Long-term Follow-up visit",
             "Second Long-term Follow-up visit", "Third Long-term Follow-up visit", "Fourth Long-term Follow-up visit",
-            "Fifth Long-term Follow-up visit", "Sixth Long-term Follow-up visit", "Seventh Long-term Follow-up visit", "Prime Vaccination Day - stage 2",
-            "Booster related messages - stage 2", "Prime Vaccination First Follow-up visit - stage 2", "Prime Vaccination Second Follow-up visit - stage 2",
-            "Boost Vaccination Day - stage 2", "Boost Vaccination First Follow-up visit - stage 2", "Boost Vaccination Second Follow-up visit - stage 2",
-            "Boost Vaccination Third Follow-up visit - stage 2", "First Long-term Follow-up visit - stage 2", "Second Long-term Follow-up visit - stage 2",
+            "Fifth Long-term Follow-up visit", "Sixth Long-term Follow-up visit", "Seventh Long-term Follow-up visit",
+            "Third Vaccination Day", "First Post Third Vaccination visit", "Second Post Third Vaccination visit",
+            "Third Post Third Vaccination visit", "Fourth Post Third Vaccination visit", "Fifth Post Third Vaccination visit",
+            "Prime Vaccination Day - stage 2", "Booster related messages - stage 2", "Prime Vaccination First Follow-up visit - stage 2",
+            "Prime Vaccination Second Follow-up visit - stage 2", "Boost Vaccination Day - stage 2", "Boost Vaccination First Follow-up visit - stage 2",
+            "Boost Vaccination Second Follow-up visit - stage 2", "Boost Vaccination Third Follow-up visit - stage 2",
+            "First Long-term Follow-up visit - stage 2", "Second Long-term Follow-up visit - stage 2",
             "Third Long-term Follow-up visit - stage 2", "Fourth Long-term Follow-up visit - stage 2"));
 
     public static final String STAGE = " - stage ";
