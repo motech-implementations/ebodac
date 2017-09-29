@@ -20,7 +20,9 @@ public class ClinicController {
             "Max Prime Second Follow Up Visits", "Max Booster First Follow Up Visits", "Max Booster Second Follow Up Visits",
             "Max Booster Third Follow Up Visits", "Max First Long Term Follow Up Visits", "Max Second Long Term Follow Up Visits",
             "Max Third Long Term Follow Up Visits", "Max Fourth Long Term Follow Up Visits", "Max Fifth Long Term Follow Up Visits",
-            "Max Sixth Long Term Follow Up Visits", "Max Seventh Long Term Follow Up Visits"));
+            "Max Sixth Long Term Follow Up Visits", "Max Seventh Long Term Follow Up Visits", "Max Third Vaccination Visits",
+            "Max First Post Third Vaccination Visits", "Max Second Post Third Vaccination Visits", "Max Third Post Third Vaccination Visits",
+            "Max Fourth Post Third Vaccination Visits", "Max Fifth Post Third Vaccination Visits"));
 
     @Autowired
     private ClinicService clinicService;
