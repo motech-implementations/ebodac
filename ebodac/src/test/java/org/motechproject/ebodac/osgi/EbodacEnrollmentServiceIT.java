@@ -1056,7 +1056,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
 
         if ("1".equals(stage)) {
-            assertEquals(14, subjectEnrollments.getEnrollments().size());
+            assertEquals(19, subjectEnrollments.getEnrollments().size());
         } else {
             assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
@@ -1741,7 +1741,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
 
         if ("1".equals(stage)) {
-            assertEquals(14, subjectEnrollments.getEnrollments().size());
+            assertEquals(19, subjectEnrollments.getEnrollments().size());
         } else {
             assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
@@ -1787,7 +1787,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
 
         if ("1".equals(stage)) {
-            assertEquals(14, subjectEnrollments.getEnrollments().size());
+            assertEquals(19, subjectEnrollments.getEnrollments().size());
         } else {
             assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
@@ -1838,7 +1838,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
 
         if ("1".equals(stage)) {
-            assertEquals(14, subjectEnrollments.getEnrollments().size());
+            assertEquals(19, subjectEnrollments.getEnrollments().size());
         } else {
             assertEquals(12, subjectEnrollments.getEnrollments().size());
         }
@@ -1854,7 +1854,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
 
         if ("1".equals(stage)) {
-            assertEquals(11, subjectEnrollments.getEnrollments().size());
+            assertEquals(16, subjectEnrollments.getEnrollments().size());
         } else {
             assertEquals(9, subjectEnrollments.getEnrollments().size());
         }
