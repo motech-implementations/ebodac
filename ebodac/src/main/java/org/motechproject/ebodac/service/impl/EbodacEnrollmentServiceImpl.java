@@ -327,6 +327,8 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
             unenrollAndRemoveEnrollment(visit.getSubject().getSubjectId(), visit.getType().getMotechValue());
             unenrollAndRemoveEnrollment(visit.getSubject().getSubjectId(), EbodacConstants.BOOSTER_RELATED_MESSAGES);
+        } else if (VisitType.THIRD_VACCINATION_DAY.equals(visit.getType())) {
+            unenrollAndRemoveThirdVaccinationRelatedEnrollments(visit.getSubject().getSubjectId());
         } else if (!VisitType.UNSCHEDULED_VISIT.equals(visit.getType()) && !VisitType.SCREENING.equals(visit.getType())) {
             SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(visit.getSubject().getSubjectId());
             if (subjectEnrollments != null) {
@@ -368,6 +370,35 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
                 subjectEnrollmentsDataService.delete(subjectEnrollments);
             }
         }
+    }
+
+    private void unenrollAndRemoveThirdVaccinationRelatedEnrollments(String subjectId) {
+        SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subjectId);
+
+        if (subjectEnrollments != null) {
+            for (String campaignName : configService.getConfig().getThirdVaccinationRelatedMessages()) {
+                Long stageId = getStageIdFromCampaignName(campaignName);
+                Enrollment enrollment = subjectEnrollments.findEnrolmentByCampaignNameAndStageId(campaignName, stageId);
+
+                if (enrollment != null) {
+                    unnerollAndDeleteEnrollment(enrollment, subjectEnrollments, null);
+                }
+            }
+
+            if (subjectEnrollments.getEnrollments().isEmpty()) {
+                subjectEnrollmentsDataService.delete(subjectEnrollments);
+            }
+        }
+    }
+
+    private Long getStageIdFromCampaignName(String campaignName) {
+        String [] nameParts = campaignName.split(EbodacConstants.STAGE);
+
+        if (nameParts.length < 2) {
+            return 1L;
+        }
+
+        return Long.getLong(nameParts[1]);
     }
 
     private void completeCampaignForDuplicatedEnrollments(Enrollment parentEnrollment) {
