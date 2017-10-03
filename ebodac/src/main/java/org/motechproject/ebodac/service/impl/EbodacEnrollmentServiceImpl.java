@@ -102,11 +102,12 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
             if (subjectNotBoostered && checkIfCampaignInBoosterRelatedMessagesList(enrollment)) {
                 continue;
             }
+            if (checkIfThirdVaccinationRelatedAndMissingVaccination(enrollment, subject)) {
+                continue;
+            }
 
             enrollment.setStatus(EnrollmentStatus.ENROLLED);
-            if (!checkDuplicatedEnrollments(subject, enrollment)) {
-                scheduleJobsForEnrollment(enrollment, true);
-            }
+            checkDuplicatedEnrollmentsAndScheduleJobsForEnrollment(subject, enrollment, true);
             enrollmentDataService.update(enrollment);
         }
         updateSubjectEnrollments(subjectEnrollments);
@@ -493,11 +494,9 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         }
 
         subjectEnrollments.addEnrolment(enrollment);
-        checkSubjectRequiredDataAndDisconVacDateAndBoosterRelatedMessages(subject, enrollment);
+        checkSubjectRequiredDataAndDisconVacDateAndBoosterAndThirdVacRelatedMessages(subject, enrollment);
 
-        if (!checkDuplicatedEnrollments(subject, enrollment)) {
-            scheduleJobsForEnrollment(enrollment, false);
-        }
+        checkDuplicatedEnrollmentsAndScheduleJobsForEnrollment(subject, enrollment, false);
 
         updateSubjectEnrollments(subjectEnrollments);
     }
@@ -515,7 +514,7 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
 
         checkIfUnenrolled(enrollment, subjectId, campaignName);
 
-        checkSubjectRequiredDataAndDisconVacDateAndBoosterRelatedMessages(subject, enrollment);
+        checkSubjectRequiredDataAndDisconVacDateAndBoosterAndThirdVacRelatedMessages(subject, enrollment);
 
         if (referenceDate != null) {
             if (VisitType.PRIME_VACCINATION_DAY.getMotechValue().equals(campaignName) && !referenceDate.equals(enrollment.getReferenceDate())) {
@@ -530,9 +529,7 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         }
 
         enrollment.setStatus(EnrollmentStatus.ENROLLED);
-        if (!checkDuplicatedEnrollments(subject, enrollment)) {
-            scheduleJobsForEnrollment(enrollment, false);
-        }
+        checkDuplicatedEnrollmentsAndScheduleJobsForEnrollment(subject, enrollment, false);
 
         updateSubjectEnrollments(subjectEnrollments);
     }
@@ -654,7 +651,7 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         subjectEnrollmentsDataService.update(subjectEnrollments);
     }
 
-    private void checkSubjectRequiredDataAndDisconVacDateAndBoosterRelatedMessages(Subject subject, Enrollment enrollment) {
+    private void checkSubjectRequiredDataAndDisconVacDateAndBoosterAndThirdVacRelatedMessages(Subject subject, Enrollment enrollment) {
         if (checkSubjectRequiredDataAndDisconVacDate(subject) && checkIfCampaignInDisconVacList(enrollment)) {
             throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s to Campaign with name: %s, because participant resigned form booster vaccination",
                     "ebodac.enroll.error.subjectResignFromBooster", subject.getSubjectId(), enrollment.getCampaignName());
@@ -662,6 +659,10 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         if (subject.getBoosterVaccinationDate() == null && checkIfCampaignInBoosterRelatedMessagesList(enrollment)) {
             throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s to Campaign with name: %s, because participant Booster Vaccination Date is empty",
                     "ebodac.enroll.error.emptyBoosterVaccinationDate", subject.getSubjectId(), enrollment.getCampaignName());
+        }
+        if (checkIfThirdVaccinationRelatedAndMissingVaccination(enrollment, subject)) {
+            throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s to Campaign with name: %s, because participant Third Vaccination Date is empty",
+                    "ebodac.enroll.error.emptyThirdVaccinationDate", subject.getSubjectId(), enrollment.getCampaignName());
         }
     }
 
@@ -762,6 +763,12 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         return findAndSetNewParent(enrollments, enrollment, subject.getSubjectId(), campaignName);
     }
 
+    private void checkDuplicatedEnrollmentsAndScheduleJobsForEnrollment(Subject subject, Enrollment enrollment, boolean completeIfLastMessageInThePast) {
+        if (!checkDuplicatedEnrollments(subject, enrollment)) {
+            scheduleJobsForEnrollment(enrollment, completeIfLastMessageInThePast);
+        }
+    }
+
     private void changeDuplicatedEnrollmentsWhenDateOfBirthChanged(Subject newSubject, Subject oldSubject) {
         if (newSubject.getDateOfBirth() != null && !newSubject.getDateOfBirth().equals(oldSubject.getDateOfBirth())) {
             changeDuplicatedEnrollmentsWhenSubjectDataChanged(newSubject);
@@ -782,8 +789,8 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
                     parentEnrollment.getDuplicatedEnrollments().remove(enrollment);
                     enrollment.setParentEnrollment(null);
 
-                    if (EnrollmentStatus.ENROLLED.equals(enrollment.getStatus()) && !checkDuplicatedEnrollments(subject, enrollment)) {
-                        scheduleJobsForEnrollment(enrollment, false);
+                    if (EnrollmentStatus.ENROLLED.equals(enrollment.getStatus())) {
+                        checkDuplicatedEnrollmentsAndScheduleJobsForEnrollment(subject, enrollment, false);
                     }
 
                     enrollmentDataService.update(parentEnrollment);
@@ -905,8 +912,8 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
 
                     if (disconVac && checkIfCampaignInDisconVacList(enrollment)) {
                         enrollment.setStatus(EnrollmentStatus.UNENROLLED_FROM_BOOSTER);
-                    } else if (!checkDuplicatedEnrollments(subject, enrollment)) {
-                        scheduleJobsForEnrollment(enrollment, true);
+                    } else {
+                        checkDuplicatedEnrollmentsAndScheduleJobsForEnrollment(subject, enrollment, true);
                     }
                 }
 
@@ -989,18 +996,39 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
     }
 
     private boolean checkIfCampaignInBoosterRelatedMessagesList(String campaignName, Long stageId) {
+        String campaignNameWithStageId = addStageIdToCampaignName(campaignName, stageId);
+        return configService.getConfig().getBoosterRelatedMessages().contains(campaignNameWithStageId);
+    }
+
+    private String addStageIdToCampaignName(String campaignName, Long stageId) {
         Long actualStageId = getActualStageId(stageId);
-        String campaignNameWithStageId = campaignName;
 
         if (actualStageId == null) {
             throw new EbodacEnrollmentException("Participant StageId cannot be empty", "ebodac.enrollment.error.emptyStageId");
         }
 
         if (actualStageId > 1) {
-            campaignNameWithStageId = campaignName + EbodacConstants.STAGE + actualStageId;
+            return campaignName + EbodacConstants.STAGE + actualStageId;
         }
 
-        return configService.getConfig().getBoosterRelatedMessages().contains(campaignNameWithStageId);
+        return campaignName;
+    }
+
+    private boolean checkIfThirdVaccinationRelatedAndMissingVaccination(Enrollment enrollment, Subject subject) {
+        boolean thirdVac = getThirdVaccinationDate(subject) == null;
+        return thirdVac && configService.getConfig().getThirdVaccinationRelatedMessages().contains(enrollment.getCampaignNameWithStageId());
+    }
+
+    private LocalDate getThirdVaccinationDate(Subject subject) {
+        LocalDate vaccinationDate = null;
+
+        for (Visit visit : subject.getVisits()) {
+            if (VisitType.THIRD_VACCINATION_DAY.equals(visit.getType())) {
+                vaccinationDate = visit.getDate();
+            }
+        }
+
+        return vaccinationDate;
     }
 
     @Autowired
