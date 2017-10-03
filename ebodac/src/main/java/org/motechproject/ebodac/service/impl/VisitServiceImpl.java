@@ -57,9 +57,7 @@ public class VisitServiceImpl implements VisitService {
                 if (existingVisit != null) {
                     if (existingVisit.visitDatesChanged(visit)) {
                         checkAndSetMotechProjectedDate(visit, existingVisit);
-                        if (visit.getDate() == null && existingVisit.getDate() != null) {
-                            ebodacEnrollmentService.rollbackOrRemoveEnrollment(visit);
-                        }
+                        removeOrCreateMissingEnrollmentsIfActualDateChanged(visit, existingVisit);
 
                         existingVisit.setDate(visit.getDate());
                         existingVisit.setDateProjected(visit.getDateProjected());
@@ -112,6 +110,17 @@ public class VisitServiceImpl implements VisitService {
         } else if (visit.getDateProjected() == null && existingVisit.getMotechProjectedDate() != null) {
             existingVisit.setMotechProjectedDate(null);
             ebodacEnrollmentService.unenrollAndRemoveEnrollment(existingVisit);
+        }
+    }
+
+    private void removeOrCreateMissingEnrollmentsIfActualDateChanged(Visit visit, Visit existingVisit) {
+        if (visit.getDate() == null && existingVisit.getDate() != null) {
+            ebodacEnrollmentService.rollbackOrRemoveEnrollment(visit);
+        }
+
+        if (visit.getDate() != null && existingVisit.getDate() == null) {
+            existingVisit.setDate(visit.getDate());
+            ebodacEnrollmentService.enrollVisitRelatedCampaigns(existingVisit);
         }
     }
 

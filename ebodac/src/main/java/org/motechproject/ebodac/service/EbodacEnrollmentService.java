@@ -41,4 +41,6 @@ public interface EbodacEnrollmentService {
     void unenrollAndRemoveEnrollment(Visit visit);
 
     void rollbackOrRemoveEnrollment(Visit visit);
+
+    void enrollVisitRelatedCampaigns(Visit visit);
 }

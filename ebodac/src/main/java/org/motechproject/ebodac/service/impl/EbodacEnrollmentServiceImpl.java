@@ -336,6 +336,24 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         }
     }
 
+    @Override
+    public void enrollVisitRelatedCampaigns(Visit visit) {
+        if (VisitType.THIRD_VACCINATION_DAY.equals(visit.getType())) {
+            Subject subject = visit.getSubject();
+
+            for (Visit v : subject.getVisits()) {
+                try {
+                    String campaignName = v.getType().getMotechValue();
+                    if (checkIfCampaignInThirdVaccinationRelatedMessages(campaignName, subject.getStageId())) {
+                        enrollNew(subject, campaignName, v.getMotechProjectedDate(), null);
+                    }
+                } catch (EbodacEnrollmentException e) {
+                    LOGGER.debug(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
     private void unenrollAndRemoveEnrollment(String subjectId, String campaignName) {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subjectId);
 
@@ -1017,6 +1035,11 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
     private boolean checkIfThirdVaccinationRelatedAndMissingVaccination(Enrollment enrollment, Subject subject) {
         boolean thirdVac = getThirdVaccinationDate(subject) == null;
         return thirdVac && configService.getConfig().getThirdVaccinationRelatedMessages().contains(enrollment.getCampaignNameWithStageId());
+    }
+
+    private boolean checkIfCampaignInThirdVaccinationRelatedMessages(String campaignName, Long stageId) {
+        String campaignNameWithStageId = addStageIdToCampaignName(campaignName, stageId);
+        return configService.getConfig().getThirdVaccinationRelatedMessages().contains(campaignNameWithStageId);
     }
 
     private LocalDate getThirdVaccinationDate(Subject subject) {
