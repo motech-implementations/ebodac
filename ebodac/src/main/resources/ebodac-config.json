@@ -29,6 +29,8 @@
   "disconVacCampaignsList": ["Booster related messages", "Boost Vaccination Day", "Booster related messages - stage 2", "Boost Vaccination Day - stage 2"],
   "boosterRelatedMessages": ["Boost Vaccination First Follow-up visit - stage 2", "Boost Vaccination Second Follow-up visit - stage 2",
     "Boost Vaccination Third Follow-up visit - stage 2"],
+  "thirdVaccinationRelatedMessages": ["First Post Third Vaccination visit", "Second Post Third Vaccination visit",
+    "Third Post Third Vaccination visit", "Fourth Post Third Vaccination visit", "Fifth Post Third Vaccination visit"],
   "activeStageId": null,
   "subjectAgeRangeList": [
     {
