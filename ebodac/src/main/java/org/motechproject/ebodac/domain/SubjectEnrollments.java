@@ -107,6 +107,17 @@ public class SubjectEnrollments {
     }
 
     @Ignore
+    public Enrollment findEnrolmentByCampaignNameAndStageId(String campaignName, Long stageId) {
+        for (Enrollment enrollment: enrollments) {
+            if (stageId.equals(enrollment.getStageId()) && campaignName.startsWith(enrollment.getCampaignName())) {
+                return enrollment;
+            }
+        }
+
+        return null;
+    }
+
+    @Ignore
     public void addEnrolment(Enrollment enrollment) {
         enrollments.add(enrollment);
     }
