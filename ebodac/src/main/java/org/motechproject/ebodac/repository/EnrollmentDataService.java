@@ -25,12 +25,12 @@ public interface EnrollmentDataService extends MotechDataService<Enrollment> {
     @Lookup
     List<Enrollment> findByCampaignName(@LookupField(name = "campaignName") String campaignName);
 
-    @Lookup(name = "Find By Status Reference Date Stage Id Campaign Name And Participant Ids")
-    List<Enrollment> findByStatusReferenceDateStageIdCampaignNameAndSubjectIds(@LookupField(name = "status") EnrollmentStatus status,
-                                                                               @LookupField(name = "referenceDate") LocalDate referenceDate,
-                                                                               @LookupField(name = "stageId") Long stageId,
-                                                                               @LookupField(name = "campaignName", customOperator = Constants.Operators.MATCHES) String campaignName,
-                                                                               @LookupField(name = "externalId") Set<String> externalIds);
+    @Lookup(name = "Find By Status Reference Date Stage Id Group And Participant Ids")
+    List<Enrollment> findByStatusReferenceDateStageIdGroupAndSubjectIds(@LookupField(name = "status") EnrollmentStatus status,
+                                                                        @LookupField(name = "referenceDate") LocalDate referenceDate,
+                                                                        @LookupField(name = "stageId") Long stageId,
+                                                                        @LookupField(name = "group", customOperator = Constants.Operators.EQ_IGNORE_CASE) String group,
+                                                                        @LookupField(name = "externalId") Set<String> externalIds);
 
     @Lookup(name = "Find By Participant Id And Campaign Name")
     Enrollment findBySubjectIdAndCampaignName(@LookupField(name = "externalId") String externalId,

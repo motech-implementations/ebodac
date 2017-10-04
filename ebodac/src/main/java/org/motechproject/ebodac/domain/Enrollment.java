@@ -23,10 +23,18 @@ import javax.jdo.annotations.Unique;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Entity(nonEditable = true, maxFetchDepth = 1)
 @Unique(name = "externalIdAndCampaignName", members = {"externalId", "campaignName" })
 public class Enrollment {
+
+    private static final String LONG_TERM_FOLLOW_UP_CAMPAIGN_PATTERN = ".* Long-term Follow-up visit";
+    private static final String VACCINATION_FOLLOW_UP_CAMPAIGN_PATTERN = ".* Vaccination.*Follow-up visit";
+    private static final String THIRD_VACCINATION_LONG_TERM_FOLLOW_UP_CAMPAIGN_PATTERN = ".*Third Vaccination.*";
+    private static final String THIRD_VACCINATION_FOLLOW_UP_CAMPAIGN_PATTERN = "(First|Second|Third).*Third Vaccination.*";
+    private static final String LONG_TERM_FOLLOW_UP_CAMPAIGN_GROUP = "Long-term Follow-up visit";
+    private static final String VACCINATION_FOLLOW_UP_CAMPAIGN_GROUP = "Vaccination Follow-up visit";
 
     @Field(required = true)
     private String externalId;
@@ -58,6 +66,9 @@ public class Enrollment {
     @Persistent(mappedBy = "parentEnrollment")
     private Set<Enrollment> duplicatedEnrollments = new HashSet<>();
 
+    @Field
+    private String group;
+
     @NonEditable(display = false)
     @Field
     private String owner;
@@ -76,6 +87,8 @@ public class Enrollment {
         this.stageId = stageId;
 
         this.status = EnrollmentStatus.ENROLLED;
+
+        setGroupFromCampaignName(campaignName);
     }
 
     public Enrollment(String externalId, String campaignName, LocalDate referenceDate, Long stageId, Time deliverTime) {
@@ -172,6 +185,10 @@ public class Enrollment {
         this.duplicatedEnrollments = duplicatedEnrollments;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
     public String getOwner() {
         return owner;
     }
@@ -247,5 +264,19 @@ public class Enrollment {
         }
 
         return campaignName;
+    }
+
+    @Ignore
+    @JsonIgnore
+    private void setGroupFromCampaignName(String campaignName) {
+        group = campaignName;
+
+        if (Pattern.compile(VACCINATION_FOLLOW_UP_CAMPAIGN_PATTERN).matcher(campaignName).matches() ||
+                Pattern.compile(THIRD_VACCINATION_FOLLOW_UP_CAMPAIGN_PATTERN).matcher(campaignName).matches()) {
+            group = VACCINATION_FOLLOW_UP_CAMPAIGN_GROUP;
+        } else if (Pattern.compile(LONG_TERM_FOLLOW_UP_CAMPAIGN_PATTERN).matcher(campaignName).matches() ||
+                Pattern.compile(THIRD_VACCINATION_LONG_TERM_FOLLOW_UP_CAMPAIGN_PATTERN).matcher(campaignName).matches()) {
+            group = LONG_TERM_FOLLOW_UP_CAMPAIGN_GROUP;
+        }
     }
 }
