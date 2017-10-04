@@ -1014,6 +1014,86 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         assertNull(subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId()));
     }
 
+    @Test
+    public void shouldCreateThirdVaccinationRelatedEnrollmentsWhenThirdVaccinationDateAdded() throws IOException {
+        List<String> thirdVaccinationRelatedMessages = Arrays.asList("First Post Third Vaccination visit", "Second Post Third Vaccination visit",
+                "Third Post Third Vaccination visit", "Fourth Post Third Vaccination visit", "Fifth Post Third Vaccination visit");
+
+        Config config = new Config();
+        config.setThirdVaccinationRelatedMessages(thirdVaccinationRelatedMessages);
+        configService.updateConfig(config);
+
+        createSubjectWithRequireData("1");
+        createSubjectWithRequireData("2");
+
+        InputStream inputStream = getClass().getResourceAsStream("/enrollBasicWithoutThirdVaccinationDate.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/enrollBasicWithoutThirdVaccinationDate.csv");
+        inputStream.close();
+
+        Subject subject = subjectService.findSubjectBySubjectId("1");
+        SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
+
+        assertEquals(15, subjectEnrollments.getEnrollments().size());
+
+        assertEquals(EnrollmentStatus.ENROLLED, subjectEnrollments.findEnrolmentByCampaignName(VisitType.THIRD_VACCINATION_DAY.getMotechValue()).getStatus());
+        for (String campaignName : thirdVaccinationRelatedMessages) {
+            assertNull(subjectEnrollments.findEnrolmentByCampaignName(campaignName));
+        }
+
+        inputStream = getClass().getResourceAsStream("/enrollBasic.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/enrollBasic.csv");
+        inputStream.close();
+
+        subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
+
+        assertEquals(20, subjectEnrollments.getEnrollments().size());
+
+        assertEquals(EnrollmentStatus.COMPLETED, subjectEnrollments.findEnrolmentByCampaignName(VisitType.THIRD_VACCINATION_DAY.getMotechValue()).getStatus());
+        for (String campaignName : thirdVaccinationRelatedMessages) {
+            assertEquals(EnrollmentStatus.ENROLLED, subjectEnrollments.findEnrolmentByCampaignName(campaignName).getStatus());
+        }
+    }
+
+    @Test
+    public void shouldUnenrollAndDeleteThirdVaccinationRelatedEnrollmentsWhenThirdVaccinationDateRemoved() throws IOException {
+        List<String> thirdVaccinationRelatedMessages = Arrays.asList("First Post Third Vaccination visit", "Second Post Third Vaccination visit",
+                "Third Post Third Vaccination visit", "Fourth Post Third Vaccination visit", "Fifth Post Third Vaccination visit");
+
+        Config config = new Config();
+        config.setThirdVaccinationRelatedMessages(thirdVaccinationRelatedMessages);
+        configService.updateConfig(config);
+
+        createSubjectWithRequireData("1");
+        createSubjectWithRequireData("2");
+
+        InputStream inputStream = getClass().getResourceAsStream("/enrollBasic.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/enrollBasic.csv");
+        inputStream.close();
+
+        Subject subject = subjectService.findSubjectBySubjectId("1");
+        SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
+
+        assertEquals(19, subjectEnrollments.getEnrollments().size());
+
+        assertNull(subjectEnrollments.findEnrolmentByCampaignName(VisitType.THIRD_VACCINATION_DAY.getMotechValue()));
+        for (String campaignName : thirdVaccinationRelatedMessages) {
+            assertEquals(EnrollmentStatus.ENROLLED, subjectEnrollments.findEnrolmentByCampaignName(campaignName).getStatus());
+        }
+
+        inputStream = getClass().getResourceAsStream("/enrollBasicWithoutThirdVaccinationDate.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/enrollBasicWithoutThirdVaccinationDate.csv");
+        inputStream.close();
+
+        subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subject.getSubjectId());
+
+        assertEquals(15, subjectEnrollments.getEnrollments().size());
+
+        assertEquals(EnrollmentStatus.ENROLLED, subjectEnrollments.findEnrolmentByCampaignName(VisitType.THIRD_VACCINATION_DAY.getMotechValue()).getStatus());
+        for (String campaignName : thirdVaccinationRelatedMessages) {
+            assertNull(subjectEnrollments.findEnrolmentByCampaignName(campaignName));
+        }
+    }
+
     private void clearJobs() throws SchedulerException {
         NameMatcher<JobKey> nameMatcher = NameMatcher.jobNameStartsWith("org.motechproject.messagecampaign");
         Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupStartsWith("default"));
@@ -1044,7 +1124,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         configService.updateConfig(savedConfig);
     }
 
-    public void shouldEnrollAllVisitTypesForStage(String stage) throws IOException, SchedulerException {
+    private void shouldEnrollAllVisitTypesForStage(String stage) throws IOException, SchedulerException {
         createSubjectWithRequireData("1");
         createSubjectWithRequireData("2");
 
@@ -1938,7 +2018,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         }
     }
 
-    public void shouldUnenrollDuplicatedEnrollmentForStage(String stage) throws IOException, SchedulerException {
+    private void shouldUnenrollDuplicatedEnrollmentForStage(String stage) throws IOException, SchedulerException {
         final String campaignCompletedString = "org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.";
         final String runonce = "-runonce";
 
@@ -2003,7 +2083,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
     }
 
-    public void shouldUpdateGroupsWhenSubjectReenrolledForStage(String stage) throws IOException, SchedulerException {
+    private void shouldUpdateGroupsWhenSubjectReenrolledForStage(String stage) throws IOException, SchedulerException {
         final String campaignCompletedString = "org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.";
         final String runonce = "-runonce";
 
@@ -2058,7 +2138,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         assertEquals(null, enrollment2.getParentEnrollment());
     }
 
-    public void shouldRollbackWhenActualDateRemovedForStage(String stage) throws IOException, SchedulerException {
+    private void shouldRollbackWhenActualDateRemovedForStage(String stage) throws IOException, SchedulerException {
         createSubjectWithRequireData("1");
         createSubjectWithRequireData("2");
 
@@ -2110,7 +2190,7 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         assertEquals(EnrollmentStatus.ENROLLED, subjectEnrollments.findEnrolmentByCampaignName(VisitType.BOOST_VACCINATION_THIRD_FOLLOW_UP_VISIT.getMotechValue()).getStatus());
     }
 
-    public void shouldRollbackUnenrolledWhenActualDateRemovedForStage(String stage) throws IOException, SchedulerException {
+    private void shouldRollbackUnenrolledWhenActualDateRemovedForStage(String stage) throws IOException, SchedulerException {
         createSubjectWithRequireData("1");
         createSubjectWithRequireData("2");
 
