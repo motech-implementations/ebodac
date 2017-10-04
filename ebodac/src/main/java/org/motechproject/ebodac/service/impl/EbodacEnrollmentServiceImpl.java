@@ -30,15 +30,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 @Service("ebodacEnrollmentService")
 public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EbodacEnrollmentServiceImpl.class);
-
-    public static final String LONG_TERM_FOLLOW_UP_CAMPAIGN = ".* Long-term Follow-up visit";
-    public static final String FOLLOW_UP_CAMPAIGN = ".* Vaccination.*Follow-up visit";
 
     private SubjectEnrollmentsDataService subjectEnrollmentsDataService;
 
@@ -785,6 +781,7 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         LocalDate referenceDate = enrollment.getReferenceDate();
         String campaignName = enrollment.getCampaignName();
         Long stageId = enrollment.getStageId();
+        String group = enrollment.getGroup();
 
         LocalDate screeningDate = SubjectAgeRangeHelper.getScreeningActualDate(subject);
         Range<LocalDate> dateOfBirthRange = SubjectAgeRangeHelper.calculateDateOfBirthRange(subject.getDateOfBirth(),
@@ -804,10 +801,8 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
             return false;
         }
 
-        campaignName = changeCampaignNameForDuplicatedEnrollmentsPattern(campaignName);
-
-        List<Enrollment> enrollments = enrollmentDataService.findByStatusReferenceDateStageIdCampaignNameAndSubjectIds(
-                EnrollmentStatus.ENROLLED, referenceDate, stageId, campaignName, subjectIds);
+        List<Enrollment> enrollments = enrollmentDataService.findByStatusReferenceDateStageIdGroupAndSubjectIds(
+                EnrollmentStatus.ENROLLED, referenceDate, stageId, group, subjectIds);
 
         return findAndSetNewParent(enrollments, enrollment, subject.getSubjectId(), campaignName);
     }
@@ -860,16 +855,6 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
             throw new EbodacEnrollmentException("Cannot change Participant phone number, because error occurred during changing parent for duplicated enrolments",
                     e, "ebodac.updateSubject.cannotChangeParent");
         }
-    }
-
-    private String changeCampaignNameForDuplicatedEnrollmentsPattern(String campaignName) {
-        if (Pattern.compile(LONG_TERM_FOLLOW_UP_CAMPAIGN).matcher(campaignName).matches()) {
-            return LONG_TERM_FOLLOW_UP_CAMPAIGN;
-        } else if (Pattern.compile(FOLLOW_UP_CAMPAIGN).matcher(campaignName).matches()) {
-            return FOLLOW_UP_CAMPAIGN;
-        }
-
-        return campaignName;
     }
 
     private boolean findAndSetNewParent(List<Enrollment> enrollments, Enrollment enrollment, String subjectId, String campaignName) {
