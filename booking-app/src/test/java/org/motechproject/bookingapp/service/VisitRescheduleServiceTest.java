@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -215,6 +216,71 @@ public class VisitRescheduleServiceTest {
                 new VisitRescheduleDto(visitBookingDetails.get(0), new Range<>(new LocalDate(2217, 2, 6), new LocalDate(2217, 2, 16)), false, false, false),
                 new VisitRescheduleDto(visitBookingDetails.get(1), null, false, true, true),
                 new VisitRescheduleDto(visitBookingDetails.get(2), null, false, true, true)
+        ));
+
+        List<VisitRescheduleDto> resultDtos = visitRescheduleService.getVisitsRecords(new BookingGridSettings()).getRows();
+
+        checkVisitRescheduleDtoList(expectedDtos, resultDtos);
+    }
+
+    @Test
+    public void shouldNotCalculateVisitDateRangeIfStageIsNull() throws IOException {
+        List<VisitBookingDetails> visitBookingDetails = new ArrayList<>(Arrays.asList(
+                new VisitBookingDetails(null, createVisit(1L, VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, null, null, subject1)),
+                new VisitBookingDetails(null, createVisit(2L, VisitType.SECOND_LONG_TERM_FOLLOW_UP_VISIT, null, null, subject1))
+        ));
+
+        Records<VisitBookingDetails> records = new Records<>(1, 10, 3, visitBookingDetails);
+
+        when(lookupService.getEntities(eq(VisitBookingDetails.class), anyString(), anyString(), any(QueryParams.class))).thenReturn(records);
+
+        Map<VisitType, VisitScheduleOffset> offsetMapForStageId = new LinkedHashMap<>();
+        offsetMapForStageId.put(VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, createVisitScheduleOffset(VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, 1L, 10, 5, 15));
+        offsetMapForStageId.put(VisitType.SECOND_LONG_TERM_FOLLOW_UP_VISIT, createVisitScheduleOffset(VisitType.SECOND_LONG_TERM_FOLLOW_UP_VISIT, 1L, 4, 4, 4));
+
+        Map<Long, Map<VisitType, VisitScheduleOffset>> offsetMap = new LinkedHashMap<>();
+        offsetMap.put(1L, offsetMapForStageId);
+
+        when(visitScheduleOffsetService.getAllAsMap()).thenReturn(offsetMap);
+
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(null);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(new Config());
+
+        List<VisitRescheduleDto> expectedDtos = new ArrayList<>(Arrays.asList(
+                new VisitRescheduleDto(visitBookingDetails.get(0), null, false, false, false),
+                new VisitRescheduleDto(visitBookingDetails.get(1), null, false, false, false)
+        ));
+
+        List<VisitRescheduleDto> resultDtos = visitRescheduleService.getVisitsRecords(new BookingGridSettings()).getRows();
+
+        checkVisitRescheduleDtoList(expectedDtos, resultDtos);
+    }
+
+    @Test
+    public void shouldNotCalculateVisitDateRangeIfVisitScheduleOffsetIsMissing() throws IOException {
+        List<VisitBookingDetails> visitBookingDetails = new ArrayList<>(Arrays.asList(
+                new VisitBookingDetails(null, createVisit(1L, VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, null, null, subject1)),
+                new VisitBookingDetails(null, createVisit(2L, VisitType.SECOND_LONG_TERM_FOLLOW_UP_VISIT, null, null, subject1))
+        ));
+
+        Records<VisitBookingDetails> records = new Records<>(1, 10, 3, visitBookingDetails);
+
+        when(lookupService.getEntities(eq(VisitBookingDetails.class), anyString(), anyString(), any(QueryParams.class))).thenReturn(records);
+
+        when(visitScheduleOffsetService.getAllAsMap()).thenReturn(new HashMap<Long, Map<VisitType, VisitScheduleOffset>>());
+
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(1L);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(new Config());
+
+        List<VisitRescheduleDto> expectedDtos = new ArrayList<>(Arrays.asList(
+                new VisitRescheduleDto(visitBookingDetails.get(0), null, false, false, false),
+                new VisitRescheduleDto(visitBookingDetails.get(1), null, false, false, false)
         ));
 
         List<VisitRescheduleDto> resultDtos = visitRescheduleService.getVisitsRecords(new BookingGridSettings()).getRows();
