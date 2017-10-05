@@ -352,6 +352,59 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
     }
 
     @Test
+    public void shouldNotGroupEnrollmentsWithDifferentVisitTypes() throws IOException, SchedulerException {
+        final String campaignCompletedString = "org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.";
+        final String runonce = "-runonce";
+
+        Subject subject1 = createSubjectWithRequireData("1");
+        Subject subject2 = createSubjectWithRequireData("2");
+        Subject subject3 = createSubjectWithRequireData("3");
+        Subject subject4 = createSubjectWithRequireData("4");
+
+        InputStream inputStream = getClass().getResourceAsStream("/enrollDuplicatedDifferentVisitTypes.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/enrollDuplicatedDifferentVisitTypes.csv");
+        inputStream.close();
+
+        SubjectEnrollments subjectEnrollments1 = subjectEnrollmentsDataService.findBySubjectId(subject1.getSubjectId());
+        SubjectEnrollments subjectEnrollments2 = subjectEnrollmentsDataService.findBySubjectId(subject2.getSubjectId());
+        SubjectEnrollments subjectEnrollments3 = subjectEnrollmentsDataService.findBySubjectId(subject3.getSubjectId());
+        SubjectEnrollments subjectEnrollments4 = subjectEnrollmentsDataService.findBySubjectId(subject4.getSubjectId());
+
+        assertEquals(19, subjectEnrollments1.getEnrollments().size());
+        assertEquals(19, subjectEnrollments2.getEnrollments().size());
+        assertEquals(7, subjectEnrollments3.getEnrollments().size());
+        assertEquals(5, subjectEnrollments4.getEnrollments().size());
+
+        for (Enrollment enrollment : subjectEnrollments1.getEnrollments()) {
+            assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
+            String triggerKeyString = campaignCompletedString + enrollment.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment.getExternalId() + runonce;
+            assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+            assertEquals(0, enrollment.getDuplicatedEnrollments().size());
+        }
+
+        for (Enrollment enrollment : subjectEnrollments2.getEnrollments()) {
+            assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
+            String triggerKeyString = campaignCompletedString + enrollment.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment.getExternalId() + runonce;
+            assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+            assertEquals(0, enrollment.getDuplicatedEnrollments().size());
+        }
+
+        for (Enrollment enrollment : subjectEnrollments3.getEnrollments()) {
+            assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
+            String triggerKeyString = campaignCompletedString + enrollment.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment.getExternalId() + runonce;
+            assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+            assertEquals(0, enrollment.getDuplicatedEnrollments().size());
+        }
+
+        for (Enrollment enrollment : subjectEnrollments4.getEnrollments()) {
+            assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
+            String triggerKeyString = campaignCompletedString + enrollment.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment.getExternalId() + runonce;
+            assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+            assertEquals(0, enrollment.getDuplicatedEnrollments().size());
+        }
+    }
+
+    @Test
     public void shouldNotGroupEnrollmentsBetweenStages() throws IOException, SchedulerException {
         final String campaignCompletedString = "org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.";
         final String runonce = "-runonce";
