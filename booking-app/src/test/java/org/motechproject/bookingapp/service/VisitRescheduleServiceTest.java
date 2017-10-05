@@ -30,6 +30,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,20 +93,20 @@ public class VisitRescheduleServiceTest {
         bookingGridSettings.setPage(1);
         bookingGridSettings.setRows(10);
 
-        List<VisitBookingDetails> visitBookingDetailses = new ArrayList<>(Arrays.asList(
+        List<VisitBookingDetails> visitBookingDetails = new ArrayList<>(Arrays.asList(
                 new VisitBookingDetails(new LocalDate(2217, 4, 1), createVisit(1L, VisitType.PRIME_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2217, 4, 1), subject1)),
                 new VisitBookingDetails(new LocalDate(2217, 4, 1), createVisit(2L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2217, 4, 1), subject1)),
                 new VisitBookingDetails(new LocalDate(2217, 4, 1), createVisit(1L, VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, null, new LocalDate(2217, 4, 1), subject2))
         ));
 
-        Records<VisitBookingDetails> records = new Records<>(1, 10, 3, visitBookingDetailses);
+        Records<VisitBookingDetails> records = new Records<>(1, 10, 3, visitBookingDetails);
 
         when(lookupService.getEntities(eq(VisitBookingDetails.class), anyString(), anyString(), any(QueryParams.class))).thenReturn(records);
 
         List<VisitScheduleOffset> visitScheduleOffsets = new ArrayList<>(Arrays.asList(
-                createVistScheduleOffset(VisitType.PRIME_VACCINATION_FIRST_FOLLOW_UP_VISIT, 2L, 10, 5, 12),
-                createVistScheduleOffset(VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, 2L, 20, 15, 24),
-                createVistScheduleOffset(VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, 2L, 30, 25, 27)
+                createVisitScheduleOffset(VisitType.PRIME_VACCINATION_FIRST_FOLLOW_UP_VISIT, 2L, 10, 5, 12),
+                createVisitScheduleOffset(VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, 2L, 20, 15, 24),
+                createVisitScheduleOffset(VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, 2L, 30, 25, 27)
         ));
         Map<VisitType, VisitScheduleOffset> offsetMapForStageId = new LinkedHashMap<>();
         offsetMapForStageId.put(VisitType.PRIME_VACCINATION_FIRST_FOLLOW_UP_VISIT, visitScheduleOffsets.get(0));
@@ -120,26 +121,105 @@ public class VisitRescheduleServiceTest {
         ebodacConfig.setActiveStageId(2L);
 
         Config bookingAppConfig = new Config();
-        List<String> boosterRelatedMessage = new ArrayList<>(Arrays.asList("Boost Vaccination First Follow-up visit - stage 2"));
+        List<String> boosterRelatedMessage = new ArrayList<>(Collections.singletonList("Boost Vaccination First Follow-up visit - stage 2"));
         bookingAppConfig.setBoosterRelatedMessages(boosterRelatedMessage);
 
         when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
         when(bookingAppConfigService.getConfig()).thenReturn(bookingAppConfig);
 
         List<VisitRescheduleDto> expectedDtos = new ArrayList<>(Arrays.asList(
-                new VisitRescheduleDto(visitBookingDetailses.get(0), new Range<>(new LocalDate(2217, 2, 6), new LocalDate(2217, 2, 13)), false, false, false),
-                new VisitRescheduleDto(visitBookingDetailses.get(1), new Range<>(new LocalDate(2217, 3, 16), new LocalDate(2217, 3, 25)), true, false, false),
-                new VisitRescheduleDto(visitBookingDetailses.get(2), null, false, false, true)
+                new VisitRescheduleDto(visitBookingDetails.get(0), new Range<>(new LocalDate(2217, 2, 6), new LocalDate(2217, 2, 13)), false, false, false),
+                new VisitRescheduleDto(visitBookingDetails.get(1), new Range<>(new LocalDate(2217, 3, 16), new LocalDate(2217, 3, 25)), true, false, false),
+                new VisitRescheduleDto(visitBookingDetails.get(2), null, false, false, true)
         ));
 
         List<VisitRescheduleDto> resultDtos = visitRescheduleService.getVisitsRecords(bookingGridSettings).getRows();
 
-        for (int i = 0; i < expectedDtos.size(); i++) {
-            assertEquals(expectedDtos.get(i).getEarliestDate(), resultDtos.get(i).getEarliestDate());
-            assertEquals(expectedDtos.get(i).getLatestDate(), resultDtos.get(i).getLatestDate());
-            assertEquals(expectedDtos.get(i).getParticipantId(), resultDtos.get(i).getParticipantId());
-            assertEquals(expectedDtos.get(i).getIgnoreDateLimitation(), resultDtos.get(i).getIgnoreDateLimitation());
-        }
+        checkVisitRescheduleDtoList(expectedDtos, resultDtos);
+    }
+
+    @Test
+    public void shouldCalculateThirdVaccinationRelatedVisitsDateRangeUsingThirdVaccinationDate() throws IOException {
+        List<VisitBookingDetails> visitBookingDetails = new ArrayList<>(Arrays.asList(
+                new VisitBookingDetails(null, createVisit(1L, VisitType.THIRD_VACCINATION_DAY, new LocalDate(2217, 4, 1), null, subject1)),
+                new VisitBookingDetails(null, createVisit(2L, VisitType.FIRST_POST_THIRD_VACCINATION_VISIT, null, null, subject1)),
+                new VisitBookingDetails(null, createVisit(3L, VisitType.SECOND_POST_THIRD_VACCINATION_VISIT, null, null, subject1))
+        ));
+
+        Records<VisitBookingDetails> records = new Records<>(1, 10, 3, visitBookingDetails);
+
+        when(lookupService.getEntities(eq(VisitBookingDetails.class), anyString(), anyString(), any(QueryParams.class))).thenReturn(records);
+
+        Map<VisitType, VisitScheduleOffset> offsetMapForStageId = new LinkedHashMap<>();
+        offsetMapForStageId.put(VisitType.THIRD_VACCINATION_DAY, createVisitScheduleOffset(VisitType.THIRD_VACCINATION_DAY, 1L, 10, 5, 15));
+        offsetMapForStageId.put(VisitType.FIRST_POST_THIRD_VACCINATION_VISIT, createVisitScheduleOffset(VisitType.FIRST_POST_THIRD_VACCINATION_VISIT, 1L, 4, 4, 4));
+        offsetMapForStageId.put(VisitType.SECOND_POST_THIRD_VACCINATION_VISIT, createVisitScheduleOffset(VisitType.SECOND_POST_THIRD_VACCINATION_VISIT, 1L, 14, 7, 21));
+        Map<Long, Map<VisitType, VisitScheduleOffset>> offsetMap = new LinkedHashMap<>();
+        offsetMap.put(1L, offsetMapForStageId);
+
+        when(visitScheduleOffsetService.getAllAsMap()).thenReturn(offsetMap);
+
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(1L);
+
+        Config bookingAppConfig = new Config();
+        List<String> thirdVaccinationRelatedMessage = new ArrayList<>(Arrays.asList("First Post Third Vaccination visit", "Second Post Third Vaccination visit"));
+        bookingAppConfig.setThirdVaccinationRelatedMessages(thirdVaccinationRelatedMessage);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(bookingAppConfig);
+
+        List<VisitRescheduleDto> expectedDtos = new ArrayList<>(Arrays.asList(
+                new VisitRescheduleDto(visitBookingDetails.get(0), new Range<>(new LocalDate(2217, 2, 6), new LocalDate(2217, 2, 16)), false, false, false),
+                new VisitRescheduleDto(visitBookingDetails.get(1), new Range<>(new LocalDate(2217, 4, 5), new LocalDate(2217, 4, 5)), false, true, false),
+                new VisitRescheduleDto(visitBookingDetails.get(2), new Range<>(new LocalDate(2217, 4, 8), new LocalDate(2217, 4, 22)), false, true, false)
+        ));
+
+        List<VisitRescheduleDto> resultDtos = visitRescheduleService.getVisitsRecords(new BookingGridSettings()).getRows();
+
+        checkVisitRescheduleDtoList(expectedDtos, resultDtos);
+    }
+
+    @Test
+    public void shouldNotCalculateThirdVaccinationRelatedVisitsDateRangeIfThirdVaccinationDateIsNull() throws IOException {
+        List<VisitBookingDetails> visitBookingDetails = new ArrayList<>(Arrays.asList(
+                new VisitBookingDetails(null, createVisit(1L, VisitType.THIRD_VACCINATION_DAY, null, null, subject1)),
+                new VisitBookingDetails(null, createVisit(2L, VisitType.FIRST_POST_THIRD_VACCINATION_VISIT, null, null, subject1)),
+                new VisitBookingDetails(null, createVisit(3L, VisitType.SECOND_POST_THIRD_VACCINATION_VISIT, null, null, subject1))
+        ));
+
+        Records<VisitBookingDetails> records = new Records<>(1, 10, 3, visitBookingDetails);
+
+        when(lookupService.getEntities(eq(VisitBookingDetails.class), anyString(), anyString(), any(QueryParams.class))).thenReturn(records);
+
+        Map<VisitType, VisitScheduleOffset> offsetMapForStageId = new LinkedHashMap<>();
+        offsetMapForStageId.put(VisitType.THIRD_VACCINATION_DAY, createVisitScheduleOffset(VisitType.THIRD_VACCINATION_DAY, 1L, 10, 5, 15));
+        offsetMapForStageId.put(VisitType.FIRST_POST_THIRD_VACCINATION_VISIT, createVisitScheduleOffset(VisitType.FIRST_POST_THIRD_VACCINATION_VISIT, 1L, 4, 4, 4));
+        offsetMapForStageId.put(VisitType.SECOND_POST_THIRD_VACCINATION_VISIT, createVisitScheduleOffset(VisitType.SECOND_POST_THIRD_VACCINATION_VISIT, 1L, 14, 7, 21));
+        Map<Long, Map<VisitType, VisitScheduleOffset>> offsetMap = new LinkedHashMap<>();
+        offsetMap.put(1L, offsetMapForStageId);
+
+        when(visitScheduleOffsetService.getAllAsMap()).thenReturn(offsetMap);
+
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(1L);
+
+        Config bookingAppConfig = new Config();
+        List<String> thirdVaccinationRelatedMessage = new ArrayList<>(Arrays.asList("First Post Third Vaccination visit", "Second Post Third Vaccination visit"));
+        bookingAppConfig.setThirdVaccinationRelatedMessages(thirdVaccinationRelatedMessage);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(bookingAppConfig);
+
+        List<VisitRescheduleDto> expectedDtos = new ArrayList<>(Arrays.asList(
+                new VisitRescheduleDto(visitBookingDetails.get(0), new Range<>(new LocalDate(2217, 2, 6), new LocalDate(2217, 2, 16)), false, false, false),
+                new VisitRescheduleDto(visitBookingDetails.get(1), null, false, true, true),
+                new VisitRescheduleDto(visitBookingDetails.get(2), null, false, true, true)
+        ));
+
+        List<VisitRescheduleDto> resultDtos = visitRescheduleService.getVisitsRecords(new BookingGridSettings()).getRows();
+
+        checkVisitRescheduleDtoList(expectedDtos, resultDtos);
     }
 
     @Test
@@ -165,7 +245,7 @@ public class VisitRescheduleServiceTest {
         verify(visitBookingDetailsDataService, never()).findByClinicIdVisitPlannedDateAndType(anyLong(), any(LocalDate.class), any(VisitType.class));
     }
 
-    private VisitScheduleOffset createVistScheduleOffset(VisitType visitType, Long stageId, Integer timeOffset, Integer earliestDateOffset, Integer latestDateOffset) {
+    private VisitScheduleOffset createVisitScheduleOffset(VisitType visitType, Long stageId, Integer timeOffset, Integer earliestDateOffset, Integer latestDateOffset) {
         VisitScheduleOffset visitScheduleOffset = new VisitScheduleOffset();
         visitScheduleOffset.setVisitType(visitType);
         visitScheduleOffset.setStageId(stageId);
@@ -182,6 +262,18 @@ public class VisitRescheduleServiceTest {
         visit.setDate(date);
         visit.setMotechProjectedDate(projectedDate);
         visit.setSubject(subject);
+
+        subject.getVisits().add(visit);
+
         return visit;
+    }
+
+    private void checkVisitRescheduleDtoList(List<VisitRescheduleDto> expectedDtos, List<VisitRescheduleDto> resultDtos) {
+        for (int i = 0; i < expectedDtos.size(); i++) {
+            assertEquals(expectedDtos.get(i).getEarliestDate(), resultDtos.get(i).getEarliestDate());
+            assertEquals(expectedDtos.get(i).getLatestDate(), resultDtos.get(i).getLatestDate());
+            assertEquals(expectedDtos.get(i).getParticipantId(), resultDtos.get(i).getParticipantId());
+            assertEquals(expectedDtos.get(i).getIgnoreDateLimitation(), resultDtos.get(i).getIgnoreDateLimitation());
+        }
     }
 }
