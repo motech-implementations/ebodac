@@ -313,11 +313,11 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         SubjectEnrollments subjectEnrollments4 = subjectEnrollmentsDataService.findBySubjectId(subject4.getSubjectId());
         SubjectEnrollments subjectEnrollments5 = subjectEnrollmentsDataService.findBySubjectId(subject5.getSubjectId());
 
-        assertEquals(14, subjectEnrollments1.getEnrollments().size());
-        assertEquals(14, subjectEnrollments2.getEnrollments().size());
-        assertEquals(14, subjectEnrollments3.getEnrollments().size());
-        assertEquals(14, subjectEnrollments4.getEnrollments().size());
-        assertEquals(14, subjectEnrollments5.getEnrollments().size());
+        assertEquals(19, subjectEnrollments1.getEnrollments().size());
+        assertEquals(19, subjectEnrollments2.getEnrollments().size());
+        assertEquals(19, subjectEnrollments3.getEnrollments().size());
+        assertEquals(19, subjectEnrollments4.getEnrollments().size());
+        assertEquals(19, subjectEnrollments5.getEnrollments().size());
 
         for (Enrollment enrollment : subjectEnrollments1.getEnrollments()) {
             assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
@@ -370,10 +370,10 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         SubjectEnrollments subjectEnrollments3 = subjectEnrollmentsDataService.findBySubjectId(subject3.getSubjectId());
         SubjectEnrollments subjectEnrollments4 = subjectEnrollmentsDataService.findBySubjectId(subject4.getSubjectId());
 
-        assertEquals(9, subjectEnrollments1.getEnrollments().size());
-        assertEquals(9, subjectEnrollments2.getEnrollments().size());
-        assertEquals(9, subjectEnrollments3.getEnrollments().size());
-        assertEquals(9, subjectEnrollments4.getEnrollments().size());
+        assertEquals(12, subjectEnrollments1.getEnrollments().size());
+        assertEquals(12, subjectEnrollments2.getEnrollments().size());
+        assertEquals(12, subjectEnrollments3.getEnrollments().size());
+        assertEquals(12, subjectEnrollments4.getEnrollments().size());
 
         for (Enrollment enrollment : subjectEnrollments1.getEnrollments()) {
             assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
