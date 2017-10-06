@@ -311,6 +311,94 @@ public class VisitRescheduleServiceTest {
         verify(visitBookingDetailsDataService, never()).findByClinicIdVisitPlannedDateAndType(anyLong(), any(LocalDate.class), any(VisitType.class));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenVisitAlreadyTookPlace() {
+        VisitBookingDetails visitBookingDetails = new VisitBookingDetails(null, createVisit(1L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, new LocalDate(2217, 1, 1), new LocalDate(2217, 1, 1), subject1));
+
+        VisitRescheduleDto visitRescheduleDto = new VisitRescheduleDto(visitBookingDetails);
+        visitRescheduleDto.setStartTime(new Time(9, 0));
+        visitRescheduleDto.setIgnoreDateLimitation(true);
+        visitRescheduleDto.setVisitBookingDetailsId(1L);
+
+        when(visitBookingDetailsDataService.findById(1L)).thenReturn(visitBookingDetails);
+        when(ebodacEnrollmentService.checkIfEnrolledAndUpdateEnrollment(visitBookingDetails.getVisit())).thenReturn(false);
+        when(visitDataService.update(visitBookingDetails.getVisit())).thenReturn(visitBookingDetails.getVisit());
+        when(visitBookingDetailsDataService.update(visitBookingDetails)).thenReturn(visitBookingDetails);
+
+        visitRescheduleService.saveVisitReschedule(visitRescheduleDto, true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenPlannedDateIsInThePast() {
+        VisitBookingDetails visitBookingDetails = new VisitBookingDetails(null, createVisit(1L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2015, 1, 1), subject1));
+
+        VisitRescheduleDto visitRescheduleDto = new VisitRescheduleDto(visitBookingDetails);
+        visitRescheduleDto.setStartTime(new Time(9, 0));
+        visitRescheduleDto.setIgnoreDateLimitation(true);
+        visitRescheduleDto.setVisitBookingDetailsId(1L);
+
+        when(visitBookingDetailsDataService.findById(1L)).thenReturn(visitBookingDetails);
+        when(ebodacEnrollmentService.checkIfEnrolledAndUpdateEnrollment(visitBookingDetails.getVisit())).thenReturn(false);
+        when(visitDataService.update(visitBookingDetails.getVisit())).thenReturn(visitBookingDetails.getVisit());
+        when(visitBookingDetailsDataService.update(visitBookingDetails)).thenReturn(visitBookingDetails);
+
+        visitRescheduleService.saveVisitReschedule(visitRescheduleDto, true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenCannotCalculateVisitWindow() {
+        VisitBookingDetails visitBookingDetails = new VisitBookingDetails(null, createVisit(1L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2217, 1, 1), subject1));
+
+        VisitRescheduleDto visitRescheduleDto = new VisitRescheduleDto(visitBookingDetails);
+        visitRescheduleDto.setStartTime(new Time(9, 0));
+        visitRescheduleDto.setIgnoreDateLimitation(false);
+        visitRescheduleDto.setVisitBookingDetailsId(1L);
+
+        when(visitBookingDetailsDataService.findById(1L)).thenReturn(visitBookingDetails);
+        when(ebodacEnrollmentService.checkIfEnrolledAndUpdateEnrollment(visitBookingDetails.getVisit())).thenReturn(false);
+        when(visitDataService.update(visitBookingDetails.getVisit())).thenReturn(visitBookingDetails.getVisit());
+        when(visitBookingDetailsDataService.update(visitBookingDetails)).thenReturn(visitBookingDetails);
+
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(1L);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(new Config());
+
+        visitRescheduleService.saveVisitReschedule(visitRescheduleDto, true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenVisitPlannedDateOutOfWindow() {
+        VisitBookingDetails visitBookingDetails = new VisitBookingDetails(null, createVisit(1L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2217, 1, 1), subject1));
+
+        VisitRescheduleDto visitRescheduleDto = new VisitRescheduleDto(visitBookingDetails);
+        visitRescheduleDto.setStartTime(new Time(9, 0));
+        visitRescheduleDto.setIgnoreDateLimitation(false);
+        visitRescheduleDto.setVisitBookingDetailsId(1L);
+
+        when(visitBookingDetailsDataService.findById(1L)).thenReturn(visitBookingDetails);
+        when(ebodacEnrollmentService.checkIfEnrolledAndUpdateEnrollment(visitBookingDetails.getVisit())).thenReturn(false);
+        when(visitDataService.update(visitBookingDetails.getVisit())).thenReturn(visitBookingDetails.getVisit());
+        when(visitBookingDetailsDataService.update(visitBookingDetails)).thenReturn(visitBookingDetails);
+
+        Map<VisitType, VisitScheduleOffset> offsetMapForStageId = new LinkedHashMap<>();
+        offsetMapForStageId.put(VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, createVisitScheduleOffset(VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, 1L, 10, 5, 15));
+
+        Map<Long, Map<VisitType, VisitScheduleOffset>> offsetMap = new LinkedHashMap<>();
+        offsetMap.put(1L, offsetMapForStageId);
+
+        when(visitScheduleOffsetService.getAllAsMap()).thenReturn(offsetMap);
+
+        org.motechproject.ebodac.domain.Config ebodacConfig = new org.motechproject.ebodac.domain.Config();
+        ebodacConfig.setActiveStageId(1L);
+
+        when(ebodacConfigService.getConfig()).thenReturn(ebodacConfig);
+        when(bookingAppConfigService.getConfig()).thenReturn(new Config());
+
+        visitRescheduleService.saveVisitReschedule(visitRescheduleDto, true);
+    }
+
     private VisitScheduleOffset createVisitScheduleOffset(VisitType visitType, Long stageId, Integer timeOffset, Integer earliestDateOffset, Integer latestDateOffset) {
         VisitScheduleOffset visitScheduleOffset = new VisitScheduleOffset();
         visitScheduleOffset.setVisitType(visitType);
