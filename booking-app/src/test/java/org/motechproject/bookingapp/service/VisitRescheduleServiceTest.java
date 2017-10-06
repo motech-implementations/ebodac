@@ -6,18 +6,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.motechproject.bookingapp.domain.Clinic;
 import org.motechproject.bookingapp.domain.Config;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
-import org.motechproject.bookingapp.dto.VisitRescheduleDto;
 import org.motechproject.bookingapp.domain.VisitScheduleOffset;
+import org.motechproject.bookingapp.dto.VisitRescheduleDto;
+import org.motechproject.bookingapp.exception.LimitationExceededException;
+import org.motechproject.bookingapp.helper.VisitLimitationHelper;
 import org.motechproject.bookingapp.repository.VisitBookingDetailsDataService;
 import org.motechproject.bookingapp.service.impl.VisitRescheduleServiceImpl;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.commons.api.Range;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.ebodac.domain.enums.Language;
 import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.domain.enums.Language;
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.motechproject.ebodac.repository.VisitDataService;
 import org.motechproject.ebodac.service.EbodacEnrollmentService;
@@ -74,6 +77,9 @@ public class VisitRescheduleServiceTest {
 
     @Mock
     private LookupService lookupService;
+
+    @Mock
+    private VisitLimitationHelper visitLimitationHelper;
 
     private Subject subject1;
 
@@ -397,6 +403,78 @@ public class VisitRescheduleServiceTest {
         when(bookingAppConfigService.getConfig()).thenReturn(new Config());
 
         visitRescheduleService.saveVisitReschedule(visitRescheduleDto, true);
+    }
+
+    @Test(expected = LimitationExceededException.class)
+    public void shouldThrowLimitationExceededExceptionWhenLimitForVisitTypeReached() {
+        Clinic clinic = new Clinic();
+        clinic.setId(1L);
+        clinic.setNumberOfRooms(20);
+
+        VisitBookingDetails visitBookingDetails = new VisitBookingDetails(null, createVisit(1L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2217, 2, 11), subject1));
+        visitBookingDetails.setClinic(clinic);
+
+        VisitRescheduleDto visitRescheduleDto = new VisitRescheduleDto(visitBookingDetails);
+        visitRescheduleDto.setStartTime(new Time(9, 0));
+        visitRescheduleDto.setIgnoreDateLimitation(true);
+        visitRescheduleDto.setVisitBookingDetailsId(1L);
+
+        when(visitBookingDetailsDataService.findById(1L)).thenReturn(visitBookingDetails);
+        when(ebodacEnrollmentService.checkIfEnrolledAndUpdateEnrollment(visitBookingDetails.getVisit())).thenReturn(false);
+        when(visitDataService.update(visitBookingDetails.getVisit())).thenReturn(visitBookingDetails.getVisit());
+        when(visitBookingDetailsDataService.update(visitBookingDetails)).thenReturn(visitBookingDetails);
+
+        List<VisitBookingDetails> visitBookingDetailsList = new ArrayList<>();
+
+        for (long i = 1; i < 5; i++) {
+            VisitBookingDetails details = new VisitBookingDetails();
+            details.setId(i);
+            visitBookingDetailsList.add(details);
+        }
+
+        when(visitBookingDetailsDataService.findByClinicIdVisitPlannedDateAndType(clinic.getId(), visitRescheduleDto.getPlannedDate(), visitRescheduleDto.getVisitType())).thenReturn(visitBookingDetailsList);
+        when(visitLimitationHelper.getMaxVisitCountForVisitType(visitRescheduleDto.getVisitType(), clinic)).thenReturn(2);
+
+        visitRescheduleService.saveVisitReschedule(visitRescheduleDto, false);
+
+        verify(visitLimitationHelper).checkCapacityForVisitBookingDetails(visitRescheduleDto.getPlannedDate(), clinic, visitRescheduleDto.getVisitId());
+    }
+
+    @Test(expected = LimitationExceededException.class)
+    public void shouldThrowLimitationExceededExceptionWhenMaxAmountOfParticipantExceeded() {
+        Clinic clinic = new Clinic();
+        clinic.setId(1L);
+        clinic.setNumberOfRooms(2);
+
+        VisitBookingDetails visitBookingDetails = new VisitBookingDetails(null, createVisit(1L, VisitType.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT, null, new LocalDate(2217, 2, 11), subject1));
+        visitBookingDetails.setClinic(clinic);
+
+        VisitRescheduleDto visitRescheduleDto = new VisitRescheduleDto(visitBookingDetails);
+        visitRescheduleDto.setStartTime(new Time(9, 0));
+        visitRescheduleDto.setIgnoreDateLimitation(true);
+        visitRescheduleDto.setVisitBookingDetailsId(1L);
+
+        when(visitBookingDetailsDataService.findById(1L)).thenReturn(visitBookingDetails);
+        when(ebodacEnrollmentService.checkIfEnrolledAndUpdateEnrollment(visitBookingDetails.getVisit())).thenReturn(false);
+        when(visitDataService.update(visitBookingDetails.getVisit())).thenReturn(visitBookingDetails.getVisit());
+        when(visitBookingDetailsDataService.update(visitBookingDetails)).thenReturn(visitBookingDetails);
+
+        List<VisitBookingDetails> visitBookingDetailsList = new ArrayList<>();
+
+        for (long i = 1; i < 5; i++) {
+            VisitBookingDetails details = new VisitBookingDetails();
+            details.setId(i);
+            details.setStartTime(new Time(9, 0));
+            details.setEndTime(new Time(10, 0));
+            visitBookingDetailsList.add(details);
+        }
+
+        when(visitBookingDetailsDataService.findByClinicIdVisitPlannedDateAndType(clinic.getId(), visitRescheduleDto.getPlannedDate(), visitRescheduleDto.getVisitType())).thenReturn(visitBookingDetailsList);
+        when(visitLimitationHelper.getMaxVisitCountForVisitType(visitRescheduleDto.getVisitType(), clinic)).thenReturn(20);
+
+        visitRescheduleService.saveVisitReschedule(visitRescheduleDto, false);
+
+        verify(visitLimitationHelper).checkCapacityForVisitBookingDetails(visitRescheduleDto.getPlannedDate(), clinic, visitRescheduleDto.getVisitId());
     }
 
     private VisitScheduleOffset createVisitScheduleOffset(VisitType visitType, Long stageId, Integer timeOffset, Integer earliestDateOffset, Integer latestDateOffset) {
