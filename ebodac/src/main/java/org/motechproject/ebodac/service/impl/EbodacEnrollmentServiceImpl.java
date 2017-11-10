@@ -458,8 +458,15 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
 
     private void updateReferenceDateIfUnenrolled(Enrollment enrollment, Visit visit) {
         enrollment.setReferenceDate(visit.getMotechProjectedDate());
-        enrollment.setParentEnrollment(null);
         enrollment.setDuplicatedEnrollments(null);
+
+        Enrollment parentEnrollment = enrollment.getParentEnrollment();
+        if (parentEnrollment != null) {
+            enrollment.setParentEnrollment(null);
+
+            parentEnrollment.getDuplicatedEnrollments().remove(enrollment);
+            enrollmentDataService.update(parentEnrollment);
+        }
 
         enrollmentDataService.update(enrollment);
     }
@@ -567,7 +574,14 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
                         "ebodac.enroll.error.primeVaccinationDateChanged", subjectId, enrollment.getCampaignName());
             }
             enrollment.setReferenceDate(referenceDate);
-            enrollment.setParentEnrollment(null);
+
+            Enrollment parentEnrollment = enrollment.getParentEnrollment();
+            if (parentEnrollment != null) {
+                enrollment.setParentEnrollment(null);
+
+                parentEnrollment.getDuplicatedEnrollments().remove(enrollment);
+                enrollmentDataService.update(parentEnrollment);
+            }
         } else if (enrollment.getReferenceDate() == null) {
             throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s to Campaign with name: %s, because reference date is empty",
                     "ebodac.enroll.error.emptyReferenceDate", subjectId, enrollment.getCampaignName());
@@ -771,11 +785,17 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
     private boolean checkDuplicatedEnrollments(Subject subject, Enrollment enrollment) {
         enrollment.setDuplicatedEnrollments(null);
 
-        if (enrollment.getParentEnrollment() != null && EnrollmentStatus.ENROLLED.equals(enrollment.getParentEnrollment().getStatus())) {
-            return true;
-        }
+        Enrollment parentEnrollment = enrollment.getParentEnrollment();
+        if (parentEnrollment != null) {
+            if (EnrollmentStatus.ENROLLED.equals(parentEnrollment.getStatus())) {
+                return true;
+            }
 
-        enrollment.setParentEnrollment(null);
+            enrollment.setParentEnrollment(null);
+            parentEnrollment.getDuplicatedEnrollments().remove(enrollment);
+
+            enrollmentDataService.update(parentEnrollment);
+        }
 
         String phoneNumber = subject.getPhoneNumber();
         LocalDate referenceDate = enrollment.getReferenceDate();
