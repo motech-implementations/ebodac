@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.motechproject</groupId>
     <artifactId>ebodac-modules</artifactId>
-    <version>3.1.10-SNAPSHOT</version>
+    <version>3.1.10</version>
     <packaging>pom</packaging>
     <name>EBODAC Modules</name>
 
@@ -23,7 +23,7 @@
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
         <url>${scm.url}</url>
-      <tag>HEAD</tag>
+      <tag>ebodac-modules-3.1.10</tag>
   </scm>
 
     <dependencies>
