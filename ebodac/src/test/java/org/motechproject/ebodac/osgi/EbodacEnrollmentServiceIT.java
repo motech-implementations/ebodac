@@ -555,35 +555,42 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         String triggerKeyString = campaignCompletedString + enrollment1.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment1.getExternalId() + runonce;
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
         assertEquals(1, enrollment1.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment1.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         triggerKeyString = campaignCompletedString + enrollment2.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment2.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
         assertEquals(enrollment1, enrollment2.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment3.getStatus());
         triggerKeyString = campaignCompletedString + enrollment3.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment3.getExternalId() + runonce;
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
         assertEquals(1, enrollment3.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment3.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment4.getStatus());
         triggerKeyString = campaignCompletedString + enrollment4.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment4.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment4.getDuplicatedEnrollments().size());
         assertEquals(enrollment3, enrollment4.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment5.getStatus());
         triggerKeyString = campaignCompletedString + enrollment5.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment5.getExternalId() + runonce;
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
         assertEquals(2, enrollment5.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment5.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment6.getStatus());
         triggerKeyString = campaignCompletedString + enrollment6.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment6.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment6.getDuplicatedEnrollments().size());
         assertEquals(enrollment5, enrollment6.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment7.getStatus());
         triggerKeyString = campaignCompletedString + enrollment7.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment7.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment7.getDuplicatedEnrollments().size());
         assertEquals(enrollment5, enrollment7.getParentEnrollment());
 
 
@@ -602,36 +609,43 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         assertEquals(EnrollmentStatus.ENROLLED, enrollment1.getStatus());
         triggerKeyString = campaignCompletedString + enrollment1.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment1.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment1.getDuplicatedEnrollments().size());
         assertEquals(enrollment2, enrollment1.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         triggerKeyString = campaignCompletedString + enrollment2.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment2.getExternalId() + runonce;
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
         assertEquals(2, enrollment2.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment2.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment3.getStatus());
         triggerKeyString = campaignCompletedString + enrollment3.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment3.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment3.getDuplicatedEnrollments().size());
         assertEquals(enrollment2, enrollment3.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment4.getStatus());
         triggerKeyString = campaignCompletedString + enrollment4.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment4.getExternalId() + runonce;
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
         assertEquals(1, enrollment4.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment4.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment5.getStatus());
         triggerKeyString = campaignCompletedString + enrollment5.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment5.getExternalId() + runonce;
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
         assertEquals(1, enrollment5.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment5.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment6.getStatus());
         triggerKeyString = campaignCompletedString + enrollment6.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment6.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment6.getDuplicatedEnrollments().size());
         assertEquals(enrollment4, enrollment6.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment7.getStatus());
         triggerKeyString = campaignCompletedString + enrollment7.getCampaignNameWithBoostVacDayAndStageId() + "." + enrollment7.getExternalId() + runonce;
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString)));
+        assertEquals(0, enrollment7.getDuplicatedEnrollments().size());
         assertEquals(enrollment5, enrollment7.getParentEnrollment());
     }
 
@@ -664,23 +678,30 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment1.getStatus());
         assertEquals(1, enrollment1.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment1.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
         assertEquals(enrollment1, enrollment2.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment3.getStatus());
         assertEquals(1, enrollment3.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment3.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment4.getStatus());
+        assertEquals(0, enrollment4.getDuplicatedEnrollments().size());
         assertEquals(enrollment3, enrollment4.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment5.getStatus());
         assertEquals(2, enrollment5.getDuplicatedEnrollments().size());
+        assertEquals(null, enrollment5.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment6.getStatus());
+        assertEquals(0, enrollment6.getDuplicatedEnrollments().size());
         assertEquals(enrollment5, enrollment6.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment7.getStatus());
+        assertEquals(0, enrollment7.getDuplicatedEnrollments().size());
         assertEquals(enrollment5, enrollment7.getParentEnrollment());
 
         ebodacEnrollmentService.unenrollSubject(subject1.getSubjectId());
@@ -2031,10 +2052,12 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
         assertEquals(enrollment1, enrollment2.getParentEnrollment());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment3.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
+        assertEquals(0, enrollment3.getDuplicatedEnrollments().size());
         assertEquals(enrollment1, enrollment3.getParentEnrollment());
 
         ebodacEnrollmentService.unenrollSubject(subject1.getSubjectId());
@@ -2061,11 +2084,25 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         if (enrollment2.getParentEnrollment() == null) {
             assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
             assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
+
             assertEquals(enrollment2, enrollment3.getParentEnrollment());
+            assertEquals(enrollment2, enrollment1.getParentEnrollment());
+
+            assertEquals(2, enrollment2.getDuplicatedEnrollments().size());
+
+            assertEquals(0, enrollment1.getDuplicatedEnrollments().size());
+            assertEquals(0, enrollment3.getDuplicatedEnrollments().size());
         } else if (enrollment3.getParentEnrollment() == null) {
             assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
             assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
+
             assertEquals(enrollment3, enrollment2.getParentEnrollment());
+            assertEquals(enrollment3, enrollment1.getParentEnrollment());
+
+            assertEquals(2, enrollment3.getDuplicatedEnrollments().size());
+
+            assertEquals(0, enrollment1.getDuplicatedEnrollments().size());
+            assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
         } else {
             fail();
         }
@@ -2101,15 +2138,18 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment1.getStatus());
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString1)));
+        assertEquals(null, enrollment1.getParentEnrollment());
         assertEquals(2, enrollment1.getDuplicatedEnrollments().size());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
         assertEquals(enrollment1, enrollment2.getParentEnrollment());
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment3.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
         assertEquals(enrollment1, enrollment3.getParentEnrollment());
+        assertEquals(0, enrollment3.getDuplicatedEnrollments().size());
 
         ebodacEnrollmentService.unenrollSubject(subject3.getSubjectId());
 
@@ -2127,13 +2167,18 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment1.getStatus());
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString1)));
+        assertEquals(null, enrollment1.getParentEnrollment());
+        assertEquals(2, enrollment1.getDuplicatedEnrollments().size());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
         assertEquals(enrollment1, enrollment2.getParentEnrollment());
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
 
         assertEquals(EnrollmentStatus.UNENROLLED, enrollment3.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
+        assertEquals(enrollment1, enrollment3.getParentEnrollment());
+        assertEquals(0, enrollment3.getDuplicatedEnrollments().size());
     }
 
     private void shouldUpdateGroupsWhenSubjectReenrolledForStage(String stage) throws IOException, SchedulerException {
@@ -2165,11 +2210,13 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment1.getStatus());
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString1)));
+        assertEquals(null, enrollment1.getParentEnrollment());
         assertEquals(2, enrollment1.getDuplicatedEnrollments().size());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         assertFalse(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
         assertEquals(enrollment1, enrollment2.getParentEnrollment());
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
 
         ebodacEnrollmentService.reenrollSubjectWithNewDate(enrollment2.getExternalId(),
                 enrollment2.getCampaignName(), new LocalDate(2115, 9, 22));
@@ -2185,10 +2232,13 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment1.getStatus());
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString1)));
+        assertEquals(null, enrollment1.getParentEnrollment());
+        assertEquals(1, enrollment1.getDuplicatedEnrollments().size());
 
         assertEquals(EnrollmentStatus.ENROLLED, enrollment2.getStatus());
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString2)));
         assertEquals(null, enrollment2.getParentEnrollment());
+        assertEquals(0, enrollment2.getDuplicatedEnrollments().size());
     }
 
     private void shouldRollbackWhenActualDateRemovedForStage(String stage) throws IOException, SchedulerException {
