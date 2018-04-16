@@ -1,6 +1,8 @@
 package org.motechproject.ebodac.domain;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.DateTime;
@@ -12,6 +14,7 @@ import org.motechproject.ebodac.util.json.serializer.CustomDateDeserializer;
 import org.motechproject.ebodac.util.json.serializer.CustomDateSerializer;
 import org.motechproject.ebodac.util.json.serializer.CustomDateTimeDeserializer;
 import org.motechproject.ebodac.util.json.serializer.CustomDateTimeSerializer;
+import org.motechproject.ebodac.util.json.serializer.CustomEnrollmentSerializer;
 import org.motechproject.ebodac.util.json.serializer.CustomVisitListDeserializer;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Cascade;
@@ -34,7 +37,7 @@ import java.util.List;
  */
 @ReadAccess(value = SecurityMode.PERMISSIONS, members = { "manageEbodac" })
 @Access(value = SecurityMode.PERMISSIONS, members = { "manageSubjects" })
-@Entity(recordHistory = true, name = "Participant")
+@Entity(recordHistory = true, name = "Participant", maxFetchDepth = 2)
 public class Subject {
 
     /**
@@ -154,6 +157,13 @@ public class Subject {
     @Persistent(mappedBy = "subject")
     @Cascade(delete = true)
     private List<Visit> visits = new ArrayList<>();
+
+    @JsonIgnore
+    @NonEditable
+    @Field(displayName = "Enrollment Status")
+    @Persistent(mappedBy = "subject")
+    @Cascade(persist = false, update = false)
+    private SubjectEnrollments enrollment;
 
     public Subject() {
     }
@@ -424,6 +434,17 @@ public class Subject {
     @JsonDeserialize(using = CustomVisitListDeserializer.class)
     public void setVisits(List<Visit> visits) {
         this.visits = visits;
+    }
+
+    @JsonProperty
+    @JsonSerialize(using = CustomEnrollmentSerializer.class)
+    public SubjectEnrollments getEnrollment() {
+        return enrollment;
+    }
+
+    @JsonIgnore
+    public void setEnrollment(SubjectEnrollments enrollment) {
+        this.enrollment = enrollment;
     }
 
     @Ignore

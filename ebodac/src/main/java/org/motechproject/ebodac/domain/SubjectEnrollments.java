@@ -17,7 +17,7 @@ import org.motechproject.mds.annotations.NonEditable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "ParticipantEnrollments", nonEditable = true, maxFetchDepth = 2)
+@Entity(recordHistory = true, name = "ParticipantEnrollments", nonEditable = true, maxFetchDepth = 2)
 public class SubjectEnrollments {
 
     public static final String STATUS_PROPERTY_NAME = "status";
@@ -125,5 +125,10 @@ public class SubjectEnrollments {
     @Ignore
     public void removeEnrolment(Enrollment enrollment) {
         enrollments.remove(enrollment);
+    }
+
+    @Override
+    public String toString() {
+        return status.getValue();
     }
 }

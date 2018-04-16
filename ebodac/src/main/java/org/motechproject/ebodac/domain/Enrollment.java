@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-@Entity(nonEditable = true, maxFetchDepth = 1)
+@Entity(recordHistory = true, nonEditable = true, maxFetchDepth = 1)
 @Unique(name = "externalIdAndCampaignName", members = {"externalId", "campaignName" })
 public class Enrollment {
 
