@@ -327,13 +327,10 @@ public final class EbodacConstants {
             put("Planned Visit Date",   "motechProjectedDate");
             put("Actual Visit Date",    "date");
             put("Visit Type",           "type");
-            put("RAVE Planned Date",    "dateProjected");
             put("Modification Date",    "modificationDate");
             put("Creation Date",        "creationDate");
             put("Modified By",          "modifiedBy");
-            put("Owner",                "owner");
             put("Created By",           "creator");
-            put("Id",                   "id");
         }
     };
 

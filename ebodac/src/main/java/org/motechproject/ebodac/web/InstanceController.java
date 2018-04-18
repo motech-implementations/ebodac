@@ -435,6 +435,10 @@ public class InstanceController {
     }
 
     private Map<String, String> getSelectedFieldsMap(Map<String, String> availableFieldsMap, List<String> selectedFields) {
+        if (selectedFields == null) {
+            return availableFieldsMap;
+        }
+
         Map<String, String> selectedFieldsMap = new LinkedHashMap<>();
 
         for (String field : selectedFields) {
