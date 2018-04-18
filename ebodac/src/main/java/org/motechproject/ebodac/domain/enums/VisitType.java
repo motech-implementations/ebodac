@@ -1,5 +1,7 @@
 package org.motechproject.ebodac.domain.enums;
 
+import org.apache.commons.lang.StringUtils;
+
 public enum VisitType {
     SCREENING("Screening"),
     PRIME_VACCINATION_DAY("Prime Vaccination Day"),
@@ -33,12 +35,15 @@ public enum VisitType {
     }
 
     public static VisitType getByValue(String value) {
-        if (value != null && value.startsWith(UNSCHEDULED_VISIT.getMotechValue())) {
+        if (StringUtils.isBlank(value)) {
+            return null;
+        }
+        if (value.startsWith(UNSCHEDULED_VISIT.getMotechValue())) {
             return UNSCHEDULED_VISIT;
         }
         for (VisitType visitType : VisitType.values()) {
             for (String typeValue : visitType.typeValues) {
-                if (typeValue.equalsIgnoreCase(value)) {
+                if (value.toLowerCase().startsWith(typeValue.toLowerCase())) {
                     return visitType;
                 }
             }
