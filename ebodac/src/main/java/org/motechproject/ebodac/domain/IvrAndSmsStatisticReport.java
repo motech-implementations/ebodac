@@ -11,7 +11,7 @@ import org.motechproject.mds.util.SecurityMode;
 import javax.jdo.annotations.Unique;
 
 @Access(value = SecurityMode.PERMISSIONS, members = { "manageEbodac" })
-@Entity(nonEditable = true)
+@Entity(nonEditable = true, maxFetchDepth = 3)
 @Unique(name = "providerCallIdAndSubject", members = {"providerCallId", "subject" })
 public class IvrAndSmsStatisticReport {
 
