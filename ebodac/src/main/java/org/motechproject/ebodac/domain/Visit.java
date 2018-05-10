@@ -22,7 +22,7 @@ import org.motechproject.mds.util.SecurityMode;
 
 
 @Access(value = SecurityMode.PERMISSIONS, members = { "manageEbodac" })
-@Entity(recordHistory = true)
+@Entity(recordHistory = true, maxFetchDepth = 3)
 public class Visit {
 
     public static final String MOTECH_PROJECTED_DATE_PROPERTY_NAME = "motechProjectedDate";
