@@ -769,8 +769,10 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
                     e.setDuplicatedEnrollments(duplicatedEnrollments);
 
                     if (parentUnenrolled) {
-                        oldParent.setParentEnrollment(e);
                         duplicatedEnrollments.add(oldParent);
+                        for (Enrollment en: duplicatedEnrollments) {
+                            en.setParentEnrollment(e);
+                        }
                     }
 
                     enrollmentDataService.update(oldParent);

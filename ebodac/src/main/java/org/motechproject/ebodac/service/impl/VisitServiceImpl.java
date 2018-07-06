@@ -61,10 +61,11 @@ public class VisitServiceImpl implements VisitService {
 
                         existingVisit.setDate(visit.getDate());
                         existingVisit.setDateProjected(visit.getDateProjected());
+                        visitDataService.update(existingVisit);
 
                         ebodacEnrollmentService.enrollOrCompleteCampaignForSubject(existingVisit);
 
-                        return visitDataService.update(existingVisit);
+                        return existingVisit;
                     } else {
                         return existingVisit;
                     }
