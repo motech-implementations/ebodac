@@ -1,6 +1,7 @@
 package org.motechproject.ebodac.service.impl;
 
 import org.motechproject.ebodac.domain.Subject;
+import org.motechproject.ebodac.domain.SubjectEnrollments;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.motechproject.ebodac.repository.SubjectDataService;
@@ -111,17 +112,23 @@ public class VisitServiceImpl implements VisitService {
         } else if (visit.getDateProjected() == null && existingVisit.getMotechProjectedDate() != null) {
             existingVisit.setMotechProjectedDate(null);
             ebodacEnrollmentService.unenrollAndRemoveEnrollment(existingVisit);
+            SubjectEnrollments enrollments = ebodacEnrollmentService.findSubjectEnrolments(existingVisit.getSubject().getSubjectId());
+            existingVisit.getSubject().setEnrollment(enrollments);
         }
     }
 
     private void removeOrCreateMissingEnrollmentsIfActualDateChanged(Visit visit, Visit existingVisit) {
         if (visit.getDate() == null && existingVisit.getDate() != null) {
             ebodacEnrollmentService.rollbackOrRemoveEnrollment(visit);
+            SubjectEnrollments enrollments = ebodacEnrollmentService.findSubjectEnrolments(existingVisit.getSubject().getSubjectId());
+            existingVisit.getSubject().setEnrollment(enrollments);
         }
 
         if (visit.getDate() != null && existingVisit.getDate() == null) {
             existingVisit.setDate(visit.getDate());
             ebodacEnrollmentService.enrollVisitRelatedCampaigns(existingVisit);
+            SubjectEnrollments enrollments = ebodacEnrollmentService.findSubjectEnrolments(existingVisit.getSubject().getSubjectId());
+            existingVisit.getSubject().setEnrollment(enrollments);
         }
     }
 

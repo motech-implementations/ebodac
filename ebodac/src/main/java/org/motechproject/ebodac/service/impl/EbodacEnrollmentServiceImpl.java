@@ -352,6 +352,11 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         }
     }
 
+    @Override
+    public SubjectEnrollments findSubjectEnrolments(String subjectId) {
+        return subjectEnrollmentsDataService.findBySubjectId(subjectId);
+    }
+
     private void unenrollAndRemoveEnrollment(String subjectId, String campaignName) {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findBySubjectId(subjectId);
 

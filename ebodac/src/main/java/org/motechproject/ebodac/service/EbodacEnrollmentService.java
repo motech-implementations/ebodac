@@ -2,6 +2,7 @@ package org.motechproject.ebodac.service;
 
 import org.joda.time.LocalDate;
 import org.motechproject.ebodac.domain.Subject;
+import org.motechproject.ebodac.domain.SubjectEnrollments;
 import org.motechproject.ebodac.domain.Visit;
 
 public interface EbodacEnrollmentService {
@@ -43,4 +44,6 @@ public interface EbodacEnrollmentService {
     void rollbackOrRemoveEnrollment(Visit visit);
 
     void enrollVisitRelatedCampaigns(Visit visit);
+
+    SubjectEnrollments findSubjectEnrolments(String subjectId);
 }

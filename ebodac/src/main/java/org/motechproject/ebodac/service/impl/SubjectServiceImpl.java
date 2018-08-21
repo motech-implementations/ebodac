@@ -75,9 +75,8 @@ public class SubjectServiceImpl implements SubjectService {
             subjectInDb.setSection(newSubject.getSection());
             subjectInDb.setDistrict(newSubject.getDistrict());
 
-            ebodacEnrollmentService.enrollSubject(subjectInDb);
-
             subjectInDb = update(subjectInDb);
+            ebodacEnrollmentService.enrollSubject(subjectInDb);
         } else {
             subjectInDb = create(newSubject);
         }
@@ -99,6 +98,7 @@ public class SubjectServiceImpl implements SubjectService {
                 }
 
                 ebodacEnrollmentService.withdrawalOrEnrollSubject(subjectInDb, newSubject);
+                subjectInDb = findSubjectBySubjectId(newSubject.getSubjectId());
 
                 subjectInDb.setGender(newSubject.getGender());
                 subjectInDb.setStageId(newSubject.getStageId());
