@@ -1,5 +1,10 @@
 package org.motechproject.ebodac.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ebodac.constants.EbodacConstants;
@@ -17,13 +22,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class RaveController {
@@ -57,6 +59,16 @@ public class RaveController {
     @ResponseBody
     public ResponseEntity<String> importCsv(@RequestBody String csvFile) throws IOException {
         Reader reader = new InputStreamReader(new ByteArrayInputStream(csvFile.getBytes()));
+        raveImportService.importCsv(reader, "");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/web-api/import-csv-file", method = RequestMethod.POST)
+    @PreAuthorize(Constants.Roles.HAS_DATA_ACCESS)
+    @ResponseBody
+    public ResponseEntity<String> importCsvFile(@RequestParam MultipartFile csvFile) throws IOException {
+        InputStream in = csvFile.getInputStream();
+        Reader reader = new InputStreamReader(in);
         raveImportService.importCsv(reader, "");
         return new ResponseEntity<>(HttpStatus.OK);
     }

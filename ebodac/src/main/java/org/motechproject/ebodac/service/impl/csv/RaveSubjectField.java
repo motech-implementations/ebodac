@@ -3,7 +3,10 @@ package org.motechproject.ebodac.service.impl.csv;
 
 public enum RaveSubjectField {
     SiteNumber("siteId"),
+    Site("siteName"),
     Subject("subjectId"),
+    PHONE("phoneNumber"),
+    LANG("language"),
     BRTHDT("dateOfBirth"),
     SEX("gender"),
     STAGE("stageId"),

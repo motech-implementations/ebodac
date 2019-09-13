@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.ebodac.domain.enums.Gender;
 import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.domain.enums.Language;
 import org.motechproject.ebodac.domain.enums.VisitType;
 import org.motechproject.ebodac.service.RaveImportService;
 import org.motechproject.ebodac.service.SubjectService;
@@ -76,6 +77,9 @@ public class RaveImportServiceImpl implements RaveImportService {
             if (subjectField.equals(RaveSubjectField.SEX)) {
                 Gender gender = Gender.getByValue(csvValue);
                 subject.setGender(gender);
+            } else if (subjectField.equals(RaveSubjectField.LANG)) {
+                Language language = Language.getByCode(csvValue);
+                subject.setLanguage(language);
             } else {
                 setProperty(subject, fieldName, csvValue);
             }
